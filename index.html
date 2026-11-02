@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Transferencia Bancaria Chile</title>
+  <style>
+    :root {
+      --primary: #0056b3;
+      --primary-hover: #004494;
+      --bg: #f2f4f8;
+      --card-bg: #ffffff;
+      --text: #1c1e21;
+      --text-muted: #606770;
+      --border: #dcdfe6;
+      --success: #28a745;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 14px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    .container { width: 100%; max-width: 440px; margin: 0 auto; }
+    
+    .header-card {
+      background: linear-gradient(135deg, #0052cc 0%, #003380 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(0, 51, 128, 0.2);
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.22);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .title { font-size: 20px; font-weight: 800; word-break: break-word; }
+    .subtitle { font-size: 14px; opacity: 0.9; margin-top: 2px; }
+
+    .instructions {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .fields-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .field-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    .field-info { flex: 1; margin-right: 10px; overflow: hidden; }
+    .field-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+    .field-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      outline: none;
+      padding: 2px 0;
+      cursor: text;
+    }
+    .btn-copy {
+      background: #e7f1ff;
+      color: var(--primary);
+      border: 1px solid #b8d5ff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 85px;
+      text-align: center;
+      touch-action: manipulation;
+    }
+    .btn-copy:active { background: #cfe2ff; transform: scale(0.97); }
+    .btn-copy.copied { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+
+    .btn-copy-all {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 86, 179, 0.25);
+      margin-bottom: 18px;
+    }
+    .btn-copy-all:active { background: var(--primary-dark); }
+
+    .banks-title { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; text-align: center; }
+    .banks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+    .btn-bank {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 12px 8px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .btn-bank:active { background: #e9ecef; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: #111;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      opacity: 0;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 9999;
+      pointer-events: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-card">
+      <div class="badge">Datos de Transferencia</div>
+      <div class="title" id="disp-name">Cargando...</div>
+      <div class="subtitle" id="disp-bank-type">Banco</div>
+    </div>
+
+    <p class="instructions">Toca <b>Copiar</b> en cada dato para pegarlo en tu banco:</p>
+
+    <div class="fields-list">
+      <div class="field-card">
+        <div class="field-info">
+          <div class="field-label">RUT</div>
+          <input type="text" id="val-rut" class="field-input" readonly value="--">
+        </div>
+        <button type="button" class="btn-copy" onclick="copyFromInput('val-rut', 'RUT', this)">Copiar</button>
+      </div>
+
+      <div class="field-card">
+        <div class="field-info">
+          <div class="field-label">N° de Cuenta</div>
+          <input type="text" id="val-account" class="field-input" readonly value="--">
+        </div>
+        <button type="button" class="btn-copy" onclick="copyFromInput('val-account', 'N° Cuenta', this)">Copiar</button>
+      </div>
+
+      <div class="field-card" id="row-email">
+        <div class="field-info">
+          <div class="field-label">Correo para Comprobante</div>
+          <input type="text" id="val-email" class="field-input" readonly value="--">
+        </div>
+        <button type="button" class="btn-copy" onclick="copyFromInput('val-email', 'Correo', this)">Copiar</button>
+      </div>
+
+      <div class="field-card">
+        <div class="field-info">
+          <div class="field-label">Banco y Tipo</div>
+          <input type="text" id="val-bank-desc" class="field-input" readonly value="--">
+        </div>
+        <button type="button" class="btn-copy" onclick="copyFromInput('val-bank-desc', 'Banco', this)">Copiar</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn-copy-all" onclick="copyAllText()">📋 Copiar Todo el Texto</button>
+
+    <div class="banks-title">Abrir App de tu Banco</div>
+    <div class="banks-grid">
+      <a class="btn-bank" href="bancoestado://" onclick="launchBank('cl.bancoestado')">BancoEstado</a>
+      <a class="btn-bank" href="santandercl://" onclick="launchBank('cl.santander.smartphone')">Santander</a>
+      <a class="btn-bank" href="bancochile://" onclick="launchBank('cl.bancochile.mibanco')">Banco de Chile</a>
+      <a class="btn-bank" href="bci://" onclick="launchBank('cl.bci.app.personas')">BCI</a>
+      <a class="btn-bank" href="bancofalabella://" onclick="launchBank('cl.bancofalabella.personas')">Falabella</a>
+      <a class="btn-bank" href="tenpo://" onclick="launchBank('cl.tenpo.app')">Tenpo</a>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">¡Copiado!</div>
+
+  <script>
+    // Decodificar datos desde los parámetros de la URL
+    var searchStr = window.location.search || '';
+    if (!searchStr && window.location.hash) {
+      searchStr = '?' + window.location.hash.substring(1);
+    }
+    var params = new URLSearchParams(searchStr);
+
+    var nameVal = params.get('n') || 'Destinatario';
+    var rutVal = params.get('r') || '';
+    var bankVal = params.get('b') || 'Banco';
+    var typeVal = params.get('t') || 'Cuenta';
+    var accountVal = params.get('c') || '';
+    var emailVal = params.get('e') || '';
+
+    document.getElementById('disp-name').textContent = nameVal;
+    document.getElementById('disp-bank-type').textContent = bankVal + ' • ' + typeVal;
+    document.getElementById('val-rut').value = rutVal;
+    document.getElementById('val-account').value = accountVal;
+    document.getElementById('val-bank-desc').value = bankVal + ' (' + typeVal + ')';
+
+    if (emailVal) {
+      document.getElementById('val-email').value = emailVal;
+    } else {
+      document.getElementById('row-email').style.display = 'none';
+    }
+
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show';
+      if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(50);
+      }
+      setTimeout(function() {
+        t.className = 'toast';
+      }, 2000);
+    }
+
+    // Función de copiado 100% compatible con HTTP, HTTPS, Chrome, Safari y navegadores antiguos
+    function universalCopy(text, inputElem) {
+      // 1. Método moderno si está disponible y en contexto seguro
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(function() {
+          return execCommandFallback(text, inputElem);
+        });
+      }
+      // 2. Método ejecCommand (Funciona SIEMPRE en HTTP de redes locales y móviles)
+      return execCommandFallback(text, inputElem);
+    }
+
+    function execCommandFallback(text, inputElem) {
+      return new Promise(function(resolve, reject) {
+        try {
+          var target = inputElem;
+          var created = false;
+          if (!target) {
+            target = document.createElement('textarea');
+            target.value = text;
+            target.style.position = 'fixed';
+            target.style.left = '-9999px';
+            target.style.top = '-9999px';
+            document.body.appendChild(target);
+            created = true;
+          }
+          target.focus();
+          if (target.select) {
+            target.select();
+            target.setSelectionRange(0, 99999); // Para móviles
+          }
+          var successful = document.execCommand('copy');
+          if (created) {
+            document.body.removeChild(target);
+          }
+          if (successful) resolve();
+          else reject(new Error('execCommand failed'));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    function copyFromInput(inputId, label, btn) {
+      var input = document.getElementById(inputId);
+      var text = input.value.trim();
+      universalCopy(text, input).then(function() {
+        showToast('✅ ' + label + ' copiado');
+        if (btn) {
+          var orig = btn.textContent;
+          btn.textContent = '¡Copiado!';
+          btn.className = 'btn-copy copied';
+          setTimeout(function() {
+            btn.textContent = orig;
+            btn.className = 'btn-copy';
+          }, 1500);
+        }
+      }).catch(function(e) {
+        // Fallback: seleccionar el texto para que el usuario toque "Copiar" nativamente
+        input.focus();
+        input.select();
+        showToast('Mantén presionado para copiar');
+      });
+    }
+
+    function copyAllText() {
+      var full = 'Nombre: ' + nameVal + '\nRUT: ' + rutVal + '\nBanco: ' + bankVal + '\nTipo de Cuenta: ' + typeVal + '\nN° Cuenta: ' + accountVal + '\nCorreo: ' + emailVal;
+      universalCopy(full.trim(), null).then(function() {
+        showToast('✅ Todo el formato copiado');
+      }).catch(function() {
+        showToast('Error al copiar todo');
+      });
+    }
+
+    function launchBank(pkg) {
+      setTimeout(function() {
+        if (navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1) {
+          window.location.href = 'intent://#Intent;package=' + pkg + ';end';
+        }
+      }, 600);
+    }
+  </script>
+</body>
+</html>
