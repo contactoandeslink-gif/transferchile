@@ -14,7 +14,6 @@
       --text-muted: #5f6368;
       --border: #dcdfe6;
       --success: #28a745;
-      --whatsapp: #25d366;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 14px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
@@ -93,7 +92,7 @@
     .divider-text:not(:empty)::before { margin-right: .75em; }
     .divider-text:not(:empty)::after { margin-left: .75em; }
 
-    .fields-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .fields-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
     .field-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -132,12 +131,44 @@
     .btn-copy-small:active { background: #dce9ff; }
     .btn-copy-small.copied { background: #d4edda; color: #155724; border-color: #c3e6cb; }
 
-    .banks-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; text-align: center; }
-    .banks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-    .btn-bank {
+    /* Sección de Bancos */
+    .banks-section {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 12px 8px;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .banks-title { font-size: 14px; font-weight: 800; color: var(--text); text-transform: uppercase; margin-bottom: 4px; text-align: center; }
+    .banks-subtitle { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 12px; }
+    .bank-search {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+      background: #fdfdfd;
+      transition: border-color 0.15s ease;
+    }
+    .bank-search:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.12);
+    }
+    .banks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .btn-bank {
+      background: #f8f9fc;
+      border: 1px solid var(--border);
+      padding: 11px 8px;
       border-radius: 10px;
       font-size: 13px;
       font-weight: 700;
@@ -148,8 +179,10 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      transition: all 0.15s ease;
     }
-    .btn-bank:active { background: #e9ecef; }
+    .btn-bank:hover { background: #eef2fa; border-color: var(--primary); }
+    .btn-bank:active { background: #dce4f5; transform: scale(0.97); }
 
     .toast {
       position: fixed;
@@ -187,6 +220,40 @@
       Al tocar <b>Copiar</b>, abre tu banco y al agregar nuevo contacto <b>se rellenará todo automáticamente</b>.
     </p>
 
+    <!-- SECCIÓN DE APERTURA DIRECTA DE BANCOS CHILENOS -->
+    <div class="banks-section">
+      <div class="banks-title">🏦 Abrir App de tu Banco</div>
+      <p class="banks-subtitle">Toca tu banco para abrirlo directamente e ingresar la transferencia:</p>
+      
+      <input type="text" id="bank-filter" class="bank-search" placeholder="🔍 Buscar mi banco (ej: Falabella, Tenpo...)" onkeyup="filterBanks()">
+
+      <div class="banks-grid" id="banks-container">
+        <!-- Bancos Tradicionales -->
+        <a class="btn-bank" data-name="banco estado cuentarut" href="javascript:void(0)" onclick="openBankApp('cl.bancoestado', 'bancoestado://')">Banco Estado</a>
+        <a class="btn-bank" data-name="banco santander" href="javascript:void(0)" onclick="openBankApp('cl.santander.smartphone', 'santandercl://')">Santander</a>
+        <a class="btn-bank" data-name="banco de chile edwards mi banco" href="javascript:void(0)" onclick="openBankApp('cl.bancochile.mibanco', 'bancochile://')">Banco de Chile</a>
+        <a class="btn-bank" data-name="banco falabella cmr" href="javascript:void(0)" onclick="openBankApp('cl.bancofalabella.personas', 'bancofalabella://')">Banco Falabella</a>
+        <a class="btn-bank" data-name="bci banco credito e inversiones" href="javascript:void(0)" onclick="openBankApp('cl.bci.app.personas', 'bci://')">BCI</a>
+        <a class="btn-bank" data-name="scotiabank chile scotiago" href="javascript:void(0)" onclick="openBankApp('cl.scotiabank.scotiago', 'scotiago://')">Scotiabank</a>
+        <a class="btn-bank" data-name="itau banco itaú personas" href="javascript:void(0)" onclick="openBankApp('cl.itau.personas', 'itaupersonas://')">Banco Itaú</a>
+        <a class="btn-bank" data-name="banco ripley" href="javascript:void(0)" onclick="openBankApp('cl.bancoripley.app', 'bancoripley://')">Banco Ripley</a>
+        <a class="btn-bank" data-name="banco bice" href="javascript:void(0)" onclick="openBankApp('cl.bice.personas', 'bice://')">Banco BICE</a>
+        <a class="btn-bank" data-name="banco security" href="javascript:void(0)" onclick="openBankApp('cl.bancosecurity.banco', 'bancosecurity://')">Banco Security</a>
+        <a class="btn-bank" data-name="banco consorcio" href="javascript:void(0)" onclick="openBankApp('cl.bancoconsorcio.app', 'bancoconsorcio://')">Banco Consorcio</a>
+        <a class="btn-bank" data-name="banco internacional" href="javascript:void(0)" onclick="openBankApp('cl.bancointernacional.personas', 'bancointernacional://')">Internacional</a>
+
+        <!-- Cuentas Digitales y Prepago CMF -->
+        <a class="btn-bank" data-name="tenpo prepago tarjeta" href="javascript:void(0)" onclick="openBankApp('cl.tenpo.app', 'tenpo://')">Tenpo</a>
+        <a class="btn-bank" data-name="mach bci cuenta" href="javascript:void(0)" onclick="openBankApp('com.bci.mach', 'mach://')">MACH</a>
+        <a class="btn-bank" data-name="global66 prepago global 66" href="javascript:void(0)" onclick="openBankApp('com.global66.app', 'global66://')">Global66</a>
+        <a class="btn-bank" data-name="mercado pago mercadopago wallet" href="javascript:void(0)" onclick="openBankApp('com.mercadopago.wallet', 'mercadopago://')">Mercado Pago</a>
+        <a class="btn-bank" data-name="coopeuch cooperativa" href="javascript:void(0)" onclick="openBankApp('cl.coopeuch.app', 'coopeuch://')">Coopeuch</a>
+        <a class="btn-bank" data-name="chek ripley" href="javascript:void(0)" onclick="openBankApp('cl.bancoripley.chek', 'chek://')">Chek</a>
+        <a class="btn-bank" data-name="tapp caja los andes" href="javascript:void(0)" onclick="openBankApp('cl.cajalosandes.tapp', 'tapp://')">Tapp</a>
+        <a class="btn-bank" data-name="copec pay" href="javascript:void(0)" onclick="openBankApp('cl.copec.copecpay', 'copecpay://')">Copec Pay</a>
+      </div>
+    </div>
+
     <div class="divider-text">O copiar campo por campo si tu banco lo pide</div>
 
     <div class="fields-list">
@@ -221,16 +288,6 @@
         </div>
         <button type="button" class="btn-copy-small" onclick="copyFromInput('val-bank-desc', 'Banco', this)">Copiar</button>
       </div>
-    </div>
-
-    <div class="banks-title">Abrir App Bancaria</div>
-    <div class="banks-grid">
-      <a class="btn-bank" href="bancofalabella://" onclick="launchBank('cl.bancofalabella.personas')">Falabella</a>
-      <a class="btn-bank" href="bancoestado://" onclick="launchBank('cl.bancoestado')">BancoEstado</a>
-      <a class="btn-bank" href="santandercl://" onclick="launchBank('cl.santander.smartphone')">Santander</a>
-      <a class="btn-bank" href="bancochile://" onclick="launchBank('cl.bancochile.mibanco')">Banco de Chile</a>
-      <a class="btn-bank" href="bci://" onclick="launchBank('cl.bci.app.personas')">BCI</a>
-      <a class="btn-bank" href="tenpo://" onclick="launchBank('cl.tenpo.app')">Tenpo</a>
     </div>
   </div>
 
@@ -390,12 +447,34 @@
       });
     }
 
-    function launchBank(pkg) {
-      setTimeout(function() {
-        if (navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1) {
-          window.location.href = 'intent://#Intent;package=' + pkg + ';end';
+    // Filtrador de bancos en tiempo real
+    function filterBanks() {
+      var q = document.getElementById('bank-filter').value.toLowerCase().trim();
+      var items = document.querySelectorAll('#banks-container .btn-bank');
+      for (var i = 0; i < items.length; i++) {
+        var name = items[i].getAttribute('data-name') || items[i].textContent.toLowerCase();
+        if (name.indexOf(q) > -1) {
+          items[i].style.display = 'flex';
+        } else {
+          items[i].style.display = 'none';
         }
-      }, 600);
+      }
+    }
+
+    // Apertura directa inteligente con fallback para Android e iOS
+    function openBankApp(pkg, scheme) {
+      var isAndroid = navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1;
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      if (isAndroid) {
+        // Formato oficial Android Chrome Intent con fallback a Google Play Store si no está instalado
+        window.location.href = 'intent://#Intent;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
+      } else if (isIOS && scheme) {
+        window.location.href = scheme;
+      } else {
+        // Navegador de escritorio o fallback general
+        window.open('https://play.google.com/store/apps/details?id=' + pkg, '_blank');
+      }
     }
   </script>
 </body>
