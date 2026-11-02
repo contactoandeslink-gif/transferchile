@@ -7,13 +7,14 @@
   <style>
     :root {
       --primary: #0056b3;
-      --primary-hover: #004494;
-      --bg: #f2f4f8;
+      --primary-dark: #003d82;
+      --bg: #f4f6fa;
       --card-bg: #ffffff;
-      --text: #1c1e21;
-      --text-muted: #606770;
+      --text: #1a1a1a;
+      --text-muted: #5f6368;
       --border: #dcdfe6;
       --success: #28a745;
+      --whatsapp: #25d366;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 14px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
@@ -22,43 +23,86 @@
     .header-card {
       background: linear-gradient(135deg, #0052cc 0%, #003380 100%);
       color: white;
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 18px;
+      padding: 22px 20px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 14px rgba(0, 51, 128, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 51, 128, 0.22);
+      text-align: center;
     }
     .badge {
       display: inline-block;
       background: rgba(255,255,255,0.22);
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-    .title { font-size: 20px; font-weight: 800; word-break: break-word; }
-    .subtitle { font-size: 14px; opacity: 0.9; margin-top: 2px; }
+    .title { font-size: 22px; font-weight: 800; word-break: break-word; }
+    .subtitle { font-size: 15px; opacity: 0.92; margin-top: 4px; font-weight: 600; }
+
+    /* Botón Héroe Principal: Copiar Todo */
+    .btn-hero-copy {
+      width: 100%;
+      background: #0056b3;
+      color: white;
+      border: none;
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(0, 86, 179, 0.35);
+      margin-bottom: 10px;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .btn-hero-copy:active { transform: scale(0.97); background: var(--primary-dark); }
+    .btn-hero-copy.copied { background: var(--success); }
 
     .instructions {
       font-size: 13px;
       color: var(--text-muted);
       text-align: center;
-      margin-bottom: 12px;
-      font-weight: 500;
+      margin-bottom: 16px;
+      line-height: 1.4;
     }
 
-    .fields-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .divider-text {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 16px 0 12px 0;
+    }
+    .divider-text::before, .divider-text::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    .divider-text:not(:empty)::before { margin-right: .75em; }
+    .divider-text:not(:empty)::after { margin-left: .75em; }
+
+    .fields-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .field-card {
       background: var(--card-bg);
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
     .field-info { flex: 1; margin-right: 10px; overflow: hidden; }
     .field-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
@@ -66,45 +110,29 @@
       width: 100%;
       border: none;
       background: transparent;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--text);
       outline: none;
       padding: 2px 0;
       cursor: text;
     }
-    .btn-copy {
-      background: #e7f1ff;
+    .btn-copy-small {
+      background: #eef4ff;
       color: var(--primary);
-      border: 1px solid #b8d5ff;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 14px;
+      border: 1px solid #c7dcff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      min-width: 85px;
+      min-width: 75px;
       text-align: center;
-      touch-action: manipulation;
     }
-    .btn-copy:active { background: #cfe2ff; transform: scale(0.97); }
-    .btn-copy.copied { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+    .btn-copy-small:active { background: #dce9ff; }
+    .btn-copy-small.copied { background: #d4edda; color: #155724; border-color: #c3e6cb; }
 
-    .btn-copy-all {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 86, 179, 0.25);
-      margin-bottom: 18px;
-    }
-    .btn-copy-all:active { background: var(--primary-dark); }
-
-    .banks-title { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; text-align: center; }
+    .banks-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; text-align: center; }
     .banks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
     .btn-bank {
       background: var(--card-bg);
@@ -151,7 +179,15 @@
       <div class="subtitle" id="disp-bank-type">Banco</div>
     </div>
 
-    <p class="instructions">Toca <b>Copiar</b> en cada dato para pegarlo en tu banco:</p>
+    <!-- BOTÓN HÉROE PRINCIPAL: COPIAR TODO -->
+    <button type="button" id="btn-hero" class="btn-hero-copy" onclick="copyAllText()">
+      📋 Copiar Datos Completos
+    </button>
+    <p class="instructions">
+      Al tocar <b>Copiar</b>, abre tu banco y al agregar nuevo contacto <b>se rellenará todo automáticamente</b>.
+    </p>
+
+    <div class="divider-text">O copiar campo por campo si tu banco lo pide</div>
 
     <div class="fields-list">
       <div class="field-card">
@@ -159,7 +195,7 @@
           <div class="field-label">RUT</div>
           <input type="text" id="val-rut" class="field-input" readonly value="--">
         </div>
-        <button type="button" class="btn-copy" onclick="copyFromInput('val-rut', 'RUT', this)">Copiar</button>
+        <button type="button" class="btn-copy-small" onclick="copyFromInput('val-rut', 'RUT', this)">Copiar</button>
       </div>
 
       <div class="field-card">
@@ -167,7 +203,7 @@
           <div class="field-label">N° de Cuenta</div>
           <input type="text" id="val-account" class="field-input" readonly value="--">
         </div>
-        <button type="button" class="btn-copy" onclick="copyFromInput('val-account', 'N° Cuenta', this)">Copiar</button>
+        <button type="button" class="btn-copy-small" onclick="copyFromInput('val-account', 'N° Cuenta', this)">Copiar</button>
       </div>
 
       <div class="field-card" id="row-email">
@@ -175,7 +211,7 @@
           <div class="field-label">Correo para Comprobante</div>
           <input type="text" id="val-email" class="field-input" readonly value="--">
         </div>
-        <button type="button" class="btn-copy" onclick="copyFromInput('val-email', 'Correo', this)">Copiar</button>
+        <button type="button" class="btn-copy-small" onclick="copyFromInput('val-email', 'Correo', this)">Copiar</button>
       </div>
 
       <div class="field-card">
@@ -183,19 +219,17 @@
           <div class="field-label">Banco y Tipo</div>
           <input type="text" id="val-bank-desc" class="field-input" readonly value="--">
         </div>
-        <button type="button" class="btn-copy" onclick="copyFromInput('val-bank-desc', 'Banco', this)">Copiar</button>
+        <button type="button" class="btn-copy-small" onclick="copyFromInput('val-bank-desc', 'Banco', this)">Copiar</button>
       </div>
     </div>
 
-    <button type="button" class="btn-copy-all" onclick="copyAllText()">📋 Copiar Todo el Texto</button>
-
-    <div class="banks-title">Abrir App de tu Banco</div>
+    <div class="banks-title">Abrir App Bancaria</div>
     <div class="banks-grid">
+      <a class="btn-bank" href="bancofalabella://" onclick="launchBank('cl.bancofalabella.personas')">Falabella</a>
       <a class="btn-bank" href="bancoestado://" onclick="launchBank('cl.bancoestado')">BancoEstado</a>
       <a class="btn-bank" href="santandercl://" onclick="launchBank('cl.santander.smartphone')">Santander</a>
       <a class="btn-bank" href="bancochile://" onclick="launchBank('cl.bancochile.mibanco')">Banco de Chile</a>
       <a class="btn-bank" href="bci://" onclick="launchBank('cl.bci.app.personas')">BCI</a>
-      <a class="btn-bank" href="bancofalabella://" onclick="launchBank('cl.bancofalabella.personas')">Falabella</a>
       <a class="btn-bank" href="tenpo://" onclick="launchBank('cl.tenpo.app')">Tenpo</a>
     </div>
   </div>
@@ -203,7 +237,6 @@
   <div id="toast" class="toast">¡Copiado!</div>
 
   <script>
-    // Decodificar datos desde los parámetros de la URL
     var searchStr = window.location.search || '';
     if (!searchStr && window.location.hash) {
       searchStr = '?' + window.location.hash.substring(1);
@@ -241,15 +274,12 @@
       }, 2000);
     }
 
-    // Función de copiado 100% compatible con HTTP, HTTPS, Chrome, Safari y navegadores antiguos
     function universalCopy(text, inputElem) {
-      // 1. Método moderno si está disponible y en contexto seguro
       if (navigator.clipboard && window.isSecureContext) {
         return navigator.clipboard.writeText(text).catch(function() {
           return execCommandFallback(text, inputElem);
         });
       }
-      // 2. Método ejecCommand (Funciona SIEMPRE en HTTP de redes locales y móviles)
       return execCommandFallback(text, inputElem);
     }
 
@@ -270,7 +300,7 @@
           target.focus();
           if (target.select) {
             target.select();
-            target.setSelectionRange(0, 99999); // Para móviles
+            target.setSelectionRange(0, 99999);
           }
           var successful = document.execCommand('copy');
           if (created) {
@@ -281,28 +311,6 @@
         } catch (err) {
           reject(err);
         }
-      });
-    }
-
-    function copyFromInput(inputId, label, btn) {
-      var input = document.getElementById(inputId);
-      var text = input.value.trim();
-      universalCopy(text, input).then(function() {
-        showToast('✅ ' + label + ' copiado');
-        if (btn) {
-          var orig = btn.textContent;
-          btn.textContent = '¡Copiado!';
-          btn.className = 'btn-copy copied';
-          setTimeout(function() {
-            btn.textContent = orig;
-            btn.className = 'btn-copy';
-          }, 1500);
-        }
-      }).catch(function(e) {
-        // Fallback: seleccionar el texto para que el usuario toque "Copiar" nativamente
-        input.focus();
-        input.select();
-        showToast('Mantén presionado para copiar');
       });
     }
 
@@ -337,7 +345,6 @@
 
     function copyAllText() {
       var bankNameFormatted = normalizeBankName(bankVal);
-      // Formato con las etiquetas exactas que los algoritmos de BancoEstado, Santander y Mi Banco reconocen
       var full = 'Nombre: ' + nameVal + '\n' +
                  'RUT: ' + rutVal + '\n' +
                  'Banco: ' + bankNameFormatted + '\n' +
@@ -345,10 +352,41 @@
                  'Número de cuenta: ' + accountVal + '\n' +
                  'Correo: ' + emailVal;
       
+      var heroBtn = document.getElementById('btn-hero');
       universalCopy(full.trim(), null).then(function() {
-        showToast('✅ Todo el formato copiado');
+        showToast('✅ ¡Datos copiados! Abre tu banco para pegar');
+        if (heroBtn) {
+          var orig = heroBtn.textContent;
+          heroBtn.textContent = '✅ ¡Copiado con Éxito!';
+          heroBtn.className = 'btn-hero-copy copied';
+          setTimeout(function() {
+            heroBtn.textContent = orig;
+            heroBtn.className = 'btn-hero-copy';
+          }, 2000);
+        }
       }).catch(function() {
-        showToast('Error al copiar todo');
+        showToast('Error al copiar');
+      });
+    }
+
+    function copyFromInput(inputId, label, btn) {
+      var input = document.getElementById(inputId);
+      var text = input.value.trim();
+      universalCopy(text, input).then(function() {
+        showToast('✅ ' + label + ' copiado');
+        if (btn) {
+          var orig = btn.textContent;
+          btn.textContent = '¡Listo!';
+          btn.className = 'btn-copy-small copied';
+          setTimeout(function() {
+            btn.textContent = orig;
+            btn.className = 'btn-copy-small';
+          }, 1500);
+        }
+      }).catch(function(e) {
+        input.focus();
+        input.select();
+        showToast('Mantén presionado para copiar');
       });
     }
 
