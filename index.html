@@ -306,8 +306,32 @@
       });
     }
 
+    function normalizeBankName(b) {
+      if (!b) return 'Banco Estado';
+      var clean = b.trim();
+      var lower = clean.toLowerCase();
+      if (lower === 'bancoestado' || lower === 'banco estado' || lower.includes('cuentarut')) {
+        return 'Banco Estado';
+      }
+      if (lower.includes('santander')) return 'Banco Santander';
+      if (lower.includes('chile') || lower.includes('edwards')) return 'Banco de Chile';
+      if (lower.includes('bci')) return 'BCI';
+      if (lower.includes('falabella')) return 'Banco Falabella';
+      if (lower.includes('scotia')) return 'Scotiabank';
+      if (lower.includes('itau') || lower.includes('itaú')) return 'Banco Itaú';
+      return clean;
+    }
+
     function copyAllText() {
-      var full = 'Nombre: ' + nameVal + '\nRUT: ' + rutVal + '\nBanco: ' + bankVal + '\nTipo de Cuenta: ' + typeVal + '\nN° Cuenta: ' + accountVal + '\nCorreo: ' + emailVal;
+      var bankNameFormatted = normalizeBankName(bankVal);
+      // Formato con las etiquetas exactas que los algoritmos de BancoEstado, Santander y Mi Banco reconocen
+      var full = 'Nombre: ' + nameVal + '\n' +
+                 'RUT: ' + rutVal + '\n' +
+                 'Banco: ' + bankNameFormatted + '\n' +
+                 'Tipo de cuenta: ' + typeVal + '\n' +
+                 'Número de cuenta: ' + accountVal + '\n' +
+                 'Correo: ' + emailVal;
+      
       universalCopy(full.trim(), null).then(function() {
         showToast('✅ Todo el formato copiado');
       }).catch(function() {
