@@ -228,29 +228,29 @@
       <input type="text" id="bank-filter" class="bank-search" placeholder="🔍 Buscar mi banco (ej: Falabella, Tenpo...)" onkeyup="filterBanks()">
 
       <div class="banks-grid" id="banks-container">
-        <!-- Bancos Tradicionales -->
-        <a class="btn-bank" data-name="banco estado cuentarut" href="javascript:void(0)" onclick="openBankApp('cl.bancoestado', 'bancoestado://')">Banco Estado</a>
+        <!-- Principales Bancos de Chile con Packages oficiales verificados en Google Play -->
+        <a class="btn-bank" data-name="banco estado cuentarut" href="javascript:void(0)" onclick="openBankApp('net.veritran.becl.prod', 'bancoestado://')">Banco Estado</a>
         <a class="btn-bank" data-name="banco santander" href="javascript:void(0)" onclick="openBankApp('cl.santander.smartphone', 'santandercl://')">Santander</a>
-        <a class="btn-bank" data-name="banco de chile edwards mi banco" href="javascript:void(0)" onclick="openBankApp('cl.bancochile.mibanco', 'bancochile://')">Banco de Chile</a>
-        <a class="btn-bank" data-name="banco falabella cmr" href="javascript:void(0)" onclick="openBankApp('cl.bancofalabella.personas', 'bancofalabella://')">Banco Falabella</a>
+        <a class="btn-bank" data-name="banco de chile edwards mi banco" href="javascript:void(0)" onclick="openBankApp('cl.bancochile.mi_banco', 'bancochile://')">Banco de Chile</a>
+        <a class="btn-bank" data-name="banco falabella cmr" href="javascript:void(0)" onclick="openBankApp('cl.android', 'bancofalabella://')">Banco Falabella</a>
         <a class="btn-bank" data-name="bci banco credito e inversiones" href="javascript:void(0)" onclick="openBankApp('cl.bci.app.personas', 'bci://')">BCI</a>
-        <a class="btn-bank" data-name="scotiabank chile scotiago" href="javascript:void(0)" onclick="openBankApp('cl.scotiabank.scotiago', 'scotiago://')">Scotiabank</a>
-        <a class="btn-bank" data-name="itau banco itaú personas" href="javascript:void(0)" onclick="openBankApp('cl.itau.personas', 'itaupersonas://')">Banco Itaú</a>
-        <a class="btn-bank" data-name="banco ripley" href="javascript:void(0)" onclick="openBankApp('cl.bancoripley.app', 'bancoripley://')">Banco Ripley</a>
-        <a class="btn-bank" data-name="banco bice" href="javascript:void(0)" onclick="openBankApp('cl.bice.personas', 'bice://')">Banco BICE</a>
-        <a class="btn-bank" data-name="banco security" href="javascript:void(0)" onclick="openBankApp('cl.bancosecurity.banco', 'bancosecurity://')">Banco Security</a>
-        <a class="btn-bank" data-name="banco consorcio" href="javascript:void(0)" onclick="openBankApp('cl.bancoconsorcio.app', 'bancoconsorcio://')">Banco Consorcio</a>
-        <a class="btn-bank" data-name="banco internacional" href="javascript:void(0)" onclick="openBankApp('cl.bancointernacional.personas', 'bancointernacional://')">Internacional</a>
+        <a class="btn-bank" data-name="scotiabank chile scotiago" href="javascript:void(0)" onclick="openBankApp('com.scotiabank.chile.sgo', 'scotiago://')">Scotiabank</a>
+        <a class="btn-bank" data-name="itau banco itaú personas" href="javascript:void(0)" onclick="openBankApp('cl.itau.cl.banco', 'itaupersonas://')">Banco Itaú</a>
+        <a class="btn-bank" data-name="banco ripley" href="javascript:void(0)" onclick="openBankApp('com.bancoripley.bancoripley', 'bancoripley://')">Banco Ripley</a>
+        <a class="btn-bank" data-name="banco bice" href="javascript:void(0)" onclick="openBankApp('cl.bice.apppersonas', 'bice://')">Banco BICE</a>
+        <a class="btn-bank" data-name="banco security" href="javascript:void(0)" onclick="openBankApp('cl.bancosecurity.bancosecurity', 'bancosecurity://')">Banco Security</a>
+        <a class="btn-bank" data-name="banco consorcio" href="javascript:void(0)" onclick="openBankApp('cl.consorcio.bancopersonas', 'bancoconsorcio://')">Banco Consorcio</a>
+        <a class="btn-bank" data-name="banco internacional" href="javascript:void(0)" onclick="openBankApp('cl.bancointernacional.cl', 'bancointernacional://')">Internacional</a>
 
         <!-- Cuentas Digitales y Prepago CMF -->
         <a class="btn-bank" data-name="tenpo prepago tarjeta" href="javascript:void(0)" onclick="openBankApp('cl.tenpo.app', 'tenpo://')">Tenpo</a>
         <a class="btn-bank" data-name="mach bci cuenta" href="javascript:void(0)" onclick="openBankApp('com.bci.mach', 'mach://')">MACH</a>
         <a class="btn-bank" data-name="global66 prepago global 66" href="javascript:void(0)" onclick="openBankApp('com.global66.app', 'global66://')">Global66</a>
         <a class="btn-bank" data-name="mercado pago mercadopago wallet" href="javascript:void(0)" onclick="openBankApp('com.mercadopago.wallet', 'mercadopago://')">Mercado Pago</a>
-        <a class="btn-bank" data-name="coopeuch cooperativa" href="javascript:void(0)" onclick="openBankApp('cl.coopeuch.app', 'coopeuch://')">Coopeuch</a>
-        <a class="btn-bank" data-name="chek ripley" href="javascript:void(0)" onclick="openBankApp('cl.bancoripley.chek', 'chek://')">Chek</a>
+        <a class="btn-bank" data-name="coopeuch cooperativa" href="javascript:void(0)" onclick="openBankApp('cl.coopeuch.appcoopeuch', 'coopeuch://')">Coopeuch</a>
+        <a class="btn-bank" data-name="chek ripley" href="javascript:void(0)" onclick="openBankApp('cl.dalechek.app', 'chek://')">Chek</a>
         <a class="btn-bank" data-name="tapp caja los andes" href="javascript:void(0)" onclick="openBankApp('cl.cajalosandes.tapp', 'tapp://')">Tapp</a>
-        <a class="btn-bank" data-name="copec pay" href="javascript:void(0)" onclick="openBankApp('cl.copec.copecpay', 'copecpay://')">Copec Pay</a>
+        <a class="btn-bank" data-name="copec pay" href="javascript:void(0)" onclick="openBankApp('com.copec.appcopec', 'copecpay://')">Copec Pay</a>
       </div>
     </div>
 
@@ -447,7 +447,6 @@
       });
     }
 
-    // Filtrador de bancos en tiempo real
     function filterBanks() {
       var q = document.getElementById('bank-filter').value.toLowerCase().trim();
       var items = document.querySelectorAll('#banks-container .btn-bank');
@@ -461,18 +460,17 @@
       }
     }
 
-    // Apertura directa inteligente con fallback para Android e iOS
     function openBankApp(pkg, scheme) {
       var isAndroid = navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1;
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
       if (isAndroid) {
-        // Formato oficial Android Chrome Intent con fallback a Google Play Store si no está instalado
+        // En Android: si la app está instalada, se abre en el acto. Si no, va directo a Google Play Store
         window.location.href = 'intent://#Intent;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
       } else if (isIOS && scheme) {
         window.location.href = scheme;
       } else {
-        // Navegador de escritorio o fallback general
+        // En navegador de escritorio PC: abre la ficha oficial de Play Store
         window.open('https://play.google.com/store/apps/details?id=' + pkg, '_blank');
       }
     }
