@@ -315,10 +315,23 @@
       }
       if (lower.includes('santander')) return 'Banco Santander';
       if (lower.includes('chile') || lower.includes('edwards')) return 'Banco de Chile';
-      if (lower.includes('bci')) return 'BCI';
+      if (lower.includes('bci') || lower === 'banco de credito e inversiones') return 'BCI';
       if (lower.includes('falabella')) return 'Banco Falabella';
       if (lower.includes('scotia')) return 'Scotiabank';
       if (lower.includes('itau') || lower.includes('itaú')) return 'Banco Itaú';
+      if (lower.includes('ripley')) return 'Banco Ripley';
+      if (lower.includes('security')) return 'Banco Security';
+      if (lower.includes('bice')) return 'Banco BICE';
+      if (lower.includes('consorcio')) return 'Banco Consorcio';
+      if (lower.includes('internacional')) return 'Banco Internacional';
+      if (lower.includes('global') || lower.includes('global66')) return 'Global66';
+      if (lower.includes('tenpo')) return 'Tenpo';
+      if (lower.includes('mach')) return 'MACH';
+      if (lower.includes('mercado') || lower.includes('mercadopago')) return 'Mercado Pago';
+      if (lower.includes('coopeuch')) return 'Coopeuch';
+      if (lower.includes('chek')) return 'Chek';
+      if (lower.includes('tapp')) return 'Tapp';
+      if (lower.includes('copec')) return 'Copec Pay';
       return clean;
     }
 
