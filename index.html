@@ -202,6 +202,57 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Modal Asistente Exclusivo Mercado Pago */
+    .mp-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .mp-modal-box {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 24px 20px;
+      max-width: 390px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+      animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .mp-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .mp-modal-close {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -298,6 +349,51 @@
   </div>
 
   <div id="toast" class="toast">¡Copiado!</div>
+
+  <!-- MODAL ESPECIAL ASISTENTE MERCADO PAGO -->
+  <div id="mp-modal" class="mp-modal-backdrop">
+    <div class="mp-modal-box">
+      <div class="mp-modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 22px;">💙</span>
+          <span style="font-weight: 800; font-size: 17px; color: #009ee3;">Mercado Pago Asistente</span>
+        </div>
+        <button type="button" class="mp-modal-close" onclick="closeMpModal()">&times;</button>
+      </div>
+
+      <p style="font-size: 13px; color: #475569; margin: 12px 0 14px 0; line-height: 1.45;">
+        A diferencia de otros bancos, Mercado Pago <b>no lee bloques de texto largo</b> en su buscador; solo acepta el RUT limpio.
+      </p>
+
+      <div style="background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px;">
+        <div style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px;">
+          Paso 1: RUT Listo en Portapapeles
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+          <span id="mp-rut-display" style="font-size: 16px; font-weight: 800; color: #0f172a;">--</span>
+          <button type="button" id="btn-mp-rut" class="btn-copy-small copied" onclick="copyMpField('rut', this)">Copiado ✔</button>
+        </div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Pégalo en el buscador "¿A quién le transfieres?"</div>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+          Paso 2: Si te pide cuenta externa
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+          <div>
+            <div id="mp-bank-display" style="font-size: 12px; font-weight: 700; color: #334155;">--</div>
+            <div id="mp-acc-display" style="font-size: 14px; font-weight: 800; color: #0f172a;">--</div>
+          </div>
+          <button type="button" id="btn-mp-acc" class="btn-copy-small" onclick="copyMpField('acc', this)">Copiar Cuenta</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn-hero-copy" style="background: #009ee3; width: 100%; box-shadow: 0 4px 15px rgba(0, 158, 227, 0.35);" onclick="launchMercadoPagoApp()">
+        Abrir Mercado Pago Ahora 🚀
+      </button>
+    </div>
+  </div>
 
   <script>
     var searchStr = window.location.search || '';
@@ -472,6 +568,11 @@
     }
 
     function openBankApp(pkg, scheme) {
+      if (pkg === 'com.mercadopago.wallet') {
+        openMercadoPagoAssistant();
+        return;
+      }
+
       var isAndroid = navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1;
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -483,6 +584,69 @@
       } else {
         // En navegador de escritorio PC: abre la ficha oficial de Play Store
         window.open('https://play.google.com/store/apps/details?id=' + pkg, '_blank');
+      }
+    }
+
+    function openMercadoPagoAssistant() {
+      // Mercado Pago exige RUT limpio en su buscador (rechaza bloques de texto largo con 'Nombre:' o 'Banco:')
+      var cleanRut = rutVal.replace(/\./g, '').trim();
+      universalCopy(cleanRut, null);
+
+      document.getElementById('mp-rut-display').textContent = cleanRut;
+      document.getElementById('mp-bank-display').textContent = normalizeBankName(bankVal) + ' (' + typeVal + ')';
+      document.getElementById('mp-acc-display').textContent = 'N°: ' + accountVal;
+
+      var btnRut = document.getElementById('btn-mp-rut');
+      if (btnRut) {
+        btnRut.textContent = 'Copiado ✔';
+        btnRut.className = 'btn-copy-small copied';
+      }
+
+      var modal = document.getElementById('mp-modal');
+      modal.style.display = 'flex';
+      showToast('💙 RUT ' + cleanRut + ' listo para Mercado Pago');
+    }
+
+    function closeMpModal() {
+      document.getElementById('mp-modal').style.display = 'none';
+    }
+
+    function copyMpField(field, btn) {
+      var text = '';
+      var label = '';
+      if (field === 'rut') {
+        text = rutVal.replace(/\./g, '').trim();
+        label = 'RUT';
+      } else if (field === 'acc') {
+        text = accountVal.trim();
+        label = 'N° de Cuenta';
+      }
+
+      universalCopy(text, null).then(function() {
+        showToast('✅ ' + label + ' copiado');
+        if (btn) {
+          var orig = btn.textContent;
+          btn.textContent = '¡Listo!';
+          btn.className = 'btn-copy-small copied';
+          setTimeout(function() {
+            btn.textContent = orig;
+            btn.className = 'btn-copy-small';
+          }, 1500);
+        }
+      });
+    }
+
+    function launchMercadoPagoApp() {
+      closeMpModal();
+      var isAndroid = navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1;
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      if (isAndroid) {
+        window.location.href = 'intent://#Intent;package=com.mercadopago.wallet;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.mercadopago.wallet;end';
+      } else if (isIOS) {
+        window.location.href = 'mercadopago://';
+      } else {
+        window.open('https://play.google.com/store/apps/details?id=com.mercadopago.wallet', '_blank');
       }
     }
   </script>
