@@ -306,6 +306,10 @@
     }
     var params = new URLSearchParams(searchStr);
 
+    if (!params.get('n') && !params.get('r') && !params.get('c')) {
+      window.location.replace('andeslink.html');
+    }
+
     var nameVal = params.get('n') || 'Destinatario';
     var rutVal = params.get('r') || '';
     var bankVal = params.get('b') || 'Banco';
