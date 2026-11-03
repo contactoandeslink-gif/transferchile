@@ -362,30 +362,50 @@
       </div>
 
       <p style="font-size: 13px; color: #475569; margin: 12px 0 14px 0; line-height: 1.45;">
-        A diferencia de otros bancos, Mercado Pago <b>no lee bloques de texto largo</b> en su buscador; solo acepta el RUT limpio.
+        Elige cómo prefieres copiar los datos para pegarlos en el buscador de transferencias de Mercado Pago:
       </p>
 
-      <div style="background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px;">
-        <div style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px;">
-          Paso 1: RUT Listo en Portapapeles
+      <!-- OPCIÓN 1: NOMBRE Y RUT JUNTOS (PRUEBA) -->
+      <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px;">
+        <div style="font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">
+          ⚡ Prueba: Nombre y RUT juntos
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
-          <span id="mp-rut-display" style="font-size: 16px; font-weight: 800; color: #0f172a;">--</span>
-          <button type="button" id="btn-mp-rut" class="btn-copy-small copied" onclick="copyMpField('rut', this)">Copiado ✔</button>
+        <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin: 4px 0;" id="mp-name-rut-display">
+          --
         </div>
-        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Pégalo en el buscador "¿A quién le transfieres?"</div>
+        <div style="display: flex; gap: 6px; margin-top: 6px;">
+          <button type="button" id="btn-mp-both" class="btn-copy-small copied" style="flex: 1;" onclick="copyMpField('both', this)">
+            Copiar Ambos Juntos ✔
+          </button>
+          <button type="button" class="btn-copy-small" style="flex: 1;" onclick="copyMpField('both_lines', this)">
+            En 2 Líneas
+          </button>
+        </div>
       </div>
 
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px;">
-        <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
-          Paso 2: Si te pide cuenta externa
+      <!-- OPCIÓN 2: SOLO RUT O SOLO NOMBRE -->
+      <div style="background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px;">
+        <div style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px;">
+          Copiar por separado (si falla el combinado)
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+          <span id="mp-rut-display" style="font-size: 14px; font-weight: 800; color: #0f172a;">--</span>
+          <button type="button" class="btn-copy-small" onclick="copyMpField('rut', this)">Copiar Solo RUT</button>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+          <span id="mp-name-display" style="font-size: 13px; font-weight: 700; color: #334155;">--</span>
+          <button type="button" class="btn-copy-small" onclick="copyMpField('name', this)">Copiar Solo Nombre</button>
+        </div>
+      </div>
+
+      <!-- OPCIÓN 3: CUENTA EXTERNA -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <div id="mp-bank-display" style="font-size: 12px; font-weight: 700; color: #334155;">--</div>
-            <div id="mp-acc-display" style="font-size: 14px; font-weight: 800; color: #0f172a;">--</div>
+            <div id="mp-bank-display" style="font-size: 11px; font-weight: 700; color: #64748b;">--</div>
+            <div id="mp-acc-display" style="font-size: 13px; font-weight: 800; color: #0f172a;">--</div>
           </div>
-          <button type="button" id="btn-mp-acc" class="btn-copy-small" onclick="copyMpField('acc', this)">Copiar Cuenta</button>
+          <button type="button" class="btn-copy-small" onclick="copyMpField('acc', this)">Copiar Cuenta</button>
         </div>
       </div>
 
@@ -588,23 +608,27 @@
     }
 
     function openMercadoPagoAssistant() {
-      // Mercado Pago exige RUT limpio en su buscador (rechaza bloques de texto largo con 'Nombre:' o 'Banco:')
       var cleanRut = rutVal.replace(/\./g, '').trim();
-      universalCopy(cleanRut, null);
+      var combined = nameVal + ' - ' + cleanRut;
 
-      document.getElementById('mp-rut-display').textContent = cleanRut;
+      // Por defecto para la prueba solicitada: copiamos Nombre y RUT juntos
+      universalCopy(combined, null);
+
+      document.getElementById('mp-name-rut-display').textContent = combined;
+      document.getElementById('mp-rut-display').textContent = 'RUT: ' + cleanRut;
+      document.getElementById('mp-name-display').textContent = 'Nombre: ' + nameVal;
       document.getElementById('mp-bank-display').textContent = normalizeBankName(bankVal) + ' (' + typeVal + ')';
       document.getElementById('mp-acc-display').textContent = 'N°: ' + accountVal;
 
-      var btnRut = document.getElementById('btn-mp-rut');
-      if (btnRut) {
-        btnRut.textContent = 'Copiado ✔';
-        btnRut.className = 'btn-copy-small copied';
+      var btnBoth = document.getElementById('btn-mp-both');
+      if (btnBoth) {
+        btnBoth.textContent = 'Copiado ✔';
+        btnBoth.className = 'btn-copy-small copied';
       }
 
       var modal = document.getElementById('mp-modal');
       modal.style.display = 'flex';
-      showToast('💙 RUT ' + cleanRut + ' listo para Mercado Pago');
+      showToast('📋 Copiado: ' + combined);
     }
 
     function closeMpModal() {
@@ -612,11 +636,22 @@
     }
 
     function copyMpField(field, btn) {
+      var cleanRut = rutVal.replace(/\./g, '').trim();
       var text = '';
       var label = '';
-      if (field === 'rut') {
-        text = rutVal.replace(/\./g, '').trim();
+
+      if (field === 'both') {
+        text = nameVal + ' - ' + cleanRut;
+        label = 'Nombre y RUT';
+      } else if (field === 'both_lines') {
+        text = 'Nombre: ' + nameVal + '\nRUT: ' + cleanRut;
+        label = 'Nombre y RUT (2 líneas)';
+      } else if (field === 'rut') {
+        text = cleanRut;
         label = 'RUT';
+      } else if (field === 'name') {
+        text = nameVal;
+        label = 'Nombre';
       } else if (field === 'acc') {
         text = accountVal.trim();
         label = 'N° de Cuenta';
