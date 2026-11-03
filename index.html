@@ -316,7 +316,7 @@
         <button type="button" class="btn-copy-small" onclick="copyFromInput('val-rut', 'RUT', this)">Copiar</button>
       </div>
 
-      <div class="field-card">
+      <div class="field-card" id="row-account">
         <div class="field-info">
           <div class="field-label">N° de Cuenta</div>
           <input type="text" id="val-account" class="field-input" readonly value="--">
@@ -332,7 +332,7 @@
         <button type="button" class="btn-copy-small" onclick="copyFromInput('val-email', 'Correo', this)">Copiar</button>
       </div>
 
-      <div class="field-card">
+      <div class="field-card" id="row-bank">
         <div class="field-info">
           <div class="field-label">Banco y Tipo</div>
           <input type="text" id="val-bank-desc" class="field-input" readonly value="--">
@@ -399,7 +399,7 @@
       </div>
 
       <!-- OPCIÓN 3: CUENTA EXTERNA -->
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px;">
+      <div id="mp-acc-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div id="mp-bank-display" style="font-size: 11px; font-weight: 700; color: #64748b;">--</div>
@@ -434,10 +434,21 @@
     var emailVal = params.get('e') || '';
 
     document.getElementById('disp-name').textContent = nameVal;
-    document.getElementById('disp-bank-type').textContent = bankVal + ' • ' + typeVal;
     document.getElementById('val-rut').value = rutVal;
-    document.getElementById('val-account').value = accountVal;
-    document.getElementById('val-bank-desc').value = bankVal + ' (' + typeVal + ')';
+
+    if (accountVal) {
+      document.getElementById('val-account').value = accountVal;
+    } else {
+      document.getElementById('row-account').style.display = 'none';
+    }
+
+    if (params.get('b')) {
+      document.getElementById('disp-bank-type').textContent = bankVal + (typeVal ? ' • ' + typeVal : '');
+      document.getElementById('val-bank-desc').value = bankVal + (typeVal ? ' (' + typeVal + ')' : '');
+    } else {
+      document.getElementById('disp-bank-type').style.display = 'none';
+      document.getElementById('row-bank').style.display = 'none';
+    }
 
     if (emailVal) {
       document.getElementById('val-email').value = emailVal;
@@ -528,14 +539,15 @@
     }
 
     function copyAllText() {
-      var bankNameFormatted = normalizeBankName(bankVal);
-      var full = 'Nombre: ' + nameVal + '\n' +
-                 'RUT: ' + rutVal + '\n' +
-                 'Banco: ' + bankNameFormatted + '\n' +
-                 'Tipo de cuenta: ' + typeVal + '\n' +
-                 'Número de cuenta: ' + accountVal + '\n' +
-                 'Correo: ' + emailVal;
-      
+      var parts = [];
+      if (nameVal && nameVal !== 'Destinatario') parts.push('Nombre: ' + nameVal);
+      if (rutVal) parts.push('RUT: ' + rutVal);
+      if (params.get('b')) parts.push('Banco: ' + normalizeBankName(bankVal));
+      if (params.get('t')) parts.push('Tipo de cuenta: ' + typeVal);
+      if (accountVal) parts.push('Número de cuenta: ' + accountVal);
+      if (emailVal) parts.push('Correo: ' + emailVal);
+
+      var full = parts.join('\n');
       var heroBtn = document.getElementById('btn-hero');
       universalCopy(full.trim(), null).then(function() {
         showToast('✅ ¡Datos copiados! Abre tu banco para pegar');
@@ -619,6 +631,11 @@
       document.getElementById('mp-name-display').textContent = 'Nombre: ' + nameVal;
       document.getElementById('mp-bank-display').textContent = normalizeBankName(bankVal) + ' (' + typeVal + ')';
       document.getElementById('mp-acc-display').textContent = 'N°: ' + accountVal;
+
+      var mpAccCard = document.getElementById('mp-acc-card');
+      if (mpAccCard) {
+        mpAccCard.style.display = accountVal ? 'block' : 'none';
+      }
 
       var btnBoth = document.getElementById('btn-mp-both');
       if (btnBoth) {
