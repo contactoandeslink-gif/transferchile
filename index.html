@@ -611,6 +611,28 @@
       }
     }
 
+    var iosAppStoreIds = {
+      'net.veritran.becl.prod': 'id419266657',
+      'cl.santander.smartphone': 'id382029969',
+      'cl.bancochile.mi_banco': 'id384876935',
+      'cl.android': 'id885549005',
+      'cl.bci.app.personas': 'id364906478',
+      'cl.scotiabank.go': 'id1354316827',
+      'com.konylabs.ItauMobileBank': 'id549887010',
+      'cl.bancoripley.appbanco': 'id1023773095',
+      'cl.bice.apppersonas': 'id1140941578',
+      'com.sec.retail': 'id988880620',
+      'cl.consorcio.mobileapp': 'id1212876122',
+      'com.baninter': 'id1459461584',
+      'com.krealo.tenpo': 'id1492336338',
+      'cl.bci.sismo.mach': 'id1289069152',
+      'com.global66.cards': 'id1463990666',
+      'com.mercadopago.wallet': 'id925436649',
+      'com.coopeuchapp': 'id1446702787',
+      'cl.tapp': 'id1527636166',
+      'cl.copec.PagoClick': 'id1108428612'
+    };
+
     function openBankApp(pkg, scheme) {
       if (pkg === 'com.mercadopago.wallet') {
         openMercadoPagoAssistant();
@@ -624,7 +646,18 @@
         // En Android: si la app está instalada, se abre en el acto. Si no, va directo a Google Play Store
         window.location.href = 'intent://#Intent;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
       } else if (isIOS && scheme) {
-        window.location.href = scheme;
+        var appId = iosAppStoreIds[pkg];
+        if (scheme) {
+          var start = Date.now();
+          window.location.href = scheme;
+          setTimeout(function() {
+            if (Date.now() - start < 2000 && !document.hidden && appId) {
+              window.location.href = 'https://apps.apple.com/cl/app/' + appId;
+            }
+          }, 1500);
+        } else if (appId) {
+          window.location.href = 'https://apps.apple.com/cl/app/' + appId;
+        }
       } else {
         // En navegador de escritorio PC: abre la ficha oficial de Play Store
         window.open('https://play.google.com/store/apps/details?id=' + pkg, '_blank');
