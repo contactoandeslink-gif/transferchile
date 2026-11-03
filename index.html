@@ -351,7 +351,7 @@
   <div id="toast" class="toast">¡Copiado!</div>
 
   <!-- MODAL ESPECIAL ASISTENTE MERCADO PAGO -->
-  <div id="mp-modal" class="mp-modal-backdrop">
+  <div id="mp-modal" class="mp-modal-backdrop" onclick="if(event.target===this)closeMpModal()">
     <div class="mp-modal-box">
       <div class="mp-modal-header">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -416,6 +416,9 @@
       <button type="button" class="btn-hero-copy" style="background: #009ee3; width: 100%; box-shadow: 0 4px 15px rgba(0, 158, 227, 0.35);" onclick="launchMercadoPagoApp()">
         Abrir Mercado Pago Ahora 🚀
       </button>
+      <div style="font-size: 11px; color: #64748b; text-align: center; margin-top: 10px; line-height: 1.4;">
+        💡 Esta guía se quedará abierta aquí para que puedas volver a revisar el Banco o la Cuenta en el Paso 3.
+      </div>
     </div>
   </div>
 
@@ -698,7 +701,7 @@
     }
 
     function launchMercadoPagoApp() {
-      closeMpModal();
+      // Mantenemos el modal abierto para que el usuario pueda volver a copiar los pasos 2 y 3
       var isAndroid = navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('android') > -1;
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
