@@ -19,6 +19,10 @@
       --glass-blur: blur(28px);
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -64,17 +68,17 @@
     /* HEADER MINIMALISTA ESTILO STARLINK */
     header {
       width: 100%;
-      padding: 24px 48px;
+      padding: 20px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      background: rgba(7, 9, 14, 0.4);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(7, 9, 14, 0.65);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .brand-logo {
@@ -108,17 +112,20 @@
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.5px;
-      transition: color 0.2s ease;
+      transition: all 0.2s ease;
+      padding: 6px 10px;
+      border-radius: 6px;
     }
 
     nav a:hover {
       color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .btn-portal {
@@ -356,79 +363,242 @@
       text-align: center;
     }
 
-    /* SECCIÓN DE CARACTERÍSTICAS TÉCNICAS */
-    .specs-section {
-      max-width: 1080px;
-      margin: 80px auto;
+    /* SECCIÓN BASE GENERAL */
+    .section-container {
+      max-width: 1180px;
+      margin: 100px auto;
       padding: 0 24px;
+      scroll-margin-top: 100px;
     }
 
-    .specs-title {
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-tag {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: #8f9bb3;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .spec-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 16px;
-      padding: 24px;
-      backdrop-filter: blur(16px);
-      transition: all 0.2s ease;
-    }
-
-    .spec-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.18);
-    }
-
-    .spec-icon {
-      font-size: 26px;
+      color: #00d2ff;
       margin-bottom: 12px;
     }
 
-    .spec-name {
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* SECCIÓN 1: PARA COMERCIOS */
+    .commerce-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .commerce-card {
+      background: rgba(18, 22, 34, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 32px 28px;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .commerce-card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-4px);
+      background: rgba(25, 30, 48, 0.7);
+    }
+
+    .commerce-icon {
+      font-size: 34px;
+      margin-bottom: 20px;
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .commerce-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .commerce-card p {
+      font-size: 14px;
+      color: #b5bdd0;
+      line-height: 1.55;
+    }
+
+    /* SECCIÓN 2: BANCOS COMPATIBLES */
+    .banks-search-bar {
+      max-width: 480px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+
+    .banks-search-input {
+      width: 100%;
+      padding: 14px 20px 14px 46px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 30px;
+      font-size: 14px;
+      color: white;
+      outline: none;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+    }
+
+    .banks-search-input:focus {
+      border-color: #00d2ff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+    }
+
+    .banks-search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8892b0;
+      font-size: 16px;
+    }
+
+    .banks-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .bank-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 12px 22px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+    }
+
+    .bank-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #00d2ff;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .bank-pill .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00d2ff;
+    }
+
+    /* SECCIÓN 3: SEGURIDAD */
+    .security-container {
+      background: linear-gradient(135deg, rgba(20, 26, 45, 0.7) 0%, rgba(10, 14, 25, 0.85) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px;
+      padding: 48px 40px;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+
+    .security-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-top: 36px;
+    }
+
+    .security-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .security-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(0, 210, 255, 0.15);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: #00d2ff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .security-content h4 {
       font-size: 17px;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 6px;
     }
 
-    .spec-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.45;
+    .security-content p {
+      font-size: 14px;
+      color: #a0aec0;
+      line-height: 1.5;
     }
 
     /* FOOTER */
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 40px 24px;
+      padding: 48px 24px;
       text-align: center;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.45);
       font-size: 12px;
       letter-spacing: 0.5px;
+      margin-top: 120px;
+      background: rgba(7, 9, 14, 0.8);
+      backdrop-filter: blur(12px);
     }
 
     /* RESPONSIVE */
-    @media (max-width: 768px) {
-      header { padding: 18px 20px; }
+    @media (max-width: 820px) {
+      header { padding: 16px 20px; }
       nav { display: none; }
       .hero { padding: 40px 16px; }
       .card-starlink { padding: 28px 22px; min-height: 340px; }
       .card-title { font-size: 26px; }
+      .security-container { padding: 32px 20px; }
     }
   </style>
 </head>
@@ -436,7 +606,7 @@
 
   <div class="hero-bg"></div>
 
-  <!-- HEADER -->
+  <!-- HEADER NAVEGABLE CON SCROLL SUAVE -->
   <header>
     <a href="andeslink.html" class="brand-logo">
       ANDES<span>LINK</span>
@@ -452,8 +622,8 @@
     </div>
   </header>
 
-  <!-- HERO PRINCIPAL -->
-  <main class="hero">
+  <!-- HERO PRINCIPAL (TRANSFERCHILE) -->
+  <main class="hero" id="transferchile">
     <div class="hero-badge">
       <div class="dot"></div>
       Ecosistema AndesLink • Chile 2026
@@ -465,7 +635,7 @@
     </p>
 
     <!-- LAS 2 TARJETAS FROSTED GLASS AL ESTILO STARLINK -->
-    <div class="cards-grid" id="transferchile">
+    <div class="cards-grid">
       
       <!-- TARJETA 1 (DESTACADA / DESCARGA APP) -->
       <div class="card-starlink card-primary">
@@ -514,29 +684,112 @@
     </div>
   </main>
 
-  <!-- ESPECIFICACIONES TÉCNICAS -->
-  <section class="specs-section">
-    <div class="specs-title">Tecnología Diseñada para el Comercio Chileno</div>
-    <div class="specs-grid">
-      <div class="spec-item">
-        <div class="spec-icon">⚡</div>
-        <div class="spec-name">Copia en 1 Toque</div>
-        <div class="spec-desc">Formato estándar que los bancos reconocen en el portapapeles para auto-rellenar 5 campos en un instante.</div>
+  <!-- SECCIÓN 1: PARA COMERCIOS -->
+  <section class="section-container" id="comercios">
+    <div class="section-header">
+      <div class="section-tag">Solución para Negocios y Pymes</div>
+      <h2 class="section-title">Diseñado para el Mostrador y la Atención Rápida</h2>
+      <p class="section-subtitle">
+        Cobra sin filas de espera, sin que el cliente tipee mal tu RUT o cuenta y sin pagar comisiones por máquinas de tarjetas.
+      </p>
+    </div>
+
+    <div class="commerce-grid">
+      <div class="commerce-card">
+        <div class="commerce-icon">💰</div>
+        <h3>Cero Comisiones por Venta</h3>
+        <p>A diferencia de las máquinas de tarjetas de crédito o débito (que cobran hasta un 3% por cada compra), las transferencias llegan 100% íntegras y directas a tu cuenta.</p>
       </div>
-      <div class="spec-item">
-        <div class="spec-icon">🏦</div>
-        <div class="spec-name">20 Bancos Oficiales</div>
-        <div class="spec-desc">Apertura directa de Banco Estado, Banco de Chile, Santander, Falabella, BCI, MACH, Tenpo y más.</div>
+
+      <div class="commerce-card">
+        <div class="commerce-icon">📲</div>
+        <h3>QR de Mostrador Listo</h3>
+        <p>Coloca tu código QR en tu mostrador o caja. El cliente enfoca con la cámara de su celular y todos tus datos bancarios se cargan en su pantalla al instante.</p>
       </div>
-      <div class="spec-item">
-        <div class="spec-icon">🔒</div>
-        <div class="spec-name">100% Seguro</div>
-        <div class="spec-desc">Nunca te pide claves de acceso ni contraseñas. Tus datos permanecen siempre en tu dispositivo.</div>
+
+      <div class="commerce-card">
+        <div class="commerce-icon">💬</div>
+        <h3>Cobro por WhatsApp</h3>
+        <p>Para ventas por delivery, Instagram o mensajes directos: toca un botón y envía un enlace limpio con tus datos listos para copiar con 1 solo toque.</p>
       </div>
-      <div class="spec-item">
-        <div class="spec-icon">📶</div>
-        <div class="spec-name">Modo Offline Total</div>
-        <div class="spec-desc">Genera QRs y comparte datos sin depender de internet o de servidores caídos en ferias o locales.</div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: BANCOS COMPATIBLES -->
+  <section class="section-container" id="bancos">
+    <div class="section-header">
+      <div class="section-tag">Cobertura Nacional CMF</div>
+      <h2 class="section-title">Compatible con el 100% de los Bancos Chilenos</h2>
+      <p class="section-subtitle">
+        Tus clientes pueden pagarte desde cualquier aplicación bancaria oficial. El sistema abre su banco directamente en su teléfono.
+      </p>
+    </div>
+
+    <!-- Buscador en tiempo real de bancos -->
+    <div class="banks-search-bar">
+      <span class="banks-search-icon">🔍</span>
+      <input type="text" id="bank-filter" class="banks-search-input" placeholder="Buscar banco (ej: Falabella, Tenpo, Estado...)" onkeyup="filterBankPills()">
+    </div>
+
+    <div class="banks-cloud" id="banks-cloud-list">
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Estado (CuentaRUT)</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Santander</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco de Chile / Edwards</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Falabella</div>
+      <div class="bank-pill"><span class="badge-dot"></span>BCI</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Scotiabank Chile</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Itaú</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Ripley</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco BICE</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Security</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Consorcio</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Banco Internacional</div>
+      <div class="bank-pill"><span class="badge-dot"></span>BTG Pactual</div>
+      <div class="bank-pill"><span class="badge-dot"></span>MACH (BCI)</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Tenpo</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Global66</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Mercado Pago</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Coopeuch</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Tapp (Caja Los Andes)</div>
+      <div class="bank-pill"><span class="badge-dot"></span>Copec Pay</div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: SEGURIDAD -->
+  <section class="section-container" id="seguridad">
+    <div class="security-container">
+      <div class="section-header" style="margin-bottom: 20px;">
+        <div class="section-tag">Protección & Confianza</div>
+        <h2 class="section-title">Seguridad Blindada para tu Dinero</h2>
+        <p class="section-subtitle">
+          El protocolo de TransferChile está pensado para proteger a los comercios de estafas con comprobantes falsos y transferencias programadas.
+        </p>
+      </div>
+
+      <div class="security-points">
+        <div class="security-item">
+          <div class="security-num">01</div>
+          <div class="security-content">
+            <h4>Cero Solicitud de Claves</h4>
+            <p>La aplicación jamás te pedirá tus contraseñas, claves de internet ni claves de transferencias. Funciona 100% con datos públicos de cobro (RUT, Nombre y Cuenta).</p>
+          </div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-num">02</div>
+          <div class="security-content">
+            <h4>Regla de Oro Antifraude</h4>
+            <p>Capacitamos a tu equipo: nunca entregar productos mirando la pantalla del cliente. Espera siempre la notificación oficial en la barra de tu propio banco antes de despachar.</p>
+          </div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-num">03</div>
+          <div class="security-content">
+            <h4>Almacenamiento Local</h4>
+            <p>Tus cuentas bancarias se guardan en la memoria encriptada de tu teléfono, sin enviarse a servidores de terceros ni bases de datos externas.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -546,6 +799,21 @@
     <p>ANDESLINK © 2026 • Red de Soluciones Digitales • Villarrica / Santiago de Chile</p>
     <p style="margin-top: 6px; font-size: 11px; opacity: 0.6;">TransferChile es un desarrollo oficial de AndesLink para la modernización de cobros.</p>
   </footer>
+
+  <script>
+    function filterBankPills() {
+      var query = document.getElementById('bank-filter').value.toLowerCase().trim();
+      var pills = document.querySelectorAll('#banks-cloud-list .bank-pill');
+      for (var i = 0; i < pills.length; i++) {
+        var text = pills[i].textContent.toLowerCase();
+        if (text.indexOf(query) > -1) {
+          pills[i].style.display = 'flex';
+        } else {
+          pills[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
 
 </body>
 </html>
