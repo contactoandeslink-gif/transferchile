@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANDESLINK | Tecnología Digital & TransferChile</title>
+  <meta name="description" content="AndesLink - Soluciones tecnológicas de alta velocidad. Descarga TransferChile para cobros instantáneos en 1 toque.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --text-main: #ffffff;
+      --text-muted: #a0a6b5;
+      --accent-blue: #0080ff;
+      --glass-border: rgba(255, 255, 255, 0.14);
+      --glass-bg: rgba(18, 22, 34, 0.65);
+      --glass-blur: blur(28px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fondo cinemático estilo Starlink (Atardecer en la Cordillera de los Andes) */
+    .hero-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.35) 0%, transparent 50%),
+        radial-gradient(circle at 75% 30%, rgba(255, 94, 98, 0.28) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(0, 128, 255, 0.25) 0%, transparent 55%),
+        linear-gradient(180deg, #090c15 0%, #171b2d 45%, #2a2038 75%, #08090f 100%);
+      background-attachment: fixed;
+    }
+
+    /* Silueta sutil de montaña / atmósfera */
+    .hero-bg::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 45%;
+      background: linear-gradient(to top, rgba(7, 9, 14, 0.95), transparent);
+    }
+
+    /* HEADER MINIMALISTA ESTILO STARLINK */
+    header {
+      width: 100%;
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(7, 9, 14, 0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .brand-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 5px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo span {
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    nav a {
+      color: #cfd4e2;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: #ffffff;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-portal {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .btn-portal:hover {
+      background: white;
+      color: black;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 70px 24px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #b5c7e8;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      background: #00ff88;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00ff88;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.08;
+      max-width: 900px;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 40%, #b8c3d9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.5;
+      margin-bottom: 50px;
+      font-weight: 400;
+    }
+
+    /* TARJETAS GLASSMORPHISM ESTILO STARLINK */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 480px));
+      gap: 28px;
+      width: 100%;
+      max-width: 1020px;
+      justify-content: center;
+    }
+
+    .card-starlink {
+      border-radius: 24px;
+      padding: 38px 34px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 380px;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-starlink:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Tarjeta 1: Iluminada / Gradiente Starlink */
+    .card-primary {
+      background: 
+        linear-gradient(135deg, rgba(142, 68, 173, 0.42) 0%, rgba(235, 77, 75, 0.28) 50%, rgba(20, 24, 40, 0.7) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Tarjeta 2: Frosted Dark Starlink */
+    .card-secondary {
+      background: rgba(18, 22, 34, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: #d1d6e3;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    /* Acciones dentro de las tarjetas */
+    .card-action-box {
+      margin-top: auto;
+    }
+
+    .action-input-wrapper {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .action-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: white;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .action-input:focus {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: white;
+    }
+
+    .btn-starlink-white {
+      width: 100%;
+      background: #ffffff;
+      color: #05070c;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+      transition: all 0.2s ease;
+    }
+
+    .btn-starlink-white:hover {
+      background: #f0f2f5;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(255, 255, 255, 0.35);
+    }
+
+    .btn-starlink-glass {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-starlink-glass:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: white;
+      transform: translateY(-2px);
+    }
+
+    .card-footer-meta {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* SECCIÓN DE CARACTERÍSTICAS TÉCNICAS */
+    .specs-section {
+      max-width: 1080px;
+      margin: 80px auto;
+      padding: 0 24px;
+    }
+
+    .specs-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #8f9bb3;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .spec-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      transition: all 0.2s ease;
+    }
+
+    .spec-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .spec-icon {
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .spec-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .spec-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 40px 24px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      header { padding: 18px 20px; }
+      nav { display: none; }
+      .hero { padding: 40px 16px; }
+      .card-starlink { padding: 28px 22px; min-height: 340px; }
+      .card-title { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero-bg"></div>
+
+  <!-- HEADER -->
+  <header>
+    <a href="andeslink.html" class="brand-logo">
+      ANDES<span>LINK</span>
+    </a>
+    <nav>
+      <a href="#transferchile">TransferChile</a>
+      <a href="#comercios">Para Comercios</a>
+      <a href="#bancos">Bancos Compatibles</a>
+      <a href="#seguridad">Seguridad</a>
+    </nav>
+    <div class="header-actions">
+      <a href="TransferChile.apk" download="TransferChile.apk" class="btn-portal">Descargar APK</a>
+    </div>
+  </header>
+
+  <!-- HERO PRINCIPAL -->
+  <main class="hero">
+    <div class="hero-badge">
+      <div class="dot"></div>
+      Ecosistema AndesLink • Chile 2026
+    </div>
+
+    <h1 class="hero-title">Cobros y Transferencias a la Velocidad de la Luz</h1>
+    <p class="hero-subtitle">
+      Elimina el digitado manual de cuentas y errores de transferencia. Conecta tus datos bancarios en 1 toque con cualquier cliente o banco de Chile.
+    </p>
+
+    <!-- LAS 2 TARJETAS FROSTED GLASS AL ESTILO STARLINK -->
+    <div class="cards-grid" id="transferchile">
+      
+      <!-- TARJETA 1 (DESTACADA / DESCARGA APP) -->
+      <div class="card-starlink card-primary">
+        <div>
+          <div class="card-header-tag">Aplicación Móvil Oficial</div>
+          <h2 class="card-title">TransferChile App</h2>
+          <p class="card-desc">
+            Para comerciantes, ferias y personas. Genera códigos QR de mostrador y enlaces inteligentes para WhatsApp en segundos.
+          </p>
+        </div>
+
+        <div class="card-action-box">
+          <a href="TransferChile.apk" download="TransferChile.apk" class="btn-starlink-white">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Descargar APK Oficial
+          </a>
+          <div class="card-footer-meta">Versión 1.1 Limpia • Android 8.0+ • Cero Bloqueos</div>
+        </div>
+      </div>
+
+      <!-- TARJETA 2 (PAGOS WEB / DEMO) -->
+      <div class="card-starlink card-secondary">
+        <div>
+          <div class="card-header-tag">Experiencia Web Universal</div>
+          <h2 class="card-title">Cobro sin Apps</h2>
+          <p class="card-desc">
+            Tus clientes no necesitan instalar nada. Al escanear tu QR o abrir tu link, tocan <b>Copiar Todo</b> y su banco se auto-rellena al instante.
+          </p>
+        </div>
+
+        <div class="card-action-box">
+          <div class="action-input-wrapper">
+            <input type="text" class="action-input" value="https://contactoandeslink-gif.github.io/transferchile/" readonly>
+          </div>
+          <a href="index.html?n=Isaac&r=18345678-9&b=BancoEstado&t=CuentaRUT&c=18345678&e=contacto@andeslink.net" class="btn-starlink-glass">
+            <span>⚡ Ver Demo en Vivo</span>
+          </a>
+          <div class="card-footer-meta">Compatible con BancoEstado, Santander, Falabella, MACH y 20+</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ESPECIFICACIONES TÉCNICAS -->
+  <section class="specs-section">
+    <div class="specs-title">Tecnología Diseñada para el Comercio Chileno</div>
+    <div class="specs-grid">
+      <div class="spec-item">
+        <div class="spec-icon">⚡</div>
+        <div class="spec-name">Copia en 1 Toque</div>
+        <div class="spec-desc">Formato estándar que los bancos reconocen en el portapapeles para auto-rellenar 5 campos en un instante.</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon">🏦</div>
+        <div class="spec-name">20 Bancos Oficiales</div>
+        <div class="spec-desc">Apertura directa de Banco Estado, Banco de Chile, Santander, Falabella, BCI, MACH, Tenpo y más.</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon">🔒</div>
+        <div class="spec-name">100% Seguro</div>
+        <div class="spec-desc">Nunca te pide claves de acceso ni contraseñas. Tus datos permanecen siempre en tu dispositivo.</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon">📶</div>
+        <div class="spec-name">Modo Offline Total</div>
+        <div class="spec-desc">Genera QRs y comparte datos sin depender de internet o de servidores caídos en ferias o locales.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>ANDESLINK © 2026 • Red de Soluciones Digitales • Villarrica / Santiago de Chile</p>
+    <p style="margin-top: 6px; font-size: 11px; opacity: 0.6;">TransferChile es un desarrollo oficial de AndesLink para la modernización de cobros.</p>
+  </footer>
+
+</body>
+</html>

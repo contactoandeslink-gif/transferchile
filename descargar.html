@@ -3,192 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Descargar TransferChile Oficial | App de Cobro y Radar Antifraude</title>
-  <meta name="description" content="Descarga la aplicación oficial de TransferChile para Android. Cobra por transferencia en 1 toque con QR y verificación antifraude.">
+  <title>Descargar TransferChile | ANDESLINK</title>
+  <meta name="description" content="Descarga oficial de TransferChile por AndesLink. Cobros en 1 toque y auto-rellenado bancario en Chile.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #0056b3;
-      --primary-hover: #004085;
-      --accent: #28a745;
-      --accent-hover: #218838;
-      --bg: #f4f6fa;
-      --card-bg: #ffffff;
-      --text: #1a1a1a;
-      --text-muted: #666666;
-      --border: #e2e8f0;
+      --bg-dark: #07090e;
+      --text-main: #ffffff;
+      --text-muted: #a0a6b5;
+      --glass-border: rgba(255, 255, 255, 0.14);
+      --glass-bg: rgba(18, 22, 34, 0.65);
+      --glass-blur: blur(28px);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
     body {
-      background-color: var(--bg);
-      color: var(--text);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      padding: 24px 16px;
+      justify-content: center;
+      padding: 30px 16px;
+      position: relative;
     }
-    .card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    .hero-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background: 
+        radial-gradient(circle at 30% 35%, rgba(138, 43, 226, 0.35) 0%, transparent 50%),
+        radial-gradient(circle at 75% 30%, rgba(255, 94, 98, 0.28) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(0, 128, 255, 0.25) 0%, transparent 55%),
+        linear-gradient(180deg, #090c15 0%, #171b2d 45%, #2a2038 75%, #08090f 100%);
+    }
+    .card-starlink {
+      background: linear-gradient(135deg, rgba(142, 68, 173, 0.42) 0%, rgba(235, 77, 75, 0.25) 50%, rgba(18, 22, 34, 0.75) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 28px;
+      padding: 42px 32px;
+      max-width: 480px;
       width: 100%;
-      max-width: 440px;
-      padding: 32px 24px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
       text-align: center;
-      border: 1px solid var(--border);
     }
-    .logo-badge {
-      width: 72px;
-      height: 72px;
-      background: linear-gradient(135deg, #0056b3, #0080ff);
-      color: white;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-      margin: 0 auto 16px;
-      box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
-    }
-    h1 { font-size: 22px; font-weight: 800; color: #111; margin-bottom: 6px; }
-    .tagline { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.4; }
-    
-    .btn-download {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      background: var(--accent);
-      color: white;
-      padding: 16px 20px;
-      border-radius: 14px;
-      font-size: 17px;
+    .brand-tag {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
       font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .tagline {
+      font-size: 14px;
+      color: #d1d6e3;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .btn-download {
+      background: #ffffff;
+      color: #05070c;
+      padding: 18px 28px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       text-decoration: none;
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 6px 25px rgba(255, 255, 255, 0.3);
       transition: all 0.2s ease;
       cursor: pointer;
     }
-    .btn-download:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-download:hover {
+      background: #f0f2f5;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.45);
+    }
     .btn-download:active { transform: scale(0.98); }
-    
-    .file-meta {
+    .meta {
       font-size: 12px;
-      color: #888;
-      margin-top: 8px;
-      margin-bottom: 28px;
-    }
-
-    .features {
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 16px;
-      text-align: left;
-      margin-bottom: 24px;
-      border: 1px solid #edf2f7;
-    }
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: #333;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-    .feature-item:last-child { margin-bottom: 0; }
-    .feature-icon { font-size: 18px; }
-
-    .steps-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 10px;
+      margin-bottom: 26px;
     }
     .steps {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: left;
+      font-size: 13px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      text-align: left;
-      font-size: 13px;
-      color: #444;
     }
     .step {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: #ffffff;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #eef2f6;
+      align-items: center;
+      gap: 12px;
     }
     .step-num {
-      background: #eef2fa;
-      color: var(--primary);
-      font-weight: 800;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      font-weight: 800;
       font-size: 12px;
+      flex-shrink: 0;
     }
-    
-    footer {
+    .back-link {
       margin-top: 24px;
       font-size: 12px;
-      color: #999;
-      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      letter-spacing: 0.5px;
     }
+    .back-link:hover { color: #fff; }
   </style>
 </head>
 <body>
+  <div class="hero-bg"></div>
 
-  <div class="card">
-    <div class="logo-badge">⚡</div>
+  <div class="card-starlink">
+    <div class="brand-tag">A N D E S L I N K</div>
     <h1>TransferChile</h1>
-    <p class="tagline">La app oficial para cobrar por transferencia en 1 toque y verificar abonos reales con Radar Antifraude.</p>
+    <p class="tagline">La app oficial para cobrar por transferencia en 1 toque. Comparte tu QR o link y tus clientes pegan todo automáticamente en su banco.</p>
 
-    <!-- Botón de Descarga Directa -->
     <a href="TransferChile.apk" download="TransferChile.apk" class="btn-download">
-      <span>📥</span> Descargar para Android
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      Descargar para Android
     </a>
-    <div class="file-meta">Versión 1.1 Oficial • Android 8.0+ • ~19.8 MB</div>
+    <div class="meta">Versión 1.1 Oficial • Android 8.0+ • Cero Bloqueos</div>
 
-    <!-- Beneficios Clave -->
-    <div class="features">
-      <div class="feature-item"><span class="feature-icon">🛡️</span> Radar Antifraude: confirma abonos bancarios reales</div>
-      <div class="feature-item"><span class="feature-icon">📱</span> QR y Link de WhatsApp sin errores ni teclear cuentas</div>
-      <div class="feature-item"><span class="feature-icon">🏦</span> Compatible con BancoEstado, Santander, Falabella y todos</div>
-      <div class="feature-item"><span class="feature-icon">🔒</span> 100% Seguro: no pide claves de tus bancos</div>
-    </div>
-
-    <!-- Guía de 3 pasos -->
-    <div class="steps-title">¿Cómo instalar en 3 pasos?</div>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <div>Toca el botón verde <b>Descargar</b> arriba.</div>
+        <div>Toca <b>Descargar para Android</b> arriba.</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <div>Si Android pregunta <i>"¿Descargar de todos modos?"</i>, dale a <b>Aceptar / Continuar</b>.</div>
+        <div>Si Chrome pregunta <i>"¿Descargar de todos modos?"</i>, dale a <b>Aceptar</b>.</div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <div>Abre la descarga y presiona <b>Instalar</b>. ¡Listo!</div>
+        <div>Abre el archivo descargado y presiona <b>Instalar</b>. ¡Listo!</div>
       </div>
     </div>
+
+    <div style="margin-top: 20px;">
+      <a href="andeslink.html" class="back-link">← Conocer más sobre el ecosistema AndesLink</a>
+    </div>
   </div>
-
-  <footer>
-    TransferChile © 2026 • Soluciones Digitales para Comercios
-  </footer>
-
 </body>
 </html>
