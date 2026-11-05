@@ -37,9 +37,18 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow-x: clip;
+      max-width: 100%;
       position: relative;
     }
+
+    /* FIX RESPONSIVE: nada puede ser más ancho que la pantalla del teléfono */
+    html { overflow-x: clip; }
+    .card-starlink, .hero, .section-container, .header, .cards-grid, main { min-width: 0; max-width: 100%; }
+    h1, h2, h3, p, a, .hero-subtitle, .section-subtitle { overflow-wrap: break-word; }
+    .btn-starlink-white, .btn-starlink-glass { flex-wrap: wrap; }
+    .hero-bg { width: 100%; }
+    input, img, svg { max-width: 100%; }
 
     /* Fondo cinemático estilo Starlink (Atardecer en la Cordillera de los Andes) */
     .hero-bg {
@@ -211,7 +220,7 @@
     /* TARJETAS GLASSMORPHISM ESTILO STARLINK */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 480px));
+      grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 480px));
       gap: 28px;
       width: 100%;
       max-width: 1020px;
@@ -235,10 +244,10 @@
       transform: translateY(-4px);
     }
 
-    /* Tarjeta 1: Iluminada / Gradiente Starlink */
+    /* Tarjeta 1: sobria, acento único cian */
     .card-primary {
       background:
-        linear-gradient(135deg, rgba(142, 68, 173, 0.42) 0%, rgba(235, 77, 75, 0.28) 50%, rgba(20, 24, 40, 0.7) 100%);
+        linear-gradient(135deg, rgba(142, 68, 173, 0.20) 0%, rgba(58, 68, 120, 0.16) 50%, rgba(20, 24, 40, 0.72) 100%);
       border: 1px solid rgba(255, 255, 255, 0.22);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
@@ -405,6 +414,46 @@
       margin: 0 auto;
       line-height: 1.5;
     }
+
+    /* SECCIÓN CAPTURAS: mockups fieles a la app (mismos colores del código) */
+    .shots-section { max-width: 1180px; margin: 40px auto 0; padding: 0 24px; }
+    .shots-row { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; margin-top: 36px; }
+    .phone {
+      width: 250px; border-radius: 36px; padding: 14px 12px 18px;
+      background: #0d1117; border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+    .phone-screen {
+      border-radius: 26px; background: #f6f7fb; overflow: hidden;
+      padding: 14px 12px 18px; min-height: 430px;
+    }
+    .phone-notch { width: 70px; height: 5px; border-radius: 3px; background: #2a2f3a; margin: 0 auto 12px; }
+    .app-topbar { display: flex; align-items: center; gap: 7px; margin-bottom: 14px; }
+    .app-logo { width: 22px; height: 22px; border-radius: 6px; background: linear-gradient(135deg, #007AFF, #5856D6); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 800; }
+    .app-title { font-weight: 800; font-size: 13px; color: #111827; }
+    .wallet-card {
+      border-radius: 18px; padding: 16px 14px; color: #fff;
+      background: linear-gradient(135deg, #FF6D00 0%, #E65100 55%, #BF360C 100%);
+      box-shadow: 0 10px 22px rgba(191, 54, 12, 0.35);
+    }
+    .wc-bank { font-weight: 800; font-size: 14px; }
+    .wc-name { font-weight: 700; font-size: 13px; margin-top: 8px; }
+    .wc-detail { font-size: 11px; opacity: 0.92; margin-top: 2px; }
+    .wc-btns { display: flex; gap: 8px; margin-top: 12px; }
+    .wc-btn { flex: 1; border-radius: 10px; padding: 9px 0; text-align: center; font-size: 11px; font-weight: 700; }
+    .wc-btn.white { background: #fff; color: #111; }
+    .wc-btn.green { background: #25D366; color: #fff; }
+    .wc-btn.line { border: 1px solid rgba(255,255,255,0.55); color: #fff; margin-top: 8px; }
+    .assist-card { background: #dbe4ff; border-radius: 14px; padding: 12px; margin-bottom: 12px; }
+    .assist-name { font-weight: 800; font-size: 13px; color: #1a2340; }
+    .assist-sub { font-size: 11px; color: #3b4668; margin-top: 2px; }
+    .copy-row { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e5ee; border-radius: 10px; padding: 8px 10px; margin-top: 8px; background: #fff; }
+    .copy-label { font-size: 9px; color: #6b7280; }
+    .copy-value { font-size: 12px; font-weight: 700; color: #111827; }
+    .copy-btn { background: #e8ebf4; border-radius: 8px; font-size: 10px; font-weight: 700; color: #1a2340; padding: 5px 9px; }
+    .assist-cta { background: #007AFF; color: #fff; border-radius: 12px; text-align: center; padding: 11px 0; font-size: 11px; font-weight: 800; margin-top: 12px; }
+    .shot-caption { text-align: center; font-size: 13px; color: #94a3b8; margin-top: 12px; }
+    @media (max-width: 820px) { .shots-row { gap: 24px; } }
 
     /* SECCIÓN 1: PARA COMERCIOS */
     .commerce-grid {
@@ -664,7 +713,7 @@
             </svg>
             Descargar APK Oficial
           </a>
-          <div class="card-footer-meta">Versión 2.2.8 • Android 8.0+ • Sin comisiones de la app</div>
+          <div class="card-footer-meta">Versión 2.2.9 • Android 8.0+ • Sin comisiones de la app</div>
         </div>
       </div>
 
@@ -691,6 +740,50 @@
 
     </div>
   </main>
+
+  <!-- SECCIÓN CAPTURAS: la app en acción -->
+  <section class="shots-section" id="app">
+    <div class="section-header" style="text-align: center;">
+      <div class="section-tag">La App</div>
+      <h2 class="section-title">Así se ve TransferChile</h2>
+      <p class="section-subtitle">Tus cuentas siempre a mano y un asistente que te deja los datos listos para pegar en tu banco.</p>
+    </div>
+    <div class="shots-row">
+      <div>
+        <div class="phone"><div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="app-topbar"><div class="app-logo">T</div><div class="app-title">TransferChile</div></div>
+          <div class="wallet-card">
+            <div class="wc-bank">Banco Estado</div>
+            <div class="wc-name">Isaac Navarro</div>
+            <div class="wc-detail">CuentaRUT • N° 18345678</div>
+            <div class="wc-detail">RUT: 18.345.678-4</div>
+            <div class="wc-btns">
+              <div class="wc-btn white">Ver QR</div>
+              <div class="wc-btn green">WhatsApp</div>
+            </div>
+            <div class="wc-btn line">Copiar Todos los Datos</div>
+          </div>
+        </div></div>
+        <div class="shot-caption">Mis Cuentas: tu QR y link de cobro</div>
+      </div>
+      <div>
+        <div class="phone"><div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="app-topbar"><div class="app-logo">T</div><div class="app-title">Asistente de Transferencia</div></div>
+          <div class="assist-card">
+            <div class="assist-name">Isaac Navarro</div>
+            <div class="assist-sub">Banco Estado • CuentaRUT</div>
+          </div>
+          <div class="copy-row"><div><div class="copy-label">RUT</div><div class="copy-value">18.345.678-4</div></div><div class="copy-btn">Copiar</div></div>
+          <div class="copy-row"><div><div class="copy-label">N° de Cuenta</div><div class="copy-value">18345678</div></div><div class="copy-btn">Copiar</div></div>
+          <div class="copy-row"><div><div class="copy-label">Nombre</div><div class="copy-value">Isaac Navarro</div></div><div class="copy-btn">Copiar</div></div>
+          <div class="assist-cta">Activar Barra de Copia Flotante</div>
+        </div></div>
+        <div class="shot-caption">Asistente: copia campo por campo</div>
+      </div>
+    </div>
+  </section>
 
   <!-- SECCIÓN 1: PARA COMERCIOS -->
   <section class="section-container" id="comercios">

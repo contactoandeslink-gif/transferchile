@@ -21,6 +21,14 @@
       --glass-blur: blur(28px);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+
+    /* FIX RESPONSIVE: nada puede ser más ancho que la pantalla del teléfono */
+    html, body { overflow-x: clip; max-width: 100%; }
+    .card-starlink, .hero, .section-container, .header, .cards-grid, main { min-width: 0; max-width: 100%; }
+    h1, h2, h3, p, a, .tagline, .meta, .hero-subtitle { overflow-wrap: break-word; }
+    .btn-download { flex-wrap: wrap; }
+    .hero-bg { width: 100%; }
+    input, img, svg { max-width: 100%; }
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
@@ -46,7 +54,7 @@
         linear-gradient(180deg, #090c15 0%, #171b2d 45%, #2a2038 75%, #08090f 100%);
     }
     .card-starlink {
-      background: linear-gradient(135deg, rgba(142, 68, 173, 0.42) 0%, rgba(235, 77, 75, 0.25) 50%, rgba(18, 22, 34, 0.75) 100%);
+      background: linear-gradient(135deg, rgba(142, 68, 173, 0.28) 0%, rgba(58, 68, 120, 0.22) 50%, rgba(18, 22, 34, 0.78) 100%);
       border: 1px solid rgba(255, 255, 255, 0.22);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
@@ -162,15 +170,15 @@
     <h1>TransferChile</h1>
     <p class="tagline">La app oficial para cobrar por transferencia. Comparte tu QR o link y tus clientes copian tus datos para pegarlos en su banco en segundos.</p>
 
-    <a href="TransferChile.apk?v=2.2.8" download="TransferChile.apk" class="btn-download">
+    <a href="TransferChile.apk?v=2.2.9" download="TransferChile.apk" class="btn-download">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
       </svg>
-      Descargar para Android (v2.2.8)
+      Descargar para Android (v2.2.9)
     </a>
-    <div class="meta">Versión 2.2.8 Oficial • CuentaRUT sin Dígito Verificador • Cero Comisiones</div>
+    <div class="meta">Versión 2.2.9 Oficial • CuentaRUT sin Dígito Verificador • Cero Comisiones</div>
 
     <div class="steps">
       <div class="step">
