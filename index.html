@@ -259,6 +259,11 @@
       line-height: 1;
     }
   </style>
+<style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -273,7 +278,9 @@
       📋 Copiar Datos Completos
     </button>
     <p class="instructions">
-      Al tocar <b>Copiar</b>, abre tu banco y al agregar nuevo contacto <b>se rellenará todo automáticamente</b>.
+      Al tocar <b>Copiar</b>, abre tu banco y <b>pega los datos en el formulario de transferencia</b>.
+      Algunos bancos sugieren autocompletar desde el portapapeles; si no, pégalo tú.
+      Verifica siempre el nombre del destinatario antes de confirmar.
     </p>
 
     <!-- SECCIÓN DE APERTURA DIRECTA DE BANCOS CHILENOS -->
@@ -284,7 +291,7 @@
       <input type="text" id="bank-filter" class="bank-search" placeholder="🔍 Buscar mi banco (ej: Falabella, Tenpo...)" onkeyup="filterBanks()">
 
       <div class="banks-grid" id="banks-container">
-        <!-- Principales Bancos de Chile con Packages oficiales 100% verificados en Google Play -->
+        <!-- Principales Bancos de Chile con paquetes oficiales revisados -->
         <a class="btn-bank" data-name="banco estado cuentarut" href="javascript:void(0)" onclick="openBankApp('net.veritran.becl.prod', 'bancoestado://')">Banco Estado</a>
         <a class="btn-bank" data-name="banco santander" href="javascript:void(0)" onclick="openBankApp('cl.santander.smartphone', 'santandercl://')">Santander</a>
         <a class="btn-bank" data-name="banco de chile edwards mi banco" href="javascript:void(0)" onclick="openBankApp('cl.bancochile.mi_banco', 'bancochile://')">Banco de Chile</a>
@@ -296,8 +303,8 @@
         <a class="btn-bank" data-name="banco bice" href="javascript:void(0)" onclick="openBankApp('cl.bice.apppersonas', 'bice://')">Banco BICE</a>
         <a class="btn-bank" data-name="banco security" href="javascript:void(0)" onclick="openBankApp('com.sec.retail', 'bancosecurity://')">Banco Security</a>
         <a class="btn-bank" data-name="banco consorcio" href="javascript:void(0)" onclick="openBankApp('cl.consorcio.mobileapp', 'bancoconsorcio://')">Banco Consorcio</a>
-        <a class="btn-bank" data-name="banco internacional" href="javascript:void(0)" onclick="openBankApp('com.baninter', 'bancointernacional://')">Internacional</a>
-        <a class="btn-bank" data-name="btg pactual inversiones" href="javascript:void(0)" onclick="openBankApp('com.finmarkets.celfinandroid', 'btgpactual://')">BTG Pactual</a>
+        <!-- Banco Internacional retirado temporalmente: su ficha de App Store no pudo
+             verificarse (el ID anterior apuntaba a otra app). Se repone cuando se confirme. -->        <a class="btn-bank" data-name="btg pactual inversiones" href="javascript:void(0)" onclick="openBankApp('com.finmarkets.celfinandroid', 'btgpactual://')">BTG Pactual</a>
 
         <!-- Cuentas Digitales y Prepago CMF -->
         <a class="btn-bank" data-name="tenpo prepago tarjeta" href="javascript:void(0)" onclick="openBankApp('com.krealo.tenpo', 'tenpo://')">Tenpo</a>
@@ -348,7 +355,7 @@
 
     <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border);">
       <a href="descargar.html" style="font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 700;">
-        ⚡ ¿Cobras con transferencias en tu negocio? <br><span style="text-decoration: underline;">Descarga la App con Radar Antifraude →</span>
+        ⚡ ¿Cobras con transferencias en tu negocio? <br><span style="text-decoration: underline;">Descarga la App TransferChile →</span>
       </a>
     </div>
   </div>
@@ -456,6 +463,54 @@
     var accountVal = params.get('c') || '';
     var emailVal = params.get('e') || '';
 
+    function validRut(value) {
+      var clean = value.replace(/[.\s-]/g, '').toUpperCase();
+      if (!/^\d{1,8}[0-9K]$/.test(clean)) return false;
+      var body = clean.slice(0, -1);
+      if (Number(body) === 0) return false;
+      var sum = 0, factor = 2;
+      for (var i = body.length - 1; i >= 0; i--) {
+        sum += Number(body[i]) * factor;
+        factor = factor === 7 ? 2 : factor + 1;
+      }
+      var dv = 11 - sum % 11;
+      return clean.slice(-1) === (dv === 11 ? '0' : dv === 10 ? 'K' : String(dv));
+    }
+
+    function payloadErrors(values) {
+      var errors = [];
+      ['n', 'r', 'b', 't', 'c'].forEach(function(key) {
+        if (!(values.get(key) || '').trim()) errors.push('Falta un dato obligatorio: ' + key);
+      });
+      ['n', 'r', 'b', 't', 'c', 'e'].forEach(function(key) {
+        if (new Set(values.getAll(key).map(function(v) { return v.trim(); })).size > 1)
+          errors.push('El enlace contiene datos contradictorios: ' + key);
+      });
+      var rut = values.get('r') || '';
+      var number = values.get('c') || '';
+      if (!validRut(rut)) errors.push('RUT inválido');
+      if (!/^[0-9 .-]+$/.test(number) || !/^\d{4,18}$/.test(number.replace(/[ .-]/g, '')))
+        errors.push('Número de cuenta inválido');
+      if ((values.get('t') || '').trim().toLowerCase() === 'cuentarut' &&
+          number.replace(/[ .-]/g, '') !== rut.replace(/[.\s-]/g, '').slice(0, -1))
+        errors.push('La CuentaRUT no coincide con el RUT');
+      var email = values.get('e') || '';
+      if (email && !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
+        errors.push('Correo inválido');
+      return errors;
+    }
+
+    var dataErrors = payloadErrors(params);
+    var reviewNotice = document.createElement('p');
+    reviewNotice.setAttribute('role', 'status');
+    reviewNotice.style.cssText = 'padding:16px;font-size:16px;line-height:1.5;border:1px solid currentColor;border-radius:12px';
+    reviewNotice.textContent = dataErrors.length
+      ? 'No copies estos datos todavía. Solicita un enlace corregido al destinatario. ' + dataErrors.join('. ')
+      : 'Confirma estos datos con el destinatario. La app no verifica que la cuenta exista ni que le pertenezca.';
+    var copyButton = document.getElementById('btn-hero');
+    if (copyButton) copyButton.parentNode.insertBefore(reviewNotice, copyButton);
+    if (dataErrors.length) document.querySelectorAll('.btn-copy-small, .btn-hero-copy').forEach(function(button) { button.disabled = true; button.setAttribute('aria-label', 'Datos pendientes de corrección'); });
+
     document.getElementById('disp-name').textContent = nameVal;
     document.getElementById('val-rut').value = rutVal;
 
@@ -492,6 +547,10 @@
     }
 
     function universalCopy(text, inputElem) {
+      if (dataErrors.length) {
+        showToast('Solicita datos completos y corregidos antes de copiar');
+        return Promise.reject(new Error('Datos sin validar'));
+      }
       if (navigator.clipboard && window.isSecureContext) {
         return navigator.clipboard.writeText(text).catch(function() {
           return execCommandFallback(text, inputElem);
@@ -532,7 +591,7 @@
     }
 
     function normalizeBankName(b) {
-      if (!b) return 'Banco Estado';
+      if (!b) return '';
       var clean = b.trim();
       var lower = clean.toLowerCase();
       if (lower === 'bancoestado' || lower === 'banco estado' || lower.includes('cuentarut')) {
@@ -622,26 +681,29 @@
       }
     }
 
+    // IDs de App Store (Chile) verificados uno a uno contra la API pública de iTunes
+    // en nov-2024/2026; los anteriores apuntaban a apps equivocadas o inexistentes.
     var iosAppStoreIds = {
-      'net.veritran.becl.prod': 'id419266657',
-      'cl.santander.smartphone': 'id382029969',
-      'cl.bancochile.mi_banco': 'id384876935',
-      'cl.android': 'id885549005',
-      'cl.bci.app.personas': 'id364906478',
-      'cl.scotiabank.go': 'id1354316827',
-      'com.konylabs.ItauMobileBank': 'id549887010',
-      'cl.bancoripley.appbanco': 'id1023773095',
-      'cl.bice.apppersonas': 'id1140941578',
-      'com.sec.retail': 'id988880620',
-      'cl.consorcio.mobileapp': 'id1212876122',
-      'com.baninter': 'id1459461584',
-      'com.krealo.tenpo': 'id1492336338',
-      'cl.bci.sismo.mach': 'id1289069152',
-      'com.global66.cards': 'id1463990666',
-      'com.mercadopago.wallet': 'id925436649',
-      'com.coopeuchapp': 'id1446702787',
-      'cl.tapp': 'id1527636166',
-      'cl.copec.PagoClick': 'id1108428612'
+      'net.veritran.becl.prod': 'id1143576734', // BancoEstado (Banco del Estado de Chile)
+      'cl.santander.smartphone': 'id604982236', // Santander Chile
+      'cl.bancochile.mi_banco': 'id1516872542', // Mi Banco Chile (Banco de Chile)
+      'cl.android': 'id447266660',              // Banco Falabella Chile
+      'cl.bci.app.personas': 'id1207892426',    // Bci
+      'cl.scotiabank.go': 'id1309863707',       // App Scotia (Scotiabank Chile)
+      'com.konylabs.ItauMobileBank': 'id636150714', // Itaú Chile
+      'cl.bancoripley.appbanco': 'id1287625215',// Banco Ripley Chile
+      'cl.bice.apppersonas': 'id1562225088',    // BICE
+      'com.sec.retail': 'id6473542745',         // Banco Security
+      'cl.consorcio.mobileapp': 'id1325252307', // Banco Consorcio
+      'com.baninter': 'id1459461584',           // (sin verificar) Banco Internacional
+      'com.krealo.tenpo': 'id1480047892',       // Tenpo
+      'cl.bci.sismo.mach': 'id1262116570',      // MACHBANK (MACH de BCI)
+      'com.global66.cards': 'id1494957339',     // Global66
+      'com.mercadopago.wallet': 'id925436649',  // Mercado Pago
+      'com.coopeuchapp': 'id1520619303',        // AppCoopeuch
+      'cl.tapp': 'id1578548929',                // Tapp de Caja Los Andes
+      'cl.copec.PagoClick': 'id699938289'       // Copec (Copec Pay vive dentro de la app Copec)
+      // 'com.baninter' RETIRADO: ficha de App Store sin verificar.
     };
 
     function openBankApp(pkg, scheme) {

@@ -29,6 +29,11 @@
     a:hover { text-decoration: underline; }
     .footer { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-muted); }
   </style>
+<style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -57,6 +62,8 @@
     <h2>3. Almacenamiento Local y Privacidad</h2>
     <p>Todos los datos bancarios registrados por el usuario se almacenan de manera local y exclusiva en la memoria interna de su propio dispositivo (aislamiento <code>MODE_PRIVATE</code>). <strong>Ningún dato de tus cuentas bancarias es transmitido a servidores de AndesLink para la creación de perfiles, analítica comercial ni almacenamiento centralizado.</strong></p>
 
+    <p>La app excluye sus datos de las copias automáticas de Android y de la transferencia entre dispositivos mediante las reglas del sistema. Al cambiar de teléfono, vuelve a registrar tus cuentas y confirma sus datos. Comprueba el comportamiento de cualquier herramienta de migración del fabricante antes de borrar el teléfono anterior.</p>
+
     <h2>4. Enlaces de Cobro y Códigos QR Compartidos</h2>
     <p>Cuando decides compartir voluntariamente tus datos mediante un enlace web o código QR:</p>
     <ul>
@@ -68,7 +75,7 @@
     <h2>5. Permisos Solicitados en el Dispositivo</h2>
     <ul>
       <li><strong>Notificaciones y Vibración:</strong> Utilizadas exclusivamente para mostrar la barra de copia rápida de datos o alertar sobre acciones realizadas por el usuario dentro de la app.</li>
-      <li><strong>Cámara o Galería (Opcional):</strong> Utilizadas exclusivamente si el usuario decide escanear un letrero o comprobante con texto. El procesamiento se realiza 100% en el dispositivo con bibliotecas locales (Google ML Kit), sin subir imágenes a ningún servidor.</li>
+      <li><strong>Sin acceso a cámara, contactos, SMS ni Internet en la versión actual:</strong> la app no solicita estos permisos. Las funciones de escaneo con cámara anunciadas como "próximas" aún no están implementadas; esta política se actualizará antes de activarlas.</li>
     </ul>
 
     <h2>6. Operaciones Bancarias</h2>
@@ -77,8 +84,8 @@
     <h2>7. Derechos del Usuario y Eliminación de Datos</h2>
     <p>En cumplimiento de la legislación aplicable (Ley N° 19.628 de Protección de la Vida Privada de Chile y estándares de Google Play):</p>
     <ul>
-      <li>Puedes modificar o eliminar tus cuentas en cualquier momento directamente desde la pantalla principal de la aplicación.</li>
-      <li>Al eliminar una cuenta o desinstalar la aplicación de tu teléfono, todos los datos almacenados localmente se eliminan de forma permanente e irrecuperable de tu dispositivo.</li>
+      <li>Puedes eliminar tus cuentas en cualquier momento directamente desde la pantalla principal de la aplicación.</li>
+      <li>Eliminar una cuenta borra ese registro de la app; desinstalar la app elimina su almacenamiento local. Esto no elimina mensajes, enlaces, capturas ni datos que hayas compartido o copiado fuera de la app.</li>
     </ul>
 
     <h2>8. Contacto</h2>

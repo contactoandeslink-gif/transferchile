@@ -606,6 +606,11 @@
       .security-container { padding: 32px 20px; }
     }
   </style>
+<style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
 </head>
 <body>
 
@@ -661,7 +666,7 @@
             </svg>
             Descargar APK Oficial
           </a>
-          <div class="card-footer-meta">Versión 1.1 Limpia • Android 8.0+ • Cero Bloqueos</div>
+          <div class="card-footer-meta">Versión 2.2.7 • Android 8.0+ • Sin comisiones de la app</div>
         </div>
       </div>
 
@@ -671,7 +676,7 @@
           <div class="card-header-tag">Experiencia Web Universal</div>
           <h2 class="card-title">Cobro sin Apps</h2>
           <p class="card-desc">
-            Tus clientes no necesitan instalar nada. Al escanear tu QR o abrir tu link, tocan <b>Copiar Todo</b> y su banco se auto-rellena al instante.
+            Tus clientes no necesitan instalar nada. Al escanear tu QR o abrir tu link, tocan <b>Copiar Todo</b> y reciben tus datos listos para pegar en su banco.
           </p>
         </div>
 
@@ -679,7 +684,7 @@
           <div class="action-input-wrapper">
             <input type="text" class="action-input" value="https://contactoandeslink-gif.github.io/transferchile/" readonly>
           </div>
-          <a href="index.html?n=Isaac&r=18345678-9&b=BancoEstado&t=CuentaRUT&c=18345678&e=contacto@andeslink.net" class="btn-starlink-glass">
+          <a href="index.html#n=Isaac&r=18345678-4&b=BancoEstado&t=CuentaRUT&c=18345678&e=contacto@andeslink.net" class="btn-starlink-glass">
             <span>⚡ Ver Demo en Vivo</span>
           </a>
           <div class="card-footer-meta">Compatible con BancoEstado, Santander, Falabella, MACH y 20+</div>
@@ -703,7 +708,7 @@
       <div class="commerce-card">
         <div class="commerce-icon">💰</div>
         <h3>Cero Comisiones por Venta</h3>
-        <p>A diferencia de las máquinas de tarjetas de crédito o débito (que cobran hasta un 3% por cada compra), las transferencias llegan 100% íntegras y directas a tu cuenta.</p>
+        <p>A diferencia de las máquinas de tarjetas de crédito o débito (que cobran hasta un 3% por cada compra), las transferencias llegan íntegras a tu cuenta: la app no cobra comisiones.</p>
       </div>
 
       <div class="commerce-card">
@@ -724,9 +729,9 @@
   <section class="section-container" id="bancos">
     <div class="section-header">
       <div class="section-tag">Cobertura Nacional CMF</div>
-      <h2 class="section-title">Compatible con el 100% de los Bancos Chilenos</h2>
+      <h2 class="section-title">Compatible con los principales bancos de Chile</h2>
       <p class="section-subtitle">
-        Tus clientes pueden pagarte desde cualquier aplicación bancaria oficial. El sistema abre su banco directamente en su teléfono.
+        Tus clientes pueden pagarte desde cualquier aplicación bancaria oficial copiando tus datos, y desde la web pueden abrir directo su app bancaria.
       </p>
     </div>
 
@@ -748,14 +753,14 @@
       <div class="bank-pill"><span class="badge-dot"></span>Banco BICE</div>
       <div class="bank-pill"><span class="badge-dot"></span>Banco Security</div>
       <div class="bank-pill"><span class="badge-dot"></span>Banco Consorcio</div>
-      <div class="bank-pill"><span class="badge-dot"></span>Banco Internacional</div>
+      <!-- Banco Internacional omitido hasta verificar su ficha oficial en App Store -->
+      <div class="bank-pill"><span class="badge-dot"></span>Tapp (Caja Los Andes)</div>
       <div class="bank-pill"><span class="badge-dot"></span>BTG Pactual</div>
       <div class="bank-pill"><span class="badge-dot"></span>MACH (BCI)</div>
       <div class="bank-pill"><span class="badge-dot"></span>Tenpo</div>
       <div class="bank-pill"><span class="badge-dot"></span>Global66</div>
       <div class="bank-pill"><span class="badge-dot"></span>Mercado Pago</div>
       <div class="bank-pill"><span class="badge-dot"></span>Coopeuch</div>
-      <div class="bank-pill"><span class="badge-dot"></span>Tapp (Caja Los Andes)</div>
       <div class="bank-pill"><span class="badge-dot"></span>Copec Pay</div>
     </div>
   </section>
@@ -765,9 +770,9 @@
     <div class="security-container">
       <div class="section-header" style="margin-bottom: 20px;">
         <div class="section-tag">Protección & Confianza</div>
-        <h2 class="section-title">Seguridad Blindada para tu Dinero</h2>
+        <h2 class="section-title">Seguridad y Buenas Prácticas para tu Dinero</h2>
         <p class="section-subtitle">
-          El protocolo de TransferChile está pensado para proteger a los comercios de estafas con comprobantes falsos y transferencias programadas.
+          TransferChile es un asistente para compartir datos de cobro. Estas reglas te ayudan a operar con confianza.
         </p>
       </div>
 
@@ -784,7 +789,7 @@
           <div class="security-num">02</div>
           <div class="security-content">
             <h4>Regla de Oro Antifraude</h4>
-            <p>Capacitamos a tu equipo: nunca entregar productos mirando la pantalla del cliente. Espera siempre la notificación oficial en la barra de tu propio banco antes de despachar.</p>
+            <p>Capacitamos a tu equipo: nunca entregar productos mirando la pantalla del cliente. Espera siempre el aviso oficial <b>dentro de tu propia app bancaria</b> (o confirma el saldo en ella) antes de despachar. TransferChile no verifica ni procesa pagos.</p>
           </div>
         </div>
 
@@ -792,7 +797,7 @@
           <div class="security-num">03</div>
           <div class="security-content">
             <h4>Almacenamiento Local</h4>
-            <p>Tus cuentas bancarias se guardan en la memoria encriptada de tu teléfono, sin enviarse a servidores de terceros ni bases de datos externas.</p>
+            <p>Tus cuentas bancarias se guardan solo en la memoria interna de tu teléfono, en un espacio privado de la app (sin enviarse a servidores de terceros ni bases de datos externas). Al desinstalar, se eliminan.</p>
           </div>
         </div>
       </div>
