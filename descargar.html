@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
   <meta charset="UTF-8">
-  <script>
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-      location.replace('https://' + location.hostname + location.pathname + location.search + location.hash);
-    }
-  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Descargar TransferChile | ANDESLINK</title>
   <meta name="description" content="Descarga oficial de TransferChile por AndesLink. Comparte tus datos de transferencia para cobrar rápido en Chile.">
-  
-  
-  
+
+
+
   <style>
     :root {
       --bg-dark: #07090e;
@@ -41,7 +39,7 @@
       width: 100vw;
       height: 100vh;
       z-index: -1;
-      background: 
+      background:
         radial-gradient(circle at 30% 35%, rgba(138, 43, 226, 0.35) 0%, transparent 50%),
         radial-gradient(circle at 75% 30%, rgba(255, 94, 98, 0.28) 0%, transparent 45%),
         radial-gradient(circle at 50% 85%, rgba(0, 128, 255, 0.25) 0%, transparent 55%),
@@ -164,15 +162,15 @@
     <h1>TransferChile</h1>
     <p class="tagline">La app oficial para cobrar por transferencia. Comparte tu QR o link y tus clientes copian tus datos para pegarlos en su banco en segundos.</p>
 
-    <a href="TransferChile.apk?v=2.2.7" download="TransferChile.apk" class="btn-download">
+    <a href="TransferChile.apk?v=2.2.8" download="TransferChile.apk" class="btn-download">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
       </svg>
-      Descargar para Android (v2.2.7)
+      Descargar para Android (v2.2.8)
     </a>
-    <div class="meta">Versión 2.2.7 Oficial • CuentaRUT sin Dígito Verificador • Cero Comisiones</div>
+    <div class="meta">Versión 2.2.8 Oficial • CuentaRUT sin Dígito Verificador • Cero Comisiones</div>
 
     <div class="steps">
       <div class="step">
@@ -193,5 +191,6 @@
       <a href="andeslink.html" class="back-link">← Conocer más sobre el ecosistema AndesLink</a>
     </div>
   </div>
+  <script src="assets/descargar.js" defer></script>
 </body>
 </html>

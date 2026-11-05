@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
   <meta charset="UTF-8">
-  <script>
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-      location.replace('https://' + location.hostname + location.pathname + location.search + location.hash);
-    }
-  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ANDESLINK | Tecnología Digital & TransferChile</title>
   <meta name="description" content="AndesLink - Soluciones tecnológicas de alta velocidad. Descarga TransferChile para cobros instantáneos en 1 toque.">
-  
-  
-  
+
+
+
   <style>
     :root {
       --bg-dark: #07090e;
@@ -51,7 +49,7 @@
       width: 100vw;
       height: 100vh;
       z-index: -1;
-      background: 
+      background:
         radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.35) 0%, transparent 50%),
         radial-gradient(circle at 75% 30%, rgba(255, 94, 98, 0.28) 0%, transparent 45%),
         radial-gradient(circle at 50% 85%, rgba(0, 128, 255, 0.25) 0%, transparent 55%),
@@ -239,7 +237,7 @@
 
     /* Tarjeta 1: Iluminada / Gradiente Starlink */
     .card-primary {
-      background: 
+      background:
         linear-gradient(135deg, rgba(142, 68, 173, 0.42) 0%, rgba(235, 77, 75, 0.28) 50%, rgba(20, 24, 40, 0.7) 100%);
       border: 1px solid rgba(255, 255, 255, 0.22);
       backdrop-filter: var(--glass-blur);
@@ -646,7 +644,7 @@
 
     <!-- LAS 2 TARJETAS FROSTED GLASS AL ESTILO STARLINK -->
     <div class="cards-grid">
-      
+
       <!-- TARJETA 1 (DESTACADA / DESCARGA APP) -->
       <div class="card-starlink card-primary">
         <div>
@@ -666,7 +664,7 @@
             </svg>
             Descargar APK Oficial
           </a>
-          <div class="card-footer-meta">Versión 2.2.7 • Android 8.0+ • Sin comisiones de la app</div>
+          <div class="card-footer-meta">Versión 2.2.8 • Android 8.0+ • Sin comisiones de la app</div>
         </div>
       </div>
 
@@ -738,7 +736,7 @@
     <!-- Buscador en tiempo real de bancos -->
     <div class="banks-search-bar">
       <span class="banks-search-icon">🔍</span>
-      <input type="text" id="bank-filter" class="banks-search-input" placeholder="Buscar banco (ej: Falabella, Tenpo, Estado...)" onkeyup="filterBankPills()">
+      <input type="text" id="bank-filter" class="banks-search-input" placeholder="Buscar banco (ej: Falabella, Tenpo, Estado...)" data-tc-keyup="0">
     </div>
 
     <div class="banks-cloud" id="banks-cloud-list">
@@ -810,20 +808,8 @@
     <p style="margin-top: 6px; font-size: 11px; opacity: 0.6;">TransferChile es un desarrollo oficial de AndesLink para la modernización de cobros.</p>
   </footer>
 
-  <script>
-    function filterBankPills() {
-      var query = document.getElementById('bank-filter').value.toLowerCase().trim();
-      var pills = document.querySelectorAll('#banks-cloud-list .bank-pill');
-      for (var i = 0; i < pills.length; i++) {
-        var text = pills[i].textContent.toLowerCase();
-        if (text.indexOf(query) > -1) {
-          pills[i].style.display = 'flex';
-        } else {
-          pills[i].style.display = 'none';
-        }
-      }
-    }
-  </script>
 
+
+  <script src="assets/andeslink.js" defer></script>
 </body>
 </html>
