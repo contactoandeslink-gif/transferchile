@@ -74,10 +74,11 @@
       <li>El destinatario utiliza esos datos únicamente para copiarlos y pegarlos en su aplicación bancaria oficial.</li>
     </ul>
 
-    <h2>5. Permisos Solicitados en el Dispositivo</h2>
+    <h2>5. Permisos y Funciones del Dispositivo</h2>
     <ul>
-      <li><strong>Notificaciones y Vibración:</strong> Utilizadas exclusivamente para mostrar la barra de copia rápida de datos o alertar sobre acciones realizadas por el usuario dentro de la app.</li>
-      <li><strong>Sin acceso a cámara, contactos, SMS ni Internet en la versión actual:</strong> la app no solicita estos permisos. Las funciones de escaneo con cámara anunciadas como "próximas" aún no están implementadas; esta política se actualizará antes de activarlas.</li>
+      <li><strong>Notificaciones y Vibración:</strong> utilizadas para mostrar la barra de copia rápida de datos o alertar sobre acciones realizadas por el usuario dentro de la app.</li>
+      <li><strong>Cámara y Galería (función "Escanear datos"):</strong> el usuario puede fotografiar o elegir una imagen (papel, boleta, captura de pantalla) para extraer datos de transferencia. La foto se toma con la app de cámara del sistema y el reconocimiento de texto se procesa <strong>100% dentro del dispositivo</strong> con Google ML Kit (modelo incluido en la app): <strong>ninguna imagen se sube a servidores de AndesLink ni de terceros</strong>, y la foto temporal se guarda solo en la memoria caché privada de la app.</li>
+      <li><strong>Sin acceso a contactos, SMS ni Internet:</strong> la app no solicita estos permisos.</li>
     </ul>
 
     <h2>6. Operaciones Bancarias</h2>
