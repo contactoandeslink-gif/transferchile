@@ -207,7 +207,8 @@
       var full = parts.join('\n');
       var heroBtn = document.getElementById('btn-hero');
       universalCopy(full.trim(), null).then(function() {
-        showToast('✅ ¡Datos copiados! Abre tu banco para pegar');
+        showToast('✅ ¡Datos copiados! Elige tu banco abajo');
+        revealStepBanks();
         if (heroBtn) {
           var orig = heroBtn.textContent;
           heroBtn.textContent = '✅ ¡Copiado con Éxito!';
@@ -215,12 +216,43 @@
           setTimeout(function() {
             heroBtn.textContent = orig;
             heroBtn.className = 'btn-hero-copy';
-          }, 2000);
+          }, 2500);
         }
       }).catch(function() {
         showToast('Error al copiar');
       });
     }
+
+    // Flujo inteligente 2 pasos (2.4.0): solo tras copiar se revelan los bancos.
+    // Así nadie abre su banco con el portapapeles vacío.
+    function revealStepBanks() {
+      var step = document.getElementById('step-banks');
+      if (step && step.hidden) {
+        step.hidden = false;
+        step.classList.add('tc-reveal');
+        step.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    function setupFieldsToggle() {
+      var toggle = document.getElementById('toggle-fields');
+      var step = document.getElementById('step-fields');
+      if (!toggle || !step) return;
+      var originalLabel = toggle.textContent;
+      toggle.addEventListener('click', function(event) {
+        event.preventDefault();
+        var show = step.hidden;
+        step.hidden = !show;
+        if (show) {
+          step.classList.add('tc-reveal');
+        } else {
+          step.classList.remove('tc-reveal');
+        }
+        toggle.setAttribute('aria-expanded', show ? 'true' : 'false');
+        toggle.textContent = show ? 'Ocultar campos' : originalLabel;
+      });
+    }
+    setupFieldsToggle();
 
     function copyFromInput(inputId, label, btn) {
       var input = document.getElementById(inputId);

@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
   <title>Transferencia Bancaria Chile</title>
   <style>
     :root {
@@ -206,6 +207,43 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* ===== Flujo inteligente 2 pasos (2.4.0): bancos y campos se revelan ===== */
+    .link-discreet {
+      display: block;
+      margin: 16px auto 4px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      text-decoration: underline;
+      cursor: pointer;
+      text-align: center;
+      padding: 6px 8px;
+      touch-action: manipulation;
+    }
+    .link-discreet:active { color: var(--primary); }
+    @media (prefers-reduced-motion: no-preference) {
+      .tc-reveal { animation: tcSlideDown .45s cubic-bezier(.16, 1, .3, 1) both; }
+      .tc-reveal .btn-bank { opacity: 0; animation: tcFadeUp .35s ease forwards; }
+      .tc-reveal .btn-bank:nth-child(1) { animation-delay: .04s; }
+      .tc-reveal .btn-bank:nth-child(2) { animation-delay: .08s; }
+      .tc-reveal .btn-bank:nth-child(3) { animation-delay: .12s; }
+      .tc-reveal .btn-bank:nth-child(4) { animation-delay: .16s; }
+      .tc-reveal .btn-bank:nth-child(5) { animation-delay: .20s; }
+      .tc-reveal .btn-bank:nth-child(6) { animation-delay: .24s; }
+      .tc-reveal .btn-bank:nth-child(7) { animation-delay: .28s; }
+      .tc-reveal .btn-bank:nth-child(8) { animation-delay: .32s; }
+      .tc-reveal .btn-bank:nth-child(n+9) { animation-delay: .36s; }
+    }
+    @keyframes tcSlideDown {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes tcFadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     /* Modal Asistente Exclusivo Mercado Pago */
     .mp-modal-backdrop {
       position: fixed;
@@ -281,14 +319,15 @@
       Verifica siempre el nombre del destinatario antes de confirmar.
     </p>
 
-    <!-- SECCIÓN DE APERTURA DIRECTA DE BANCOS CHILENOS -->
-    <div class="banks-section">
-      <div class="banks-title">🏦 Abrir App de tu Banco</div>
-      <p class="banks-subtitle">Toca tu banco para abrirlo directamente e ingresar la transferencia:</p>
+    <!-- PASO 2: bancos (se revela tras copiar) -->
+    <div id="step-banks" hidden>
+      <div class="banks-section">
+        <div class="banks-title">¿Desde qué banco vas a transferir?</div>
+        <p class="banks-subtitle">Los datos ya están copiados. Toca tu banco: se abre con todo listo para pegar.</p>
 
-      <input type="text" id="bank-filter" class="bank-search" placeholder="🔍 Buscar mi banco (ej: Falabella, Tenpo...)" data-tc-keyup="1">
+        <input type="text" id="bank-filter" class="bank-search" placeholder="🔍 Buscar mi banco (ej: Falabella, Tenpo...)" data-tc-keyup="1">
 
-      <div class="banks-grid" id="banks-container">
+        <div class="banks-grid" id="banks-container">
         <!-- Principales Bancos de Chile con paquetes oficiales revisados -->
         <a class="btn-bank" data-name="banco estado cuentarut" href="#" role="button" data-tc-click="2">Banco Estado</a>
         <a class="btn-bank" data-name="banco santander" href="#" role="button" data-tc-click="3">Santander</a>
@@ -311,13 +350,20 @@
         <a class="btn-bank" data-name="mercado pago mercadopago wallet" href="#" role="button" data-tc-click="17">Mercado Pago</a>
         <a class="btn-bank" data-name="coopeuch cooperativa" href="#" role="button" data-tc-click="18">Coopeuch</a>
         <a class="btn-bank" data-name="tapp caja los andes" href="#" role="button" data-tc-click="19">Tapp</a>
-        <a class="btn-bank" data-name="copec pay" href="#" role="button" data-tc-click="20">Copec Pay</a>
+          <a class="btn-bank" data-name="copec pay" href="#" role="button" data-tc-click="20">Copec Pay</a>
+        </div>
       </div>
     </div>
 
-    <div class="divider-text">O copiar campo por campo si tu banco lo pide</div>
+    <button type="button" id="toggle-fields" class="link-discreet" aria-expanded="false">
+      ¿Tu banco te pide copiar campo por campo? Toca aquí para verlos
+    </button>
 
-    <div class="fields-list">
+    <!-- Campos individuales (colapsados: se abren con el enlace discreto) -->
+    <div id="step-fields" hidden>
+      <div class="divider-text">Copiar campo por campo si tu banco lo pide</div>
+
+      <div class="fields-list">
       <div class="field-card">
         <div class="field-info">
           <div class="field-label">RUT</div>
@@ -347,7 +393,8 @@
           <div class="field-label">Banco y Tipo</div>
           <input type="text" id="val-bank-desc" class="field-input" readonly value="--">
         </div>
-        <button type="button" class="btn-copy-small" data-tc-click="24">Copiar</button>
+          <button type="button" class="btn-copy-small" data-tc-click="24">Copiar</button>
+      </div>
       </div>
     </div>
 

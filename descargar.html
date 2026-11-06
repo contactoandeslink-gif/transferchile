@@ -155,6 +155,90 @@
       letter-spacing: 0.5px;
     }
     .back-link:hover { color: #fff; }
+
+    /* ===== Prueba exclusiva Google Play: formulario por WhatsApp ===== */
+    .play-form {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      margin-top: 16px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .play-form.open { display: flex; }
+    .play-form-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    .play-form-sub { font-size: 12.5px; color: #c6ccdb; line-height: 1.45; margin-bottom: 6px; }
+    .play-form label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: #9aa2b5; margin-top: 4px; }
+    .play-form input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+    .play-form input:focus { border-color: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18); }
+    .play-form input::placeholder { color: rgba(255, 255, 255, 0.35); }
+    .play-form .hint { font-size: 11px; color: rgba(255, 255, 255, 0.5); }
+    .play-form .play-form-note { font-size: 11px; color: rgba(255, 255, 255, 0.45); text-align: center; margin-top: 4px; }
+    .btn-submit {
+      margin-top: 8px;
+      background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+      color: #04120c;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(52, 211, 153, 0.35);
+      transition: transform 0.15s ease;
+      touch-action: manipulation;
+    }
+    .btn-submit:active { transform: scale(0.97); }
+    .play-error {
+      display: none;
+      color: #f87171;
+      font-size: 12.5px;
+      font-weight: 700;
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+    .play-success {
+      display: none;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1.5px solid #22c55e;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: #bbf7d0;
+      margin-top: 14px;
+      text-align: left;
+    }
+    .link-apk {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: underline;
+    }
+    .link-apk:hover { color: #fff; }
+    @media (prefers-reduced-motion: no-preference) {
+      .play-form.open { animation: tcPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      .play-success { animation: tcPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    }
+    @keyframes tcPop {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
   </style>
 <style>
     @media (prefers-reduced-motion: reduce) {
@@ -170,30 +254,47 @@
     <h1>TransferChile</h1>
     <p class="tagline">La app oficial para cobrar por transferencia. Comparte tu QR o link y tus clientes copian tus datos para pegarlos en su banco en segundos.</p>
 
-    <a href="TransferChile.apk?v=2.3.0" download="TransferChile.apk" class="btn-download">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      Descargar para Android (v2.3.0)
-    </a>
-    <div class="meta">Versión 2.3.0 Oficial • CuentaRUT sin Dígito Verificador • Cero Comisiones</div>
+    <button type="button" id="btn-play-access" class="btn-download" aria-expanded="false" aria-controls="play-form">
+      📲 Solicitar Acceso en Google Play
+    </button>
+    <div class="meta">Prueba Exclusiva • Autorización en minutos por WhatsApp • Versión 2.5.0</div>
+
+    <!-- Formulario: la solicitud llega por WhatsApp al administrador (sin servidores) -->
+    <div id="play-form" class="play-form">
+      <div class="play-form-title">Únete a la Prueba Exclusiva de TransferChile</div>
+      <p class="play-form-sub">Estamos en fase de verificación oficial en Google Play. Déjanos tus datos y en pocos minutos te autorizamos para descargar la app directamente desde Play Store:</p>
+      <label for="f-name">Tu Nombre</label>
+      <input type="text" id="f-name" maxlength="160" autocomplete="name" placeholder="Escribe tu nombre">
+      <label for="f-phone">Tu WhatsApp</label>
+      <input type="tel" id="f-phone" maxlength="16" autocomplete="tel" placeholder="+56 9 ...">
+      <label for="f-email">Tu Correo Gmail (Play Store)</label>
+      <input type="email" id="f-email" maxlength="254" autocomplete="email" placeholder="ejemplo@gmail.com">
+      <div class="hint">Debe ser el mismo correo con el que usas Play Store en tu celular.</div>
+      <div id="play-error" class="play-error" role="alert"></div>
+      <button type="button" id="btn-play-submit" class="btn-submit">📩 Enviar y Solicitar Descarga</button>
+      <div class="play-form-note">Tus datos se envían por tu propio WhatsApp; esta página no guarda ni envía nada a servidores.</div>
+    </div>
+
+    <div id="play-success" class="play-success">
+      ¡Solicitud enviada con éxito! ✅ En unos minutos revisaremos tu cuenta y te avisaremos por WhatsApp con tu enlace oficial de descarga de Google Play.
+    </div>
 
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <div>Toca <b>Descargar para Android</b> arriba.</div>
+        <div>Toca <b>Solicitar Acceso</b> y completa tus datos.</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <div>Si Chrome pregunta <i>"¿Descargar de todos modos?"</i>, dale a <b>Aceptar</b>.</div>
+        <div>Envía el WhatsApp que se abre listo: es <b>un solo toque más</b>.</div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <div>Abre el archivo descargado y presiona <b>Instalar</b>. ¡Listo!</div>
+        <div>En minutos te autorizamos y te llega tu <b>enlace oficial de Google Play</b>. ¡Instalas desde Play Store!</div>
       </div>
     </div>
+
+    <a href="TransferChile.apk?v=2.5.0" download="TransferChile.apk" class="link-apk">¿Ya eres tester? Descarga el APK directo (v2.5.0)</a>
 
     <div style="margin-top: 20px;">
       <a href="andeslink.html" class="back-link">← Conocer más sobre el ecosistema AndesLink</a>
