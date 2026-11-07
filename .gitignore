@@ -1,6 +1,7 @@
 # Herramientas de prueba local
 dev-server.js
 test-pago.html
+shot_*.png
 
 # Variantes de logos sin recortar o sin uso en producción
 assets/bancochile.png

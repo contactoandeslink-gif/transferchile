@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Selector de Animaciones Splash | TransferChile</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: #090c15; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow-x: hidden; }
+
+    /* BARRA SUPERIOR DE SELECTORES (1 al 10) */
+    .top-nav {
+      width: 100%;
+      max-width: 600px;
+      padding: 14px 12px;
+      background: rgba(18, 24, 38, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #00d2a0;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .btn-replay {
+      background: #0066cc;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .btn-replay:hover { background: #0052a3; }
+    .btn-replay:active { transform: scale(0.95); }
+
+    /* BOTONES NUMÉRICOS 1 AL 10 */
+    .numbers-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .numbers-bar::-webkit-scrollbar { display: none; }
+    .btn-num {
+      flex: 0 0 auto;
+      width: 44px;
+      height: 38px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-num:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+    .btn-num.active {
+      background: #00d2a0;
+      color: #051410;
+      border-color: #00d2a0;
+      box-shadow: 0 0 14px rgba(0, 210, 160, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* DESCRIPCIÓN DEL CONCEPTO ACTIVO */
+    .concept-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin: 12px 14px 4px;
+      text-align: center;
+    }
+    .concept-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .concept-desc { font-size: 12.5px; color: #94a3b8; line-height: 1.4; }
+
+    /* CONTENEDOR MARCO DE CELULAR (VIEWPORT) */
+    .phone-stage {
+      width: 100%;
+      max-width: 380px;
+      height: 640px;
+      margin: 10px auto 30px;
+      border-radius: 36px;
+      border: 4px solid #1e293b;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 0 0 2px rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CÁMARA NOTCH DINÁMICA DEL TELÉFONO */
+    .phone-notch {
+      position: absolute;
+      top: 10px;
+      width: 110px;
+      height: 24px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 50;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ESCENARIO INTERNO DE ANIMACIÓN */
+    .anim-scene {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ==============================================================
+       1. EL LATIDO FINTECH (PULSO CIAN)
+       ============================================================== */
+    .scene-1 { background: radial-gradient(circle at center, #0f224a 0%, #060b17 100%); }
+    .pulse-ring {
+      position: absolute;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 2px solid #00d2a0;
+      opacity: 0;
+      animation: s1Pulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+    }
+    .pulse-ring.delay-1 { animation-delay: 0.4s; }
+    .pulse-ring.delay-2 { animation-delay: 0.8s; }
+    .s1-logo {
+      width: 84px; height: 84px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #0052cc, #002e7a);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 82, 204, 0.5), 0 0 40px rgba(0, 210, 160, 0.2);
+      animation: s1Heartbeat 2s ease-in-out infinite;
+      z-index: 2;
+    }
+    .s1-text {
+      margin-top: 24px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #fff;
+      animation: s1FadeUp 1s ease-out forwards;
+      z-index: 2;
+    }
+    .s1-sub {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #00d2a0;
+      margin-top: 4px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+    @keyframes s1Pulse {
+      0% { transform: scale(0.8); opacity: 0.9; }
+      100% { transform: scale(3.2); opacity: 0; }
+    }
+    @keyframes s1Heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.08); }
+      30% { transform: scale(0.98); }
+      45% { transform: scale(1.04); }
+    }
+    @keyframes s1FadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==============================================================
+       2. TRAZO VECTORIAL LÁSER (MACH / APPLE) - VERSIÓN MEJORADA PRO
+       ============================================================== */
+    .scene-2 {
+      background: radial-gradient(circle at center 42%, #0e172e 0%, #060913 75%);
+    }
+    .s2-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .s2-emblem-box {
+      width: 170px;
+      height: 170px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .s2-ambient-glow {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 102, 255, 0.4) 0%, rgba(0, 210, 160, 0.2) 50%, transparent 70%);
+      filter: blur(22px);
+      opacity: 0;
+      animation: s2GlowFade 2.6s ease-in-out infinite;
+    }
+    .s2-bg-fill {
+      position: absolute;
+      width: 154px;
+      height: 154px;
+      border-radius: 36px;
+      background: linear-gradient(135deg, #0052cc 0%, #002673 60%, #001747 100%);
+      box-shadow: 0 16px 40px rgba(0, 46, 122, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      opacity: 0;
+      transform: scale(0.9);
+      animation: s2FillScale 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      overflow: hidden;
+    }
+    .s2-shimmer-ray {
+      position: absolute;
+      top: -30%;
+      left: -120%;
+      width: 60%;
+      height: 160%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      transform: rotate(25deg);
+      animation: s2RaySweep 2.6s ease-in-out infinite;
+    }
+    .s2-svg-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 170px;
+      height: 170px;
+      z-index: 10;
+    }
+    .s2-laser-stroke {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: s2StrokeDraw 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .s2-laser-circuit {
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      animation: s2CircuitDraw 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .s2-node {
+      opacity: 0;
+      transform-origin: center;
+      animation: s2NodePop 2.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
+    .s2-title {
+      margin-top: 26px;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: s2TextFade 2.6s ease-out infinite;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .s2-title span { color: #00d2a0; }
+    .s2-subtitle {
+      margin-top: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: #94a3b8;
+      opacity: 0;
+      animation: s2SubFade 2.6s ease-out infinite;
+    }
+    .s2-badge {
+      margin-top: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #00d2a0;
+      opacity: 0;
+      animation: s2BadgeFade 2.6s ease-out infinite;
+    }
+
+    @keyframes s2StrokeDraw {
+      0% { stroke-dashoffset: 600; opacity: 1; }
+      40%, 85% { stroke-dashoffset: 0; opacity: 1; }
+      95%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes s2CircuitDraw {
+      0%, 20% { stroke-dashoffset: 300; opacity: 0; }
+      25% { opacity: 1; }
+      55%, 85% { stroke-dashoffset: 0; opacity: 1; }
+      95%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes s2NodePop {
+      0%, 45% { opacity: 0; transform: scale(0); }
+      55%, 85% { opacity: 1; transform: scale(1); }
+      95%, 100% { opacity: 0; }
+    }
+    @keyframes s2FillScale {
+      0%, 35% { opacity: 0; transform: scale(0.88); }
+      50%, 85% { opacity: 1; transform: scale(1); }
+      95%, 100% { opacity: 0; transform: scale(1.02); }
+    }
+    @keyframes s2GlowFade {
+      0%, 35% { opacity: 0; transform: scale(0.8); }
+      55%, 85% { opacity: 1; transform: scale(1); }
+      95%, 100% { opacity: 0; }
+    }
+    @keyframes s2RaySweep {
+      0%, 52% { left: -120%; }
+      75%, 100% { left: 160%; }
+    }
+    @keyframes s2TextFade {
+      0%, 40% { opacity: 0; transform: translateY(12px); }
+      60%, 85% { opacity: 1; transform: translateY(0); }
+      95%, 100% { opacity: 0; }
+    }
+    @keyframes s2SubFade {
+      0%, 48% { opacity: 0; transform: translateY(8px); }
+      65%, 85% { opacity: 1; transform: translateY(0); }
+      95%, 100% { opacity: 0; }
+    }
+    @keyframes s2BadgeFade {
+      0%, 54% { opacity: 0; }
+      70%, 85% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+
+    /* ==============================================================
+       3. EL ENLACE SEGURO (STRIPE / WISE)
+       ============================================================== */
+    .scene-3 { background: #070e24; }
+    .s3-curves {
+      position: relative;
+      width: 160px; height: 100px;
+    }
+    .s3-left {
+      position: absolute;
+      left: 0; top: 20px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: #0066ff;
+      filter: blur(2px);
+      animation: s3MergeLeft 2s cubic-bezier(0.3, 1, 0.4, 1) infinite;
+    }
+    .s3-right {
+      position: absolute;
+      right: 0; top: 20px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: #00d2a0;
+      filter: blur(2px);
+      animation: s3MergeRight 2s cubic-bezier(0.3, 1, 0.4, 1) infinite;
+    }
+    .s3-check {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 72px; height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #0052cc, #00d2a0);
+      display: flex; align-items: center; justify-content: center;
+      animation: s3Pop 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+      box-shadow: 0 10px 30px rgba(0, 210, 160, 0.5);
+    }
+    @keyframes s3MergeLeft {
+      0% { transform: translateX(-40px); opacity: 0.4; }
+      50% { transform: translateX(20px); opacity: 0.9; }
+      70%, 100% { transform: translateX(20px); opacity: 0; }
+    }
+    @keyframes s3MergeRight {
+      0% { transform: translateX(40px); opacity: 0.4; }
+      50% { transform: translateX(-20px); opacity: 0.9; }
+      70%, 100% { transform: translateX(-20px); opacity: 0; }
+    }
+    @keyframes s3Pop {
+      0%, 45% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      60%, 90% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+    }
+
+    /* ==============================================================
+       4. TARJETA GLASSMORFICA 3D (APPLE CARD / KLARNA)
+       ============================================================== */
+    .scene-4 {
+      background: radial-gradient(circle at center, #142347 0%, #050914 100%);
+      perspective: 900px;
+    }
+    .s4-card-3d {
+      width: 220px; height: 135px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+      padding: 16px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      animation: s4Flip 2.8s ease-in-out infinite;
+      transform-style: preserve-3d;
+    }
+    .s4-chip {
+      width: 32px; height: 24px;
+      border-radius: 5px;
+      background: linear-gradient(135deg, #ffd700, #ff9900);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .s4-brand { font-size: 14px; font-weight: 800; letter-spacing: 1px; color: #fff; }
+    @keyframes s4Flip {
+      0% { transform: rotateY(70deg) rotateX(15deg) scale(0.85); opacity: 0; }
+      20% { opacity: 1; }
+      50%, 80% { transform: rotateY(0deg) rotateX(0deg) scale(1); opacity: 1; }
+      100% { transform: rotateY(-30deg) scale(1.05); opacity: 0; }
+    }
+
+    /* ==============================================================
+       5. LA CORDILLERA DIGITAL (ANDESLINK)
+       ============================================================== */
+    .scene-5 { background: linear-gradient(180deg, #071329 0%, #030813 100%); }
+    .s5-mountain-box {
+      width: 200px; height: 120px;
+      position: relative;
+    }
+    .s5-sun {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d2a0, #0088ff);
+      box-shadow: 0 0 40px #00d2a0;
+      animation: s5SunRise 2.4s ease-out infinite;
+    }
+    .s5-mountains {
+      position: absolute;
+      bottom: 0; width: 100%;
+      display: flex; justify-content: center;
+    }
+    @keyframes s5SunRise {
+      0% { transform: translateX(-50%) translateY(35px) scale(0.6); opacity: 0; }
+      40%, 80% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateX(-50%) translateY(-5px) scale(1); opacity: 0; }
+    }
+
+    /* ==============================================================
+       6. DESTELLO CONTACTLESS NFC (GOOGLE WALLET)
+       ============================================================== */
+    .scene-6 { background: #002868; }
+    .s6-center {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s6-arc {
+      position: absolute;
+      border: 3px solid #00d2a0;
+      border-radius: 50%;
+      border-left-color: transparent;
+      border-bottom-color: transparent;
+      transform: rotate(45deg);
+      opacity: 0;
+      animation: s6Arc 1.8s ease-out infinite;
+    }
+    .s6-arc-1 { width: 90px; height: 90px; animation-delay: 0.1s; }
+    .s6-arc-2 { width: 130px; height: 130px; animation-delay: 0.3s; }
+    .s6-arc-3 { width: 170px; height: 170px; animation-delay: 0.5s; }
+    @keyframes s6Arc {
+      0% { opacity: 0; transform: rotate(45deg) scale(0.8); }
+      30% { opacity: 1; }
+      70%, 100% { opacity: 0; transform: rotate(45deg) scale(1.2); }
+    }
+
+    /* ==============================================================
+       7. EL ESCUDO DE CONFIANZA (FINTOC / BANCO)
+       ============================================================== */
+    .scene-7 { background: #f8fafc; color: #0f172a; }
+    .s7-shield {
+      width: 90px; height: 104px;
+      border: 4px solid #002e7a;
+      border-radius: 12px 12px 45px 45px;
+      background: #ffffff;
+      box-shadow: 0 16px 40px rgba(0, 46, 122, 0.18);
+      display: flex; align-items: center; justify-content: center;
+      animation: s7Drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
+    @keyframes s7Drop {
+      0% { transform: translateY(-40px) scale(0.7); opacity: 0; }
+      30%, 80% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(10px) scale(0.95); opacity: 0; }
+    }
+
+    /* ==============================================================
+       8. RELIEVE NEOMÓRFICO (NOTHING OS / TESLA)
+       ============================================================== */
+    .scene-8 { background: #131722; }
+    .s8-box {
+      width: 110px; height: 110px;
+      border-radius: 28px;
+      background: #131722;
+      box-shadow: 14px 14px 28px #090b10, -14px -14px 28px #1d2334;
+      display: flex; align-items: center; justify-content: center;
+      animation: s8Glow 2.4s ease-in-out infinite;
+    }
+    @keyframes s8Glow {
+      0%, 100% { box-shadow: 14px 14px 28px #090b10, -14px -14px 28px #1d2334; }
+      50% { box-shadow: 0 0 35px rgba(0, 210, 160, 0.3), 10px 10px 20px #090b10, -10px -10px 20px #1d2334; }
+    }
+
+    /* ==============================================================
+       9. LA ÓRBITA INFINITA (MERCADO PAGO / LEMON)
+       ============================================================== */
+    .scene-9 { background: #070914; }
+    .s9-orbit-wrap {
+      width: 140px; height: 70px;
+      position: relative;
+    }
+    .s9-dot {
+      position: absolute;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      filter: blur(1px);
+    }
+    .s9-dot-1 { background: #00d2a0; box-shadow: 0 0 16px #00d2a0; animation: s9Loop1 2s linear infinite; }
+    .s9-dot-2 { background: #0066ff; box-shadow: 0 0 16px #0066ff; animation: s9Loop2 2s linear infinite; }
+    @keyframes s9Loop1 {
+      0% { top: 25px; left: 10px; }
+      25% { top: 5px; left: 60px; }
+      50% { top: 45px; left: 110px; }
+      75% { top: 5px; left: 60px; }
+      100% { top: 25px; left: 10px; }
+    }
+    @keyframes s9Loop2 {
+      0% { top: 45px; left: 110px; }
+      25% { top: 5px; left: 60px; }
+      50% { top: 25px; left: 10px; }
+      75% { top: 5px; left: 60px; }
+      100% { top: 45px; left: 110px; }
+    }
+
+    /* ==============================================================
+       10. MINIMALISMO NÓRDICO (MONZO / NOTHING)
+       ============================================================== */
+    .scene-10 { background: #000000; }
+    .s10-line {
+      width: 0;
+      height: 2px;
+      background: #ffffff;
+      animation: s10LineWidth 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    }
+    .s10-text {
+      margin-top: 18px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: #ffffff;
+      opacity: 0;
+      animation: s10TextFade 2.2s ease forwards infinite;
+    }
+    @keyframes s10LineWidth {
+      0% { width: 0; opacity: 0; }
+      30%, 80% { width: 140px; opacity: 1; }
+      100% { width: 140px; opacity: 0; }
+    }
+    @keyframes s10TextFade {
+      0%, 25% { opacity: 0; transform: translateY(6px); }
+      45%, 80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE SELECCIÓN SUPERIOR -->
+  <div class="top-nav">
+    <div class="nav-header">
+      <span class="nav-title">✨ Elige tu Animación Splash</span>
+      <button type="button" class="btn-replay" onclick="replayCurrent()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+        Repetir
+      </button>
+    </div>
+    
+    <div class="numbers-bar" id="numbers-bar">
+      <!-- Generados por JS: 1 al 10 -->
+    </div>
+  </div>
+
+  <!-- TARJETA DESCRIPTIVA DEL CONCEPTO -->
+  <div class="concept-card">
+    <div class="concept-title" id="concept-title">1. El Latido Fintech</div>
+    <div class="concept-desc" id="concept-desc">Pulso de tarjeta inteligente con ondas concéntricas cian (Estilo Nubank / Revolut).</div>
+  </div>
+
+  <!-- MARCO DE CELULAR -->
+  <div class="phone-stage" id="phone-stage">
+    <div class="phone-notch"></div>
+    <div id="anim-mount" class="anim-scene"></div>
+  </div>
+
+  <script>
+    var concepts = [
+      {
+        id: 1,
+        title: "1. El Latido Fintech",
+        desc: "Ondas concéntricas cian estilo NFC/Contactless que se expanden desde el logo (Estilo Nubank / Revolut).",
+        render: function() {
+          return '<div class="anim-scene scene-1">' +
+            '<div class="pulse-ring"></div><div class="pulse-ring delay-1"></div><div class="pulse-ring delay-2"></div>' +
+            '<div class="s1-logo">' +
+              '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line>' +
+              '</svg>' +
+            '</div>' +
+            '<div class="s1-text">TransferChile</div>' +
+            '<div class="s1-sub">Transferencias Instantáneas</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 2,
+        title: "2. Trazo Vectorial Láser (Edición Pro MACH)",
+        desc: "El emblema oficial de TransferChile se dibuja en tiempo real con láser cian sobre fondo de lujo, revelando el circuito de conexión con destello reflectante.",
+        render: function() {
+          return '<div class="anim-scene scene-2">' +
+            '<div class="s2-container">' +
+              '<div class="s2-emblem-box">' +
+                '<div class="s2-ambient-glow"></div>' +
+                '<div class="s2-bg-fill"><div class="s2-shimmer-ray"></div></div>' +
+                '<svg class="s2-svg-layer" viewBox="0 0 170 170" fill="none">' +
+                  '<defs>' +
+                    '<linearGradient id="laserGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                      '<stop offset="0%" stop-color="#00d2a0" />' +
+                      '<stop offset="60%" stop-color="#0066ff" />' +
+                      '<stop offset="100%" stop-color="#00d2a0" />' +
+                    '</linearGradient>' +
+                  '</defs>' +
+                  '<!-- Marco squircle de lujo -->' +
+                  '<rect class="s2-laser-stroke" x="8" y="8" width="154" height="154" rx="36" stroke="url(#laserGrad)" stroke-width="4"></rect>' +
+                  '<!-- Barra superior de la T -->' +
+                  '<path class="s2-laser-circuit" d="M46 54 L124 54" stroke="#ffffff" stroke-width="12" stroke-linecap="round"></path>' +
+                  '<!-- Vástago vertical de la T -->' +
+                  '<path class="s2-laser-circuit" d="M85 54 L85 116" stroke="#ffffff" stroke-width="12" stroke-linecap="round"></path>' +
+                  '<!-- Línea de conexión transversal -->' +
+                  '<path class="s2-laser-circuit" d="M40 85 L130 85" stroke="#00d2a0" stroke-width="6" stroke-linecap="round"></path>' +
+                  '<!-- Nodos circulares de transferencia -->' +
+                  '<circle class="s2-node" cx="40" cy="85" r="7" fill="#00d2a0"></circle>' +
+                  '<circle class="s2-node" cx="130" cy="85" r="7" fill="#00d2a0"></circle>' +
+                '</svg>' +
+              '</div>' +
+              '<div class="s2-title">TransferChile<span>.</span></div>' +
+              '<div class="s2-subtitle">Transferencias Inteligentes</div>' +
+              '<div class="s2-badge">ECOSISTEMA ANDESLINK • CHILE</div>' +
+            '</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 3,
+        title: "3. El Enlace Seguro",
+        desc: "Dos esferas de luz convergen desde los lados y se funden en el centro con un chasquido de validación (Estilo Stripe / Wise).",
+        render: function() {
+          return '<div class="anim-scene scene-3">' +
+            '<div class="s3-curves">' +
+              '<div class="s3-left"></div>' +
+              '<div class="s3-right"></div>' +
+              '<div class="s3-check">' +
+                '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
+              '</div>' +
+            '</div>' +
+            '<div style="margin-top:28px;font-weight:800;font-size:19px;letter-spacing:0.5px;">Enlace Bancario Seguro</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 4,
+        title: "4. Tarjeta Glassmorphic 3D",
+        desc: "Tarjeta de vidrio esmerilado que gira suavemente en 3D con chip dorado reflectante (Estilo Apple Card / Klarna).",
+        render: function() {
+          return '<div class="anim-scene scene-4">' +
+            '<div class="s4-card-3d">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                '<div class="s4-chip"></div>' +
+                '<div style="font-size:11px;font-weight:800;opacity:0.8;">ANDESLINK</div>' +
+              '</div>' +
+              '<div>' +
+                '<div class="s4-brand">TransferChile</div>' +
+                '<div style="font-size:9px;opacity:0.6;margin-top:2px;">Fintech Platinum</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 5,
+        title: "5. La Cordillera Digital",
+        desc: "Siluetas andinas en capas con amanecer digital cian rindiendo homenaje al ecosistema AndesLink.",
+        render: function() {
+          return '<div class="anim-scene scene-5">' +
+            '<div class="s5-mountain-box">' +
+              '<div class="s5-sun"></div>' +
+              '<svg class="s5-mountains" width="200" height="90" viewBox="0 0 200 90">' +
+                '<polygon points="0,90 70,30 130,90" fill="#0c224a" opacity="0.8"></polygon>' +
+                '<polygon points="60,90 120,15 190,90" fill="#003882" opacity="0.9"></polygon>' +
+                '<polygon points="120,90 160,40 200,90" fill="#0055b8"></polygon>' +
+              '</svg>' +
+            '</div>' +
+            '<div style="margin-top:16px;font-weight:800;font-size:18px;">AndesLink Transfer</div>' +
+            '<div style="font-size:11px;color:#00d2a0;letter-spacing:2px;margin-top:4px;">CHILE</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 6,
+        title: "6. Destello Contactless NFC",
+        desc: "3 arcos de radiofrecuencia concéntricos estilo tarjeta de pago sin contacto (Estilo Google Wallet).",
+        render: function() {
+          return '<div class="anim-scene scene-6">' +
+            '<div class="s6-center">' +
+              '<div class="s6-arc s6-arc-1"></div>' +
+              '<div class="s6-arc s6-arc-2"></div>' +
+              '<div class="s6-arc s6-arc-3"></div>' +
+              '<div style="width:70px;height:70px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);">' +
+                '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#002868" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>' +
+              '</div>' +
+            '</div>' +
+            '<div style="margin-top:28px;font-weight:800;font-size:18px;letter-spacing:1px;">PAGO INSTANTÁNEO</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 7,
+        title: "7. El Escudo de Confianza",
+        desc: "Escudo bancario institucional en blanco y azul marino que desciende con rigurosa seguridad (Estilo Fintoc).",
+        render: function() {
+          return '<div class="anim-scene scene-7">' +
+            '<div class="s7-shield">' +
+              '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#002e7a" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>' +
+            '</div>' +
+            '<div style="margin-top:20px;font-weight:900;font-size:19px;color:#002e7a;">TransferChile</div>' +
+            '<div style="font-size:12px;color:#64748b;margin-top:2px;">Plataforma Certificada</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 8,
+        title: "8. Relieve Neomórfico",
+        desc: "Icono esculpido en metal oscuro con sombras cenitales y resplandor cian futurista (Estilo Tesla / Nothing OS).",
+        render: function() {
+          return '<div class="anim-scene scene-8">' +
+            '<div class="s8-box">' +
+              '<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#00d2a0" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>' +
+            '</div>' +
+            '<div style="margin-top:22px;font-weight:800;font-size:17px;letter-spacing:2px;color:#cbd5e1;">TRANSFERCHILE</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 9,
+        title: "9. La Órbita Infinita",
+        desc: "Dos esferas de luz en trayectoria infinita de intercambio de dinero (Estilo Mercado Pago / Lemon Cash).",
+        render: function() {
+          return '<div class="anim-scene scene-9">' +
+            '<div class="s9-orbit-wrap">' +
+              '<div class="s9-dot s9-dot-1"></div>' +
+              '<div class="s9-dot s9-dot-2"></div>' +
+            '</div>' +
+            '<div style="margin-top:20px;font-weight:800;font-size:18px;">Dinero en Movimiento</div>' +
+            '<div style="font-size:12px;color:#94a3b8;margin-top:2px;">TransferChile</div>' +
+          '</div>';
+        }
+      },
+      {
+        id: 10,
+        title: "10. Minimalismo Nórdico Monocromo",
+        desc: "Negro puro AMOLED (cero gasto de batería) con línea blanca de 1px que se expande hacia el nombre (Estilo Monzo).",
+        render: function() {
+          return '<div class="anim-scene scene-10">' +
+            '<div class="s10-line"></div>' +
+            '<div class="s10-text">TRANSFERCHILE</div>' +
+          '</div>';
+        }
+      }
+    ];
+
+    var currentId = 1;
+
+    function buildNav() {
+      var nav = document.getElementById('numbers-bar');
+      nav.innerHTML = '';
+      concepts.forEach(function(c) {
+        var a = document.createElement('a');
+        a.href = '?id=' + c.id;
+        a.className = 'btn-num' + (c.id === currentId ? ' active' : '');
+        a.textContent = c.id;
+        a.onclick = function(e) {
+          e.preventDefault();
+          selectConcept(c.id);
+        };
+        nav.appendChild(a);
+      });
+    }
+
+    function selectConcept(id) {
+      currentId = id;
+      window.history.replaceState(null, '', '?id=' + id);
+      var concept = concepts.find(function(c) { return c.id === id; }) || concepts[0];
+      
+      document.getElementById('concept-title').textContent = concept.title;
+      document.getElementById('concept-desc').textContent = concept.desc;
+      
+      var mount = document.getElementById('anim-mount');
+      mount.innerHTML = concept.render();
+
+      buildNav();
+    }
+
+    function replayCurrent() {
+      var mount = document.getElementById('anim-mount');
+      var concept = concepts.find(function(c) { return c.id === currentId; }) || concepts[0];
+      mount.innerHTML = '';
+      setTimeout(function() {
+        mount.innerHTML = concept.render();
+      }, 50);
+    }
+
+    // Inicializar desde la URL (?id=4 etc)
+    var urlParams = new URLSearchParams(window.location.search);
+    var initialId = parseInt(urlParams.get('id'), 10) || 1;
+    selectConcept(initialId);
+  </script>
+</body>
+</html>
