@@ -1,0 +1,9 @@
+# Herramientas de prueba local
+dev-server.js
+test-pago.html
+
+# Variantes de logos sin recortar o sin uso en producción
+assets/bancochile.png
+assets/bancochile.svg
+assets/santander.svg
+assets/scotiabank.svg

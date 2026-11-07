@@ -31,6 +31,9 @@ assert(errors({c:'ABC123'}).length);
 assert(errors({c:'11223344'}).length);
 assert.equal(errors({b:'BCI',t:'Cuenta Vista',c:'0011223344'}).length,0);
 assert(errors({e:'bad-email'}).length);
+assert(errors({m:'abc'}).length);
+assert(errors({m:'15.000'}).length);
+assert.equal(errors({m:'15000'}).length,0);
 const duplicate=new URLSearchParams(base);duplicate.append('c','999999');
 assert(context.payloadErrors(duplicate).length);
 console.log('Web: scripts parse; misleading claims absent; 8 validation cases pass');
@@ -51,4 +54,19 @@ assert(/ADMIN_WHATSAPP = '56\d{9}'/.test(dJs), 'número admin en formato interna
 assert(dJs.includes('• Nombre: ') && dJs.includes('• Correo Play Store: '), 'mensaje predeterminado completo');
 assert(!/Descargar para Android \(v/.test(dHtml), 'el botón principal ya no es el APK directo');
 assert(/link-apk/.test(dHtml), 'APK directo queda como enlace secundario');
+
+// --- Mejoras tarjeta web (datos visibles, sello, match Cuenta Vista, monto) ---
+assert(/id="card-rut"/.test(idxHtml) && /id="card-account"/.test(idxHtml), 'tarjeta debe mostrar RUT y cuenta');
+assert(/id="card-amount-row"/.test(idxHtml), 'tarjeta debe soportar fila de monto');
+assert(/seal-ok/.test(idxHtml), 'sello verde sutil en lugar del cartel gris');
+assert(/notice-error/.test(idxHtml), 'aviso de error suavizado');
+assert(/Cuenta Vista \/ CuentaRUT/.test(html), 'copia debe mapear CuentaRUT al nombre universal');
+assert(/Monto: \$/.test(html), 'copia debe incluir el monto');
+assert(!/Confirma estos datos con el destinatario/.test(html), 'el cartel gris intimidante fue eliminado');
+// --- Diseño premium: logos oficiales + tarjeta dinámica por banco ---
+assert(/class="bank-logo"/.test(idxHtml) && idxHtml.includes('assets/bancoestado.svg'), 'botones con insignia 36x36 y logos oficiales');
+assert(/assets\/scotiabank(-icon)?\.svg/.test(idxHtml), 'logo Scotiabank presente');
+assert(/bankThemes/.test(html) && /main-bank-card/.test(html), 'catálogo de temas dinámicos por banco');
+assert(/normalize\('NFD'\)/.test(html), 'matching de banco tolerante a tildes (Itaú)');
+console.log('Card-visible data, seal, Cuenta Vista match and amount PASS');
 console.log('Play-access form structure and WhatsApp message PASS');

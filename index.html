@@ -23,28 +23,110 @@
     body { background-color: var(--bg); color: var(--text); padding: 14px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
     .container { width: 100%; max-width: 440px; margin: 0 auto; }
 
-    .header-card {
+    /* Tarjeta premium DINÁMICA por banco destino (logo + gradiente de marca) */
+    .bank-card {
       background: linear-gradient(135deg, #0052cc 0%, #003380 100%);
       color: white;
       border-radius: 18px;
       padding: 22px 20px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 15px rgba(0, 51, 128, 0.22);
+      box-shadow: 0 12px 28px rgba(0, 46, 122, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s ease;
+    }
+    .bank-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .card-badge {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-badge img {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      object-fit: contain;
+      background: #ffffff;
+      padding: 1px;
+    }
+    .card-emv {
+      width: 32px; height: 24px;
+      background: linear-gradient(135deg, #ffd700, #ffa500);
+      border-radius: 5px;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+    .card-name { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; line-height: 1.2; word-break: break-word; }
+    .card-sub { font-size: 14px; opacity: 0.9; font-weight: 600; margin-bottom: 14px; }
+    .card-data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+    }
+    .card-data-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.75; font-weight: 700; }
+    .card-data-item .value { font-size: 15px; font-weight: 800; letter-spacing: 0.2px; margin-top: 2px; overflow-wrap: anywhere; }
+
+    /* Datos SIEMPRE visibles en la tarjeta (RUT, cuenta, monto): la persona
+       verifica todo en 1 segundo antes de tocar cualquier botón. */
+    .card-data {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .card-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
+    .card-line span { opacity: 0.75; font-weight: 600; flex-shrink: 0; }
+    .card-line b { font-weight: 800; letter-spacing: 0.3px; overflow-wrap: anywhere; text-align: right; }
+
+    /* Sello sutil de validación (reemplaza al cartel gris intimidante) */
+    .seal-ok {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1e7e34;
+      background: rgba(40, 167, 69, 0.1);
+      border: 1px solid rgba(40, 167, 69, 0.35);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
       text-align: center;
     }
-    .badge {
-      display: inline-block;
-      background: rgba(255,255,255,0.22);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    /* Aviso de datos con problema: visible pero sin asustar */
+    .notice-error {
+      padding: 12px 14px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      border-radius: 12px;
+      background: rgba(220, 53, 69, 0.08);
+      border: 1px solid rgba(220, 53, 69, 0.45);
+      color: #842029;
+      margin-bottom: 12px;
     }
-    .title { font-size: 22px; font-weight: 800; word-break: break-word; }
-    .subtitle { font-size: 15px; opacity: 0.92; margin-top: 4px; font-weight: 600; }
 
     /* Botón Héroe Principal: Copiar Todo */
     .btn-hero-copy {
@@ -172,8 +254,8 @@
     .btn-bank {
       background: #f8f9fc;
       border: 1px solid var(--border);
-      padding: 11px 8px;
-      border-radius: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
       font-size: 13px;
       font-weight: 700;
       color: var(--text);
@@ -181,12 +263,33 @@
       text-decoration: none;
       display: flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
+      gap: 10px;
+      justify-content: flex-start;
+      text-align: left;
       transition: all 0.15s ease;
     }
     .btn-bank:hover { background: #eef2fa; border-color: var(--primary); }
     .btn-bank:active { background: #dce4f5; transform: scale(0.97); }
+
+    /* Insignia 36×36 blanca con logo oficial: uniforme y nítida (estándar industria) */
+    .bank-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      overflow: hidden;
+      font-size: 11px;
+      font-weight: 900;
+      color: #64748b;
+      letter-spacing: 0.4px;
+    }
+    .bank-logo img { width: 26px; height: 26px; object-fit: contain; display: block; }
 
     .toast {
       position: fixed;
@@ -303,15 +406,38 @@
 </head>
 <body>
   <div class="container">
-    <div class="header-card">
-      <div class="badge">Datos de Transferencia</div>
-      <div class="title" id="disp-name">Cargando...</div>
-      <div class="subtitle" id="disp-bank-type">Banco</div>
+    <!-- Tarjeta premium: se tiñe con los colores del banco destino -->
+    <div class="bank-card" id="main-bank-card">
+      <div class="card-top">
+        <div class="card-badge">
+          <img id="card-badge-logo" src="assets/bancoestado.svg" alt="Banco">
+          <span id="card-badge-name">Banco</span>
+        </div>
+        <div class="card-emv"></div>
+      </div>
+      <div class="card-name" id="disp-name">Cargando...</div>
+      <div class="card-sub" id="disp-bank-type">Banco</div>
+      <div class="card-data-grid">
+        <div class="card-data-item">
+          <div class="label">RUT</div>
+          <div class="value" id="card-rut">--</div>
+        </div>
+        <div class="card-data-item">
+          <div class="label">N° Cuenta</div>
+          <div class="value" id="card-account">--</div>
+        </div>
+        <div class="card-data-item" id="card-amount-row" style="display:none;">
+          <div class="label">Monto</div>
+          <div class="value" id="card-amount">--</div>
+        </div>
+      </div>
     </div>
+
+    <div id="notice-slot"></div>
 
     <!-- BOTÓN HÉROE PRINCIPAL: COPIAR TODO -->
     <button type="button" id="btn-hero" class="btn-hero-copy" data-tc-click="0">
-      📋 Copiar Datos Completos
+      📋 Copiar Datos para Transferir
     </button>
     <p class="instructions">
       Al tocar <b>Copiar</b>, abre tu banco y <b>pega los datos en el formulario de transferencia</b>.
@@ -328,30 +454,31 @@
         <input type="text" id="bank-filter" class="bank-search" placeholder="🔍 Buscar mi banco (ej: Falabella, Tenpo...)" data-tc-keyup="1">
 
         <div class="banks-grid" id="banks-container">
-        <!-- Principales Bancos de Chile con paquetes oficiales revisados -->
-        <a class="btn-bank" data-name="banco estado cuentarut" href="#" role="button" data-tc-click="2">Banco Estado</a>
-        <a class="btn-bank" data-name="banco santander" href="#" role="button" data-tc-click="3">Santander</a>
-        <a class="btn-bank" data-name="banco de chile edwards mi banco" href="#" role="button" data-tc-click="4">Banco de Chile</a>
-        <a class="btn-bank" data-name="banco falabella cmr" href="#" role="button" data-tc-click="5">Banco Falabella</a>
-        <a class="btn-bank" data-name="bci banco credito e inversiones" href="#" role="button" data-tc-click="6">BCI</a>
-        <a class="btn-bank" data-name="scotiabank chile scotiago" href="#" role="button" data-tc-click="7">Scotiabank</a>
-        <a class="btn-bank" data-name="itau banco itaú personas" href="#" role="button" data-tc-click="8">Banco Itaú</a>
-        <a class="btn-bank" data-name="banco ripley" href="#" role="button" data-tc-click="9">Banco Ripley</a>
-        <a class="btn-bank" data-name="banco bice" href="#" role="button" data-tc-click="10">Banco BICE</a>
-        <a class="btn-bank" data-name="banco security" href="#" role="button" data-tc-click="11">Banco Security</a>
-        <a class="btn-bank" data-name="banco consorcio" href="#" role="button" data-tc-click="12">Banco Consorcio</a>
+        <!-- Principales Bancos de Chile con logos oficiales (insignia 36x36 blanca) -->
+        <a class="btn-bank" data-name="banco estado cuentarut" href="#" role="button" data-tc-click="2"><div class="bank-logo"><img src="assets/bancoestado.svg" alt=""></div><span>Banco Estado</span></a>
+        <a class="btn-bank" data-name="banco santander" href="#" role="button" data-tc-click="3"><div class="bank-logo"><img src="assets/santander-icon.svg" alt=""></div><span>Santander</span></a>
+        <a class="btn-bank" data-name="banco de chile edwards mi banco" href="#" role="button" data-tc-click="4"><div class="bank-logo"><img src="assets/bancochile-icon.png" alt=""></div><span>Banco de Chile</span></a>
+        <a class="btn-bank" data-name="banco falabella cmr" href="#" role="button" data-tc-click="5"><div class="bank-logo"><img src="assets/falabella.svg" alt=""></div><span>Banco Falabella</span></a>
+        <a class="btn-bank" data-name="bci banco credito e inversiones" href="#" role="button" data-tc-click="6"><div class="bank-logo"><img src="assets/bci.svg" alt=""></div><span>BCI</span></a>
+        <a class="btn-bank" data-name="scotiabank chile scotiago" href="#" role="button" data-tc-click="7"><div class="bank-logo"><img src="assets/scotiabank-icon.svg" alt=""></div><span>Scotiabank</span></a>
+        <a class="btn-bank" data-name="itau banco itaú personas" href="#" role="button" data-tc-click="8"><div class="bank-logo"><img src="assets/itau.svg" alt=""></div><span>Banco Itaú</span></a>
+        <a class="btn-bank" data-name="banco ripley" href="#" role="button" data-tc-click="9"><div class="bank-logo"><span>RI</span></div><span>Banco Ripley</span></a>
+        <a class="btn-bank" data-name="banco bice" href="#" role="button" data-tc-click="10"><div class="bank-logo"><span>BI</span></div><span>Banco BICE</span></a>
+        <a class="btn-bank" data-name="banco security" href="#" role="button" data-tc-click="11"><div class="bank-logo"><span>SE</span></div><span>Banco Security</span></a>
+        <a class="btn-bank" data-name="banco consorcio" href="#" role="button" data-tc-click="12"><div class="bank-logo"><span>CO</span></div><span>Banco Consorcio</span></a>
         <!-- Banco Internacional retirado temporalmente: su ficha de App Store no pudo
-             verificarse (el ID anterior apuntaba a otra app). Se repone cuando se confirme. -->        <a class="btn-bank" data-name="btg pactual inversiones" href="#" role="button" data-tc-click="13">BTG Pactual</a>
+             verificarse (el ID anterior apuntaba a otra app). Se repone cuando se confirme. -->
+        <a class="btn-bank" data-name="btg pactual inversiones" href="#" role="button" data-tc-click="13"><div class="bank-logo"><span>BT</span></div><span>BTG Pactual</span></a>
 
         <!-- Cuentas Digitales y Prepago CMF -->
-        <a class="btn-bank" data-name="tenpo prepago tarjeta" href="#" role="button" data-tc-click="14">Tenpo</a>
-        <a class="btn-bank" data-name="mach bci cuenta" href="#" role="button" data-tc-click="15">MACH</a>
-        <a class="btn-bank" data-name="global66 prepago global 66" href="#" role="button" data-tc-click="16">Global66</a>
-        <a class="btn-bank" data-name="mercado pago mercadopago wallet" href="#" role="button" data-tc-click="17">Mercado Pago</a>
-        <a class="btn-bank" data-name="coopeuch cooperativa" href="#" role="button" data-tc-click="18">Coopeuch</a>
-        <a class="btn-bank" data-name="tapp caja los andes" href="#" role="button" data-tc-click="19">Tapp</a>
-          <a class="btn-bank" data-name="copec pay" href="#" role="button" data-tc-click="20">Copec Pay</a>
-        </div>
+        <a class="btn-bank" data-name="tenpo prepago tarjeta" href="#" role="button" data-tc-click="14"><div class="bank-logo" style="background:#00d2a0;border-color:#00b88c;color:#00382b;"><span style="font-size:12px;letter-spacing:0;">tenpo</span></div><span>Tenpo</span></a>
+        <a class="btn-bank" data-name="mach bci cuenta" href="#" role="button" data-tc-click="15"><div class="bank-logo" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);border-color:#6a1b9a;"><img src="assets/mach-icon.svg" alt="" style="filter:brightness(0) invert(1);"></div><span>MACH</span></a>
+        <a class="btn-bank" data-name="global66 prepago global 66" href="#" role="button" data-tc-click="16"><div class="bank-logo"><span>G6</span></div><span>Global66</span></a>
+        <a class="btn-bank" data-name="mercado pago mercadopago wallet" href="#" role="button" data-tc-click="17"><div class="bank-logo" style="background:#009ee3;border-color:#0087c2;"><svg viewBox="0 0 32 32" width="22" height="22" fill="#ffffff"><path d="M16 6C10.5 6 6 10.5 6 16s4.5 10 10 10 10-4.5 10-10S21.5 6 16 6zm4.5 9.2l-2.2 2.2c-.4.4-1 .4-1.4 0l-1.4-1.4-1.8 1.8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4l2.5-2.5c.4-.4 1-.4 1.4 0l1.4 1.4 1.5-1.5c.4-.4 1-.4 1.4 0 .4.4.4 1 0 1.4z"/></svg></div><span>Mercado Pago</span></a>
+        <a class="btn-bank" data-name="coopeuch cooperativa" href="#" role="button" data-tc-click="18"><div class="bank-logo"><span>CU</span></div><span>Coopeuch</span></a>
+        <a class="btn-bank" data-name="tapp caja los andes" href="#" role="button" data-tc-click="19"><div class="bank-logo"><span>TA</span></div><span>Tapp</span></a>
+        <a class="btn-bank" data-name="copec pay" href="#" role="button" data-tc-click="20"><div class="bank-logo"><span>CP</span></div><span>Copec Pay</span></a>
+      </div>
       </div>
     </div>
 

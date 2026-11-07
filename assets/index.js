@@ -22,6 +22,7 @@
     var typeVal = params.get('t') || 'Cuenta';
     var accountVal = params.get('c') || '';
     var emailVal = params.get('e') || '';
+    var amountVal = params.get('m') || '';
 
     function validRut(value) {
       var clean = value.replace(/[.\s-]/g, '').toUpperCase();
@@ -40,7 +41,7 @@
     function payloadErrors(values) {
       var errors = [];
       if (values.toString().length > 16384) return ['El enlace es demasiado largo'];
-      var limits = {n:160, r:32, b:80, t:80, c:64, e:254};
+      var limits = {n:160, r:32, b:80, t:80, c:64, e:254, m:12};
       Object.keys(limits).forEach(function(key) {
         var field = values.get(key) || '';
         if (field.length > limits[key] || /[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/.test(field))
@@ -49,7 +50,7 @@
       ['n', 'r', 'b', 't', 'c'].forEach(function(key) {
         if (!(values.get(key) || '').trim()) errors.push('Falta un dato obligatorio: ' + key);
       });
-      ['n', 'r', 'b', 't', 'c', 'e'].forEach(function(key) {
+      ['n', 'r', 'b', 't', 'c', 'e', 'm'].forEach(function(key) {
         if (new Set(values.getAll(key).map(function(v) { return v.trim(); })).size > 1)
           errors.push('El enlace contiene datos contradictorios: ' + key);
       });
@@ -64,6 +65,8 @@
       var email = values.get('e') || '';
       if (email && !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
         errors.push('Correo inválido');
+      var monto = values.get('m') || '';
+      if (monto && !/^\d{1,9}$/.test(monto.trim())) errors.push('Monto inválido');
       return errors;
     }
 
@@ -71,22 +74,69 @@
     // No escoger silenciosamente entre dos destinatarios distintos en query y fragmento.
     if (window.location.search && window.location.hash) {
       var fragmentValues = new URLSearchParams(window.location.hash.slice(1));
-      ['n','r','b','t','c','e'].forEach(function(key) {
+      ['n','r','b','t','c','e','m'].forEach(function(key) {
         if (fragmentValues.has(key) && fragmentValues.get(key) !== params.get(key))
           dataErrors.push('El enlace contiene dos juegos de datos distintos');
       });
     }
-    var reviewNotice = document.createElement('p');
-    reviewNotice.setAttribute('role', 'status');
-    reviewNotice.style.cssText = 'padding:16px;font-size:16px;line-height:1.5;border:1px solid currentColor;border-radius:12px';
-    reviewNotice.textContent = dataErrors.length
-      ? 'No copies estos datos todavía. Solicita un enlace corregido al destinatario. ' + dataErrors.join('. ')
-      : 'Confirma estos datos con el destinatario. La app no verifica que la cuenta exista ni que le pertenezca.';
-    var copyButton = document.getElementById('btn-hero');
-    if (copyButton) copyButton.parentNode.insertBefore(reviewNotice, copyButton);
+    // Aviso según el estado: con errores, tarjeta roja suave ANTES del botón
+    // (no se puede copiar nada). Sin errores, sello verde sutil DESPUÉS de la
+    // tarjeta: confirma sin intimidar.
+    var noticeSlot = document.getElementById('notice-slot');
+    if (dataErrors.length) {
+      var errBox = document.createElement('div');
+      errBox.setAttribute('role', 'alert');
+      errBox.className = 'notice-error';
+      errBox.textContent = 'No copies estos datos todavía. Solicita un enlace corregido al destinatario. ' + dataErrors.join('. ');
+      if (noticeSlot) noticeSlot.appendChild(errBox);
+    } else {
+      var seal = document.createElement('p');
+      seal.className = 'seal-ok';
+      seal.setAttribute('role', 'status');
+      seal.textContent = '✅ Datos validados matemáticamente para transferencia.';
+      if (noticeSlot) noticeSlot.appendChild(seal);
+    }
     if (dataErrors.length) document.querySelectorAll('.btn-copy-small, .btn-hero-copy').forEach(function(button) { button.disabled = true; button.setAttribute('aria-label', 'Datos pendientes de corrección'); });
 
+    // CATÁLOGO DE TEMAS PREMIUM POR BANCO DESTINO: la tarjeta se tiñe con los
+    // colores de marca del banco y muestra su logo oficial en la insignia.
+    var bankThemes = [
+      { key: 'mach', name: 'MACH', logo: 'assets/mach-icon.svg', grad: 'linear-gradient(135deg, #1c062e 0%, #3e0c66 55%, #6200ee 100%)' },
+      { key: 'estado', name: 'BancoEstado', logo: 'assets/bancoestado.svg', grad: 'linear-gradient(135deg, #091e42 0%, #0047b3 55%, #eb5505 100%)' },
+      { key: 'chile', name: 'Banco de Chile', logo: 'assets/bancochile-icon.png', grad: 'linear-gradient(135deg, #001233 0%, #002255 55%, #004b99 100%)' },
+      { key: 'santander', name: 'Santander', logo: 'assets/santander-icon.svg', grad: 'linear-gradient(135deg, #2b0003 0%, #6e060d 55%, #b30f18 100%)' },
+      { key: 'falabella', name: 'Banco Falabella', logo: 'assets/falabella.svg', grad: 'linear-gradient(135deg, #031c0d 0%, #0c4720 55%, #157335 100%)' },
+      { key: 'bci', name: 'BCI', logo: 'assets/bci.svg', grad: 'linear-gradient(135deg, #001833 0%, #003666 55%, #005ca9 100%)' },
+      { key: 'scotia', name: 'Scotiabank', logo: 'assets/scotiabank-icon.svg', grad: 'linear-gradient(135deg, #4a0002 0%, #8a0a14 55%, #c8102e 100%)' },
+      { key: 'itau', name: 'Banco Itaú', logo: 'assets/itau.svg', grad: 'linear-gradient(135deg, #261100 0%, #5c2900 55%, #b85400 100%)' }
+    ];
+
+    var bankLower = bankVal.toLowerCase();
+    var bankLowerNorm = bankLower.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    var matchedTheme = null;
+    for (var ti = 0; ti < bankThemes.length; ti++) {
+      if (bankLowerNorm.indexOf(bankThemes[ti].key) > -1) { matchedTheme = bankThemes[ti]; break; }
+    }
+    var badgeLogo = document.getElementById('card-badge-logo');
+    var badgeName = document.getElementById('card-badge-name');
+    if (matchedTheme) {
+      badgeName.textContent = matchedTheme.name;
+      badgeLogo.src = matchedTheme.logo;
+      badgeLogo.style.display = '';
+      document.getElementById('main-bank-card').style.background = matchedTheme.grad;
+    } else {
+      badgeName.textContent = normalizeBankName(bankVal);
+      badgeLogo.style.display = 'none';
+    }
+
+    // Tarjeta: titular, banco/tipo normalizado, RUT, N° cuenta y monto SIEMPRE a la vista.
     document.getElementById('disp-name').textContent = nameVal;
+    document.getElementById('card-rut').textContent = rutVal || '—';
+    document.getElementById('card-account').textContent = accountVal || '—';
+    if (amountVal && /^\d+$/.test(amountVal.trim())) {
+      document.getElementById('card-amount-row').style.display = 'block';
+      document.getElementById('card-amount').textContent = '$' + Number(amountVal.trim()).toLocaleString('es-CL');
+    }
     document.getElementById('val-rut').value = rutVal;
 
     if (accountVal) {
@@ -96,8 +146,9 @@
     }
 
     if (params.get('b')) {
-      document.getElementById('disp-bank-type').textContent = bankVal + (typeVal ? ' • ' + typeVal : '');
-      document.getElementById('val-bank-desc').value = bankVal + (typeVal ? ' (' + typeVal + ')' : '');
+      var displayType = (typeVal || '').trim().toLowerCase() === 'cuentarut' ? 'Cuenta Vista / CuentaRUT' : typeVal;
+      document.getElementById('disp-bank-type').textContent = normalizeBankName(bankVal) + (displayType ? ' • ' + displayType : '');
+      document.getElementById('val-bank-desc').value = normalizeBankName(bankVal) + (typeVal ? ' (' + typeVal + ')' : '');
     } else {
       document.getElementById('disp-bank-type').style.display = 'none';
       document.getElementById('row-bank').style.display = 'none';
@@ -200,9 +251,14 @@
       if (nameVal && nameVal !== 'Destinatario') parts.push('Nombre: ' + nameVal);
       if (rutVal) parts.push('RUT: ' + rutVal);
       if (params.get('b')) parts.push('Banco: ' + normalizeBankName(bankVal));
-      if (params.get('t')) parts.push('Tipo de cuenta: ' + typeVal);
+      // Match universal: MACH/Banco de Chile/Santander/Scotiabank no tienen la
+      // opción "CuentaRUT" en su menú; sí "Cuenta Vista". Exportar ambos nombres
+      // hace que el autollenado haga match en todos los bancos.
+      var typeText = (typeVal || '').trim().toLowerCase() === 'cuentarut' ? 'Cuenta Vista / CuentaRUT' : typeVal;
+      if (params.get('t')) parts.push('Tipo de cuenta: ' + typeText);
       if (accountVal) parts.push('Número de cuenta: ' + accountVal);
       if (emailVal) parts.push('Correo: ' + emailVal);
+      if (amountVal && /^\d+$/.test(amountVal.trim())) parts.push('Monto: $' + amountVal.trim());
 
       var full = parts.join('\n');
       var heroBtn = document.getElementById('btn-hero');
