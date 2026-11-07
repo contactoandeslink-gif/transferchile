@@ -387,13 +387,28 @@
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
       if (isAndroid) {
-        // Formato ESTÁNDAR fintech: action=VIEW + category=BROWSABLE explícitos.
-        // Sin ellos el navegador integrado de WhatsApp (Chrome Custom Tab en modo
-        // estricto) descarta el intent por seguridad y salta a Play Store aunque
-        // la app esté instalada. Con ellos abre DIRECTO. NOTA: no incluimos
-        // scheme=: la tabla de schemes no está verificada y un scheme falso
-        // rompería la resolución por paquete (launcher) que sí funciona en Chrome.
-        window.location.href = 'intent://#Intent;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
+        var rawScheme = scheme ? scheme.replace(/:\/\/.*$/, '').replace(/:$/, '') : '';
+        var fallbackUrl = 'https://play.google.com/store/apps/details?id=' + pkg;
+
+        // Formato oficial Android Chrome para deep linking directo:
+        // Incluye scheme=${rawScheme} + package=${pkg} + action=VIEW + category=BROWSABLE.
+        // Al incluir scheme (ej: 'mach', 'bancoestado', 'santandercl'), Android resuelve
+        // el intent contra el <data android:scheme="..."> declarado en el AndroidManifest
+        // del banco y abre DIRECTO la app instalada sin pasar por Play Store.
+        var intentUri;
+        if (rawScheme) {
+          intentUri = 'intent://#Intent;scheme=' + rawScheme + ';package=' + pkg + ';action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=' + encodeURIComponent(fallbackUrl) + ';end;';
+        } else {
+          intentUri = 'intent://#Intent;package=' + pkg + ';action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=' + encodeURIComponent(fallbackUrl) + ';end;';
+        }
+
+        // Si navega dentro de WhatsApp/Instagram (webview de Meta), advertir si el sandbox bloquea la salida
+        var isMetaInApp = /WhatsApp|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+        if (isMetaInApp) {
+          showToast('Abriendo banco... Si WhatsApp abre Play Store, toca ⋮ arriba a la derecha → "Abrir en el navegador"');
+        }
+
+        window.location.href = intentUri;
       } else if (isIOS && scheme) {
         var appId = iosAppStoreIds[pkg];
         if (scheme) {
