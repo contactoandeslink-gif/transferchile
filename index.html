@@ -325,26 +325,85 @@
       touch-action: manipulation;
     }
     .link-discreet:active { color: var(--primary); }
+    .step-badge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      background: linear-gradient(135deg, rgba(0, 210, 160, 0.12), rgba(0, 102, 255, 0.1));
+      border: 1px solid rgba(0, 210, 160, 0.35);
+      border-radius: 20px;
+    }
+    .step-badge-tag {
+      background: #00d2a0;
+      color: #00382b;
+      font-size: 9.5px;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+    .step-badge-text {
+      color: #0f172a;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
-      .tc-reveal { animation: tcSlideDown .45s cubic-bezier(.16, 1, .3, 1) both; }
-      .tc-reveal .btn-bank { opacity: 0; animation: tcFadeUp .35s ease forwards; }
-      .tc-reveal .btn-bank:nth-child(1) { animation-delay: .04s; }
-      .tc-reveal .btn-bank:nth-child(2) { animation-delay: .08s; }
-      .tc-reveal .btn-bank:nth-child(3) { animation-delay: .12s; }
-      .tc-reveal .btn-bank:nth-child(4) { animation-delay: .16s; }
-      .tc-reveal .btn-bank:nth-child(5) { animation-delay: .20s; }
-      .tc-reveal .btn-bank:nth-child(6) { animation-delay: .24s; }
-      .tc-reveal .btn-bank:nth-child(7) { animation-delay: .28s; }
-      .tc-reveal .btn-bank:nth-child(8) { animation-delay: .32s; }
-      .tc-reveal .btn-bank:nth-child(n+9) { animation-delay: .36s; }
+      .tc-reveal {
+        animation: tcSlideDown .5s cubic-bezier(.16, 1, .3, 1) both;
+      }
+      .tc-reveal .banks-section {
+        animation: tcSpotlightGlow 1.6s ease-out both;
+      }
+      .tc-reveal .step-badge {
+        animation: tcBadgePop .4s cubic-bezier(.34, 1.56, .64, 1) both;
+        animation-delay: .08s;
+      }
+      .tc-reveal .btn-bank {
+        opacity: 0;
+        animation: tcFadeUp .38s cubic-bezier(.16, 1, .3, 1) forwards;
+      }
+      .tc-reveal .btn-bank:nth-child(1), .tc-reveal .btn-bank:nth-child(2) { animation-delay: .06s; }
+      .tc-reveal .btn-bank:nth-child(3), .tc-reveal .btn-bank:nth-child(4) { animation-delay: .11s; }
+      .tc-reveal .btn-bank:nth-child(5), .tc-reveal .btn-bank:nth-child(6) { animation-delay: .16s; }
+      .tc-reveal .btn-bank:nth-child(7), .tc-reveal .btn-bank:nth-child(8) { animation-delay: .21s; }
+      .tc-reveal .btn-bank:nth-child(9), .tc-reveal .btn-bank:nth-child(10) { animation-delay: .26s; }
+      .tc-reveal .btn-bank:nth-child(11), .tc-reveal .btn-bank:nth-child(12) { animation-delay: .31s; }
+      .tc-reveal .btn-bank:nth-child(n+13) { animation-delay: .36s; }
     }
     @keyframes tcSlideDown {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(22px) scale(0.98); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes tcSpotlightGlow {
+      0% {
+        border-color: #00d2a0;
+        box-shadow: 0 0 0 4px rgba(0, 210, 160, 0.4), 0 16px 40px rgba(0, 102, 255, 0.25);
+      }
+      35% {
+        border-color: #0066ff;
+        box-shadow: 0 0 0 6px rgba(0, 102, 255, 0.28), 0 20px 48px rgba(0, 102, 255, 0.22);
+      }
+      100% {
+        border-color: var(--border);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      }
+    }
+    @keyframes tcBadgePop {
+      0% { opacity: 0; transform: scale(0.7) translateY(-6px); }
+      70% { transform: scale(1.08) translateY(0); }
+      100% { opacity: 1; transform: scale(1); }
+    }
     @keyframes tcFadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     /* Modal Asistente Exclusivo Mercado Pago */
@@ -448,6 +507,12 @@
     <!-- PASO 2: bancos (se revela tras copiar) -->
     <div id="step-banks" hidden>
       <div class="banks-section">
+        <div class="step-badge-wrap">
+          <div class="step-badge">
+            <span class="step-badge-tag">PASO 2</span>
+            <span class="step-badge-text">Datos en portapapeles • Toca tu banco</span>
+          </div>
+        </div>
         <div class="banks-title">¿Desde qué banco vas a transferir?</div>
         <p class="banks-subtitle">Los datos ya están copiados. Toca tu banco: se abre con todo listo para pegar.</p>
 

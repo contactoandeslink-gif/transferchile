@@ -292,11 +292,24 @@
     // Así nadie abre su banco con el portapapeles vacío.
     function revealStepBanks() {
       var step = document.getElementById('step-banks');
-      if (step && step.hidden) {
+      if (!step) return;
+      var wasHidden = step.hidden;
+      if (wasHidden) {
         step.hidden = false;
         step.classList.add('tc-reveal');
         step.setAttribute('aria-hidden', 'false');
       }
+
+      // Viaje suave cinemático hacia los bancos para ponerlos como el centro de atención
+      setTimeout(function() {
+        try {
+          var yOffset = -18;
+          var y = step.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+        } catch (e) {
+          step.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
 
     function setupFieldsToggle() {
