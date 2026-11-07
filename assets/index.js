@@ -293,14 +293,11 @@
     function revealStepBanks() {
       var step = document.getElementById('step-banks');
       if (!step) return;
-      var wasHidden = step.hidden;
-      if (wasHidden) {
-        step.hidden = false;
-        step.classList.remove('tc-reveal');
-        void step.offsetWidth;
-        step.classList.add('tc-reveal');
-        step.setAttribute('aria-hidden', 'false');
-      }
+      step.hidden = false;
+      step.classList.remove('tc-reveal');
+      void step.offsetWidth;
+      step.classList.add('tc-reveal');
+      step.setAttribute('aria-hidden', 'false');
 
       // Viaje suave cinemático hacia los bancos para ponerlos como el centro de atención
       setTimeout(function() {
