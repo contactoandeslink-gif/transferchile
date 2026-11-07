@@ -402,9 +402,13 @@
           intentUri = 'intent://#Intent;package=' + pkg + ';action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=' + encodeURIComponent(fallbackUrl) + ';end;';
         }
 
-        // Si navega dentro de WhatsApp/Instagram (webview de Meta), advertir si el sandbox bloquea la salida
+        // Si navega dentro de Brave en Android: Brave por defecto bloquea abrir apps externas por privacidad
+        var isBrave = Boolean(window.navigator.brave);
         var isMetaInApp = /WhatsApp|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
-        if (isMetaInApp) {
+
+        if (isBrave) {
+          showToast('En Brave: si no te abre el banco, activa en Configuración → Privacidad → "Permitir abrir enlaces en apps externas"');
+        } else if (isMetaInApp) {
           showToast('Abriendo banco... Si WhatsApp abre Play Store, toca ⋮ arriba a la derecha → "Abrir en el navegador"');
         }
 
