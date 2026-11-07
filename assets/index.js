@@ -107,8 +107,17 @@
       { key: 'santander', name: 'Santander', logo: 'assets/santander-icon.svg', grad: 'linear-gradient(135deg, #2b0003 0%, #6e060d 55%, #b30f18 100%)' },
       { key: 'falabella', name: 'Banco Falabella', logo: 'assets/falabella.svg', grad: 'linear-gradient(135deg, #031c0d 0%, #0c4720 55%, #157335 100%)' },
       { key: 'bci', name: 'BCI', logo: 'assets/bci.svg', grad: 'linear-gradient(135deg, #001833 0%, #003666 55%, #005ca9 100%)' },
-      { key: 'scotia', name: 'Scotiabank', logo: 'assets/scotiabank-icon.svg', grad: 'linear-gradient(135deg, #4a0002 0%, #8a0a14 55%, #c8102e 100%)' },
-      { key: 'itau', name: 'Banco Itaú', logo: 'assets/itau.svg', grad: 'linear-gradient(135deg, #261100 0%, #5c2900 55%, #b85400 100%)' }
+      { key: 'scotia', name: 'Scotiabank', logo: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#ed0722" d="M19.8 8.5c-1.2-.6-2.6-.9-4-.9-3.2 0-5.8 1.8-5.8 4.4 0 5.4 10 3.2 10 7.8 0 2.2-2 3.8-4.8 3.8-1.8 0-3.5-.5-4.8-1.4l-.8 2.8c1.5.8 3.5 1.2 5.5 1.2 4.5 0 7.8-2.2 7.8-5.8 0-5.8-10-3.6-10-7.8 0-1.8 1.6-3 3.8-3 1.4 0 2.8.4 3.8.9l.3-2z"/></svg>'), grad: 'linear-gradient(135deg, #4a0002 0%, #8a0a14 55%, #c8102e 100%)' },
+      { key: 'itau', name: 'Banco Itaú', logo: 'assets/itau.svg', grad: 'linear-gradient(135deg, #261100 0%, #5c2900 55%, #b85400 100%)' },
+      { key: 'ripley', name: 'Banco Ripley', logo: 'assets/ripley-icon.svg', grad: 'linear-gradient(135deg, #2b0c42 0%, #5d2a84 60%, #833ab4 100%)' },
+      { key: 'bice', name: 'Banco BICE', logo: 'assets/bice-icon.svg', grad: 'linear-gradient(135deg, #002b30 0%, #005a63 55%, #007a87 100%)' },
+      { key: 'security', name: 'Banco Security', logo: 'assets/security-icon.svg', grad: 'linear-gradient(135deg, #001526 0%, #002543 55%, #003057 100%)' },
+      { key: 'consorcio', name: 'Banco Consorcio', logo: 'assets/consorcio-icon.svg', grad: 'linear-gradient(135deg, #001a33 0%, #003366 55%, #f58220 100%)' },
+      { key: 'btg', name: 'BTG Pactual', logo: 'assets/btgpactual-icon.svg', grad: 'linear-gradient(135deg, #000d2b 0%, #001e61 60%, #003399 100%)' },
+      { key: 'global', name: 'Global66', logo: 'assets/global66-icon.svg', grad: 'linear-gradient(135deg, #050714 0%, #0a0e27 60%, #00ffa3 100%)' },
+      { key: 'coopeuch', name: 'Coopeuch', logo: 'assets/coopeuch-icon.svg', grad: 'linear-gradient(135deg, #003816 0%, #006627 55%, #008d36 100%)' },
+      { key: 'tapp', name: 'Tapp', logo: 'assets/tapp-icon.svg', grad: 'linear-gradient(135deg, #240540 0%, #4a157a 55%, #ff3366 100%)' },
+      { key: 'copec', name: 'Copec Pay', logo: 'assets/copecpay-icon.svg', grad: 'linear-gradient(135deg, #4d0004 0%, #99000a 55%, #e30613 100%)' }
     ];
 
     var bankLower = bankVal.toLowerCase();
@@ -368,6 +377,34 @@
       // 'com.baninter' RETIRADO: ficha de App Store sin verificar.
     };
 
+    // Navegadores embebidos (WhatsApp, Instagram, Facebook, Telegram...): sus
+    // webviews NO ejecutan intent://, por eso un banco instalado caía en Play
+    // Store. Detectarlos y dar el atajo: abrir la página en Chrome/Safari.
+    function isEmbeddedBrowser() {
+      var ua = navigator.userAgent || '';
+      return /WhatsApp|FBAN|FBAV|Instagram|Telegram|Twitter|Snapchat|wv\)/i.test(ua);
+    }
+
+    function showWebViewHint(pkg) {
+      var hint = document.getElementById('webview-hint');
+      if (!hint) return;
+      var pkgNames = {
+        'net.veritran.becl.prod': 'BancoEstado', 'cl.santander.smartphone': 'Santander',
+        'cl.bancochile.mi_banco': 'Banco de Chile', 'cl.android': 'Banco Falabella',
+        'cl.bci.app.personas': 'BCI', 'cl.scotiabank.go': 'Scotiabank',
+        'com.konylabs.ItauMobileBank': 'Banco Itaú', 'cl.bancoripley.appbanco': 'Banco Ripley',
+        'cl.bice.apppersonas': 'Banco BICE', 'com.sec.retail': 'Banco Security',
+        'cl.consorcio.mobileapp': 'Banco Consorcio', 'com.finmarkets.celfinandroid': 'BTG Pactual',
+        'com.krealo.tenpo': 'Tenpo', 'cl.bci.sismo.mach': 'MACH',
+        'com.global66.cards': 'Global66', 'com.mercadopago.wallet': 'Mercado Pago',
+        'com.coopeuchapp': 'Coopeuch', 'cl.tapp': 'Tapp', 'cl.copec.PagoClick': 'Copec Pay'
+      };
+      var bankName = pkgNames[pkg] || 'tu banco';
+      hint.textContent = 'Estás dentro de WhatsApp (navegador integrado): para que ' + bankName +
+        ' se abra DIRECTO, toca el menú ⋮ arriba a la derecha → «Abrir en el navegador» y vuelve a tocar tu banco. Tus datos quedan copiados.';
+      hint.style.display = 'block';
+    }
+
     function openBankApp(pkg, scheme) {
       if (pkg === 'com.mercadopago.wallet') {
         openMercadoPagoAssistant();
@@ -378,6 +415,9 @@
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
       if (isAndroid) {
+        // Navegadores embebidos (WhatsApp/Instagram/FB) NO ejecutan intent://:
+        // avisar con el atajo "Abrir en navegador". Los datos ya están copiados.
+        if (isEmbeddedBrowser()) showWebViewHint(pkg);
         // En Android: si la app está instalada, se abre en el acto. Si no, va directo a Google Play Store
         window.location.href = 'intent://#Intent;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
       } else if (isIOS && scheme) {

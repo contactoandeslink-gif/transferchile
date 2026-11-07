@@ -65,8 +65,12 @@ assert(/Monto: \$/.test(html), 'copia debe incluir el monto');
 assert(!/Confirma estos datos con el destinatario/.test(html), 'el cartel gris intimidante fue eliminado');
 // --- Diseño premium: logos oficiales + tarjeta dinámica por banco ---
 assert(/class="bank-logo"/.test(idxHtml) && idxHtml.includes('assets/bancoestado.svg'), 'botones con insignia 36x36 y logos oficiales');
-assert(/assets\/scotiabank(-icon)?\.svg/.test(idxHtml), 'logo Scotiabank presente');
+assert(/M19\.8 8\.5/.test(idxHtml), 'isotipo globo Scotiabank (SVG inline) presente');
+assert(idxHtml.includes('assets/ripley-icon.svg') && idxHtml.includes('assets/copecpay-icon.svg') && idxHtml.includes('assets/global66-icon.svg'), 'los 9 logos nuevos del usuario cableados');
+assert(!/<span>[A-Z]{1,2}<\/span>/.test(idxHtml), 'sin monogramas grises residuales');
+assert((html.match(/key: '/g) || []).length >= 17, 'catálogo de temas con 17+ bancos');
 assert(/bankThemes/.test(html) && /main-bank-card/.test(html), 'catálogo de temas dinámicos por banco');
 assert(/normalize\('NFD'\)/.test(html), 'matching de banco tolerante a tildes (Itaú)');
+assert(/isEmbeddedBrowser/.test(html) && /webview-hint/.test(idxHtml), 'detección de webview embebido con atajo al navegador');
 console.log('Card-visible data, seal, Cuenta Vista match and amount PASS');
 console.log('Play-access form structure and WhatsApp message PASS');

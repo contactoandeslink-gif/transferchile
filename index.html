@@ -271,6 +271,20 @@
     .btn-bank:hover { background: #eef2fa; border-color: var(--primary); }
     .btn-bank:active { background: #dce4f5; transform: scale(0.97); }
 
+    /* Aviso para navegadores embebidos (WhatsApp/Instagram/FB): no ejecutan
+       intent://, hay que abrir en Chrome para ir directo al banco. */
+    .webview-hint {
+      display: none;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: #7c2d12;
+      background: rgba(251, 146, 60, 0.14);
+      border: 1.5px solid rgba(251, 146, 60, 0.55);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+
     /* Insignia 36×36 blanca con logo oficial: uniforme y nítida (estándar industria) */
     .bank-logo {
       width: 36px;
@@ -447,6 +461,7 @@
 
     <!-- PASO 2: bancos (se revela tras copiar) -->
     <div id="step-banks" hidden>
+      <div id="webview-hint" class="webview-hint"></div>
       <div class="banks-section">
         <div class="banks-title">¿Desde qué banco vas a transferir?</div>
         <p class="banks-subtitle">Los datos ya están copiados. Toca tu banco: se abre con todo listo para pegar.</p>
@@ -460,24 +475,24 @@
         <a class="btn-bank" data-name="banco de chile edwards mi banco" href="#" role="button" data-tc-click="4"><div class="bank-logo"><img src="assets/bancochile-icon.png" alt=""></div><span>Banco de Chile</span></a>
         <a class="btn-bank" data-name="banco falabella cmr" href="#" role="button" data-tc-click="5"><div class="bank-logo"><img src="assets/falabella.svg" alt=""></div><span>Banco Falabella</span></a>
         <a class="btn-bank" data-name="bci banco credito e inversiones" href="#" role="button" data-tc-click="6"><div class="bank-logo"><img src="assets/bci.svg" alt=""></div><span>BCI</span></a>
-        <a class="btn-bank" data-name="scotiabank chile scotiago" href="#" role="button" data-tc-click="7"><div class="bank-logo"><img src="assets/scotiabank-icon.svg" alt=""></div><span>Scotiabank</span></a>
+        <a class="btn-bank" data-name="scotiabank chile scotiago" href="#" role="button" data-tc-click="7"><div class="bank-logo"><svg viewBox="0 0 32 32" width="24" height="24" fill="#ed0722"><path d="M19.8 8.5c-1.2-.6-2.6-.9-4-.9-3.2 0-5.8 1.8-5.8 4.4 0 5.4 10 3.2 10 7.8 0 2.2-2 3.8-4.8 3.8-1.8 0-3.5-.5-4.8-1.4l-.8 2.8c1.5.8 3.5 1.2 5.5 1.2 4.5 0 7.8-2.2 7.8-5.8 0-5.8-10-3.6-10-7.8 0-1.8 1.6-3 3.8-3 1.4 0 2.8.4 3.8.9l.3-2z"/></svg></div><span>Scotiabank</span></a>
         <a class="btn-bank" data-name="itau banco itaú personas" href="#" role="button" data-tc-click="8"><div class="bank-logo"><img src="assets/itau.svg" alt=""></div><span>Banco Itaú</span></a>
-        <a class="btn-bank" data-name="banco ripley" href="#" role="button" data-tc-click="9"><div class="bank-logo"><span>RI</span></div><span>Banco Ripley</span></a>
-        <a class="btn-bank" data-name="banco bice" href="#" role="button" data-tc-click="10"><div class="bank-logo"><span>BI</span></div><span>Banco BICE</span></a>
-        <a class="btn-bank" data-name="banco security" href="#" role="button" data-tc-click="11"><div class="bank-logo"><span>SE</span></div><span>Banco Security</span></a>
-        <a class="btn-bank" data-name="banco consorcio" href="#" role="button" data-tc-click="12"><div class="bank-logo"><span>CO</span></div><span>Banco Consorcio</span></a>
+        <a class="btn-bank" data-name="banco ripley" href="#" role="button" data-tc-click="9"><div class="bank-logo"><img src="assets/ripley-icon.svg" alt=""></div><span>Banco Ripley</span></a>
+        <a class="btn-bank" data-name="banco bice" href="#" role="button" data-tc-click="10"><div class="bank-logo"><img src="assets/bice-icon.svg" alt=""></div><span>Banco BICE</span></a>
+        <a class="btn-bank" data-name="banco security" href="#" role="button" data-tc-click="11"><div class="bank-logo"><img src="assets/security-icon.svg" alt=""></div><span>Banco Security</span></a>
+        <a class="btn-bank" data-name="banco consorcio" href="#" role="button" data-tc-click="12"><div class="bank-logo"><img src="assets/consorcio-icon.svg" alt=""></div><span>Banco Consorcio</span></a>
         <!-- Banco Internacional retirado temporalmente: su ficha de App Store no pudo
              verificarse (el ID anterior apuntaba a otra app). Se repone cuando se confirme. -->
-        <a class="btn-bank" data-name="btg pactual inversiones" href="#" role="button" data-tc-click="13"><div class="bank-logo"><span>BT</span></div><span>BTG Pactual</span></a>
+        <a class="btn-bank" data-name="btg pactual inversiones" href="#" role="button" data-tc-click="13"><div class="bank-logo"><img src="assets/btgpactual-icon.svg" alt=""></div><span>BTG Pactual</span></a>
 
         <!-- Cuentas Digitales y Prepago CMF -->
         <a class="btn-bank" data-name="tenpo prepago tarjeta" href="#" role="button" data-tc-click="14"><div class="bank-logo" style="background:#00d2a0;border-color:#00b88c;color:#00382b;"><span style="font-size:12px;letter-spacing:0;">tenpo</span></div><span>Tenpo</span></a>
         <a class="btn-bank" data-name="mach bci cuenta" href="#" role="button" data-tc-click="15"><div class="bank-logo" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);border-color:#6a1b9a;"><img src="assets/mach-icon.svg" alt="" style="filter:brightness(0) invert(1);"></div><span>MACH</span></a>
-        <a class="btn-bank" data-name="global66 prepago global 66" href="#" role="button" data-tc-click="16"><div class="bank-logo"><span>G6</span></div><span>Global66</span></a>
+        <a class="btn-bank" data-name="global66 prepago global 66" href="#" role="button" data-tc-click="16"><div class="bank-logo"><img src="assets/global66-icon.svg" alt=""></div><span>Global66</span></a>
         <a class="btn-bank" data-name="mercado pago mercadopago wallet" href="#" role="button" data-tc-click="17"><div class="bank-logo" style="background:#009ee3;border-color:#0087c2;"><svg viewBox="0 0 32 32" width="22" height="22" fill="#ffffff"><path d="M16 6C10.5 6 6 10.5 6 16s4.5 10 10 10 10-4.5 10-10S21.5 6 16 6zm4.5 9.2l-2.2 2.2c-.4.4-1 .4-1.4 0l-1.4-1.4-1.8 1.8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4l2.5-2.5c.4-.4 1-.4 1.4 0l1.4 1.4 1.5-1.5c.4-.4 1-.4 1.4 0 .4.4.4 1 0 1.4z"/></svg></div><span>Mercado Pago</span></a>
-        <a class="btn-bank" data-name="coopeuch cooperativa" href="#" role="button" data-tc-click="18"><div class="bank-logo"><span>CU</span></div><span>Coopeuch</span></a>
-        <a class="btn-bank" data-name="tapp caja los andes" href="#" role="button" data-tc-click="19"><div class="bank-logo"><span>TA</span></div><span>Tapp</span></a>
-        <a class="btn-bank" data-name="copec pay" href="#" role="button" data-tc-click="20"><div class="bank-logo"><span>CP</span></div><span>Copec Pay</span></a>
+        <a class="btn-bank" data-name="coopeuch cooperativa" href="#" role="button" data-tc-click="18"><div class="bank-logo"><img src="assets/coopeuch-icon.svg" alt=""></div><span>Coopeuch</span></a>
+        <a class="btn-bank" data-name="tapp caja los andes" href="#" role="button" data-tc-click="19"><div class="bank-logo"><img src="assets/tapp-icon.svg" alt=""></div><span>Tapp</span></a>
+        <a class="btn-bank" data-name="copec pay" href="#" role="button" data-tc-click="20"><div class="bank-logo"><img src="assets/copecpay-icon.svg" alt=""></div><span>Copec Pay</span></a>
       </div>
       </div>
     </div>
