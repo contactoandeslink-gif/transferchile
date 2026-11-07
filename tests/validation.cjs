@@ -71,6 +71,7 @@ assert(!/<span>[A-Z]{1,2}<\/span>/.test(idxHtml), 'sin monogramas grises residua
 assert((html.match(/key: '/g) || []).length >= 17, 'catálogo de temas con 17+ bancos');
 assert(/bankThemes/.test(html) && /main-bank-card/.test(html), 'catálogo de temas dinámicos por banco');
 assert(/normalize\('NFD'\)/.test(html), 'matching de banco tolerante a tildes (Itaú)');
-assert(/isEmbeddedBrowser/.test(html) && /webview-hint/.test(idxHtml), 'detección de webview embebido con atajo al navegador');
+assert(/action=android\.intent\.action\.VIEW/.test(html) && /category=android\.intent\.category\.BROWSABLE/.test(html), 'intent Android con action VIEW + BROWSABLE (abre directo desde WhatsApp)');
+assert(!/webview-hint|isEmbeddedBrowser|showWebViewHint/.test(html), 'cartel webview eliminado: la página queda limpia');
 console.log('Card-visible data, seal, Cuenta Vista match and amount PASS');
 console.log('Play-access form structure and WhatsApp message PASS');

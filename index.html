@@ -271,20 +271,6 @@
     .btn-bank:hover { background: #eef2fa; border-color: var(--primary); }
     .btn-bank:active { background: #dce4f5; transform: scale(0.97); }
 
-    /* Aviso para navegadores embebidos (WhatsApp/Instagram/FB): no ejecutan
-       intent://, hay que abrir en Chrome para ir directo al banco. */
-    .webview-hint {
-      display: none;
-      font-size: 12.5px;
-      line-height: 1.45;
-      color: #7c2d12;
-      background: rgba(251, 146, 60, 0.14);
-      border: 1.5px solid rgba(251, 146, 60, 0.55);
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-    }
-
     /* Insignia 36×36 blanca con logo oficial: uniforme y nítida (estándar industria) */
     .bank-logo {
       width: 36px;
@@ -461,7 +447,6 @@
 
     <!-- PASO 2: bancos (se revela tras copiar) -->
     <div id="step-banks" hidden>
-      <div id="webview-hint" class="webview-hint"></div>
       <div class="banks-section">
         <div class="banks-title">¿Desde qué banco vas a transferir?</div>
         <p class="banks-subtitle">Los datos ya están copiados. Toca tu banco: se abre con todo listo para pegar.</p>

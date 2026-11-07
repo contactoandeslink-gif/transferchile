@@ -377,34 +377,6 @@
       // 'com.baninter' RETIRADO: ficha de App Store sin verificar.
     };
 
-    // Navegadores embebidos (WhatsApp, Instagram, Facebook, Telegram...): sus
-    // webviews NO ejecutan intent://, por eso un banco instalado caía en Play
-    // Store. Detectarlos y dar el atajo: abrir la página en Chrome/Safari.
-    function isEmbeddedBrowser() {
-      var ua = navigator.userAgent || '';
-      return /WhatsApp|FBAN|FBAV|Instagram|Telegram|Twitter|Snapchat|wv\)/i.test(ua);
-    }
-
-    function showWebViewHint(pkg) {
-      var hint = document.getElementById('webview-hint');
-      if (!hint) return;
-      var pkgNames = {
-        'net.veritran.becl.prod': 'BancoEstado', 'cl.santander.smartphone': 'Santander',
-        'cl.bancochile.mi_banco': 'Banco de Chile', 'cl.android': 'Banco Falabella',
-        'cl.bci.app.personas': 'BCI', 'cl.scotiabank.go': 'Scotiabank',
-        'com.konylabs.ItauMobileBank': 'Banco Itaú', 'cl.bancoripley.appbanco': 'Banco Ripley',
-        'cl.bice.apppersonas': 'Banco BICE', 'com.sec.retail': 'Banco Security',
-        'cl.consorcio.mobileapp': 'Banco Consorcio', 'com.finmarkets.celfinandroid': 'BTG Pactual',
-        'com.krealo.tenpo': 'Tenpo', 'cl.bci.sismo.mach': 'MACH',
-        'com.global66.cards': 'Global66', 'com.mercadopago.wallet': 'Mercado Pago',
-        'com.coopeuchapp': 'Coopeuch', 'cl.tapp': 'Tapp', 'cl.copec.PagoClick': 'Copec Pay'
-      };
-      var bankName = pkgNames[pkg] || 'tu banco';
-      hint.textContent = 'Estás dentro de WhatsApp (navegador integrado): para que ' + bankName +
-        ' se abra DIRECTO, toca el menú ⋮ arriba a la derecha → «Abrir en el navegador» y vuelve a tocar tu banco. Tus datos quedan copiados.';
-      hint.style.display = 'block';
-    }
-
     function openBankApp(pkg, scheme) {
       if (pkg === 'com.mercadopago.wallet') {
         openMercadoPagoAssistant();
@@ -415,11 +387,13 @@
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
       if (isAndroid) {
-        // Navegadores embebidos (WhatsApp/Instagram/FB) NO ejecutan intent://:
-        // avisar con el atajo "Abrir en navegador". Los datos ya están copiados.
-        if (isEmbeddedBrowser()) showWebViewHint(pkg);
-        // En Android: si la app está instalada, se abre en el acto. Si no, va directo a Google Play Store
-        window.location.href = 'intent://#Intent;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
+        // Formato ESTÁNDAR fintech: action=VIEW + category=BROWSABLE explícitos.
+        // Sin ellos el navegador integrado de WhatsApp (Chrome Custom Tab en modo
+        // estricto) descarta el intent por seguridad y salta a Play Store aunque
+        // la app esté instalada. Con ellos abre DIRECTO. NOTA: no incluimos
+        // scheme=: la tabla de schemes no está verificada y un scheme falso
+        // rompería la resolución por paquete (launcher) que sí funciona en Chrome.
+        window.location.href = 'intent://#Intent;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=' + pkg + ';S.browser_fallback_url=https://play.google.com/store/apps/details?id=' + pkg + ';end';
       } else if (isIOS && scheme) {
         var appId = iosAppStoreIds[pkg];
         if (scheme) {
