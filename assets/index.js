@@ -272,16 +272,16 @@
       var full = parts.join('\n');
       var heroBtn = document.getElementById('btn-hero');
       universalCopy(full.trim(), null).then(function() {
-        showToast('✅ ¡Datos copiados! Elige tu banco abajo');
+        showToast('📋 ¡Datos copiados! Elige tu banco');
         revealStepBanks();
         if (heroBtn) {
           var orig = heroBtn.textContent;
-          heroBtn.textContent = '✅ ¡Copiado con Éxito!';
+          heroBtn.textContent = '✔ ¡Copiado! Abre tu banco abajo ↓';
           heroBtn.className = 'btn-hero-copy copied';
           setTimeout(function() {
             heroBtn.textContent = orig;
             heroBtn.className = 'btn-hero-copy';
-          }, 2500);
+          }, 3000);
         }
       }).catch(function() {
         showToast('Error al copiar');
@@ -296,6 +296,8 @@
       var wasHidden = step.hidden;
       if (wasHidden) {
         step.hidden = false;
+        step.classList.remove('tc-reveal');
+        void step.offsetWidth;
         step.classList.add('tc-reveal');
         step.setAttribute('aria-hidden', 'false');
       }
@@ -303,13 +305,13 @@
       // Viaje suave cinemático hacia los bancos para ponerlos como el centro de atención
       setTimeout(function() {
         try {
-          var yOffset = -18;
+          var yOffset = -14;
           var y = step.getBoundingClientRect().top + window.pageYOffset + yOffset;
           window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
         } catch (e) {
           step.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 100);
+      }, 70);
     }
 
     function setupFieldsToggle() {
