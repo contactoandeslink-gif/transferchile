@@ -426,24 +426,23 @@
       }
       .tc-reveal .portapapeles-pill {
         animation: pillPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-        animation-delay: 0.05s;
+        animation-delay: 0.10s;
       }
-      /* Reparto Magnético de Naipes: Asimetría orgánica de naipes y encaje elástico */
-      .tc-reveal .btn-bank:nth-child(odd) {
+      /* Concepto 10 Perfeccionado: Onda Líquida con Aura y Elevación
+         Ordenada por pares/filas, sincronizada con el scroll y con ritmo suave (620ms) */
+      .tc-reveal .btn-bank {
         opacity: 0;
-        animation: bankDealOdd 0.42s cubic-bezier(0.2, 1.35, 0.38, 1) forwards;
+        animation: liquidBloomRow 0.62s cubic-bezier(0.22, 1.18, 0.38, 1) forwards;
       }
-      .tc-reveal .btn-bank:nth-child(even) {
-        opacity: 0;
-        animation: bankDealEven 0.42s cubic-bezier(0.2, 1.35, 0.38, 1) forwards;
-      }
-      .tc-reveal .btn-bank:nth-child(1), .tc-reveal .btn-bank:nth-child(2) { animation-delay: 0.04s; }
-      .tc-reveal .btn-bank:nth-child(3), .tc-reveal .btn-bank:nth-child(4) { animation-delay: 0.08s; }
-      .tc-reveal .btn-bank:nth-child(5), .tc-reveal .btn-bank:nth-child(6) { animation-delay: 0.12s; }
-      .tc-reveal .btn-bank:nth-child(7), .tc-reveal .btn-bank:nth-child(8) { animation-delay: 0.16s; }
-      .tc-reveal .btn-bank:nth-child(9), .tc-reveal .btn-bank:nth-child(10) { animation-delay: 0.20s; }
-      .tc-reveal .btn-bank:nth-child(11), .tc-reveal .btn-bank:nth-child(12) { animation-delay: 0.24s; }
-      .tc-reveal .btn-bank:nth-child(n+13) { animation-delay: 0.28s; }
+      .tc-reveal .btn-bank:nth-child(1), .tc-reveal .btn-bank:nth-child(2) { animation-delay: 0.16s; }
+      .tc-reveal .btn-bank:nth-child(3), .tc-reveal .btn-bank:nth-child(4) { animation-delay: 0.24s; }
+      .tc-reveal .btn-bank:nth-child(5), .tc-reveal .btn-bank:nth-child(6) { animation-delay: 0.32s; }
+      .tc-reveal .btn-bank:nth-child(7), .tc-reveal .btn-bank:nth-child(8) { animation-delay: 0.40s; }
+      .tc-reveal .btn-bank:nth-child(9), .tc-reveal .btn-bank:nth-child(10) { animation-delay: 0.48s; }
+      .tc-reveal .btn-bank:nth-child(11), .tc-reveal .btn-bank:nth-child(12) { animation-delay: 0.56s; }
+      .tc-reveal .btn-bank:nth-child(13), .tc-reveal .btn-bank:nth-child(14) { animation-delay: 0.64s; }
+      .tc-reveal .btn-bank:nth-child(15), .tc-reveal .btn-bank:nth-child(16) { animation-delay: 0.72s; }
+      .tc-reveal .btn-bank:nth-child(n+17) { animation-delay: 0.80s; }
     }
     @keyframes tcCardFloat {
       from { opacity: 0; transform: translateY(18px); }
@@ -453,24 +452,21 @@
       0% { opacity: 0; transform: scale(0.8) translateY(-4px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
-    @keyframes bankDealOdd {
+    @keyframes liquidBloomRow {
       0% {
         opacity: 0;
-        transform: translateX(-16px) translateY(24px) rotate(-3.5deg) scale(0.90);
+        transform: translateY(22px) scale(0.92);
+        box-shadow: 0 0 0 0 rgba(0, 102, 255, 0);
+      }
+      55% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 10px 24px -4px rgba(0, 102, 255, 0.22), 0 0 16px 2px rgba(0, 210, 160, 0.16);
       }
       100% {
         opacity: 1;
-        transform: translateX(0) translateY(0) rotate(0deg) scale(1);
-      }
-    }
-    @keyframes bankDealEven {
-      0% {
-        opacity: 0;
-        transform: translateX(16px) translateY(24px) rotate(3.2deg) scale(0.90);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+        transform: translateY(0) scale(1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
       }
     }
 
