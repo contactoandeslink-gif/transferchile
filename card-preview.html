@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Propuesta Rediseño Tarjeta BancoEstado | TransferChile Android</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body {
+      background: #090d16;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    .header-bar {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 210, 160, 0.12);
+      border: 1px solid rgba(0, 210, 160, 0.3);
+      color: #00d2a0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .header-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .header-sub {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* SELECTOR ANTES / DESPUÉS / VARIANTES */
+    .variant-selector {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .btn-tab {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .btn-tab.active {
+      background: #0066ff;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 102, 255, 0.35);
+    }
+    .btn-tab.danger.active {
+      background: #e65100;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(230, 81, 0, 0.35);
+    }
+
+    /* SIMULADOR DE TELÉFONO ANDROID */
+    .phone-mock {
+      width: 100%;
+      max-width: 410px;
+      background: #f8fafc;
+      border-radius: 36px;
+      padding: 16px 14px 26px;
+      box-shadow: 0 25px 55px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      color: #0f172a;
+      position: relative;
+    }
+    .phone-top-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+      padding: 0 8px 12px;
+    }
+    .phone-appbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .phone-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .phone-brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #0066ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 15px;
+    }
+    .phone-notice-card {
+      background: #f1f5f9;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+    .phone-notice-title {
+      font-weight: 800;
+      margin-bottom: 2px;
+      color: #0f172a;
+    }
+    .phone-notice-sub {
+      color: #64748b;
+      font-size: 11.5px;
+    }
+
+    /* ==============================================================
+       TARJETA 1: "EL ANTES" (LA DE TU CAPTURA DE PANTALLA)
+       ============================================================== */
+    .card-before {
+      background: linear-gradient(135deg, #ff6d00 0%, #e65100 50%, #bf360c 100%);
+      color: #ffffff;
+      border-radius: 22px;
+      padding: 20px 18px;
+      box-shadow: 0 10px 24px -4px rgba(230, 81, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .before-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .before-bank-block {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .before-emoji-chip {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .before-bank-title {
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .before-actions {
+      display: flex;
+      gap: 12px;
+      font-size: 15px;
+      opacity: 0.85;
+    }
+    .before-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+    .before-account {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .before-rut {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .before-btns-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .before-btn-qr {
+      flex: 1;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .before-btn-wa {
+      flex: 1;
+      background: #25d366;
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .before-btn-copy {
+      width: 100%;
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ==============================================================
+       TARJETA 2: "EL DESPUÉS" (PROPUESTA LUXURY FINTECH BANCOESTADO)
+       ============================================================== */
+    .card-after {
+      background: linear-gradient(135deg, #091a36 0%, #0d2855 45%, #101c38 100%);
+      color: #ffffff;
+      border-radius: 22px;
+      padding: 20px 18px;
+      box-shadow: 0 16px 36px -6px rgba(9, 26, 54, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* RESPLANDOR Y LÍNEAS DE SEGURIDAD ESTILO BILLETE / BANCO */
+    .card-after::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -30px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(238, 128, 29, 0.32) 0%, rgba(215, 0, 50, 0.15) 50%, transparent 75%);
+      pointer-events: none;
+    }
+    .card-after::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -40px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(2, 87, 160, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .card-guilloche {
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+      background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 16px);
+      pointer-events: none;
+    }
+
+    /* CABECERA: INSIGNIA OFICIAL + BANCO + PILL TIPO + ACCIONES */
+    .after-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .after-bank-identity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bank-insignia {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      background: #ffffff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      padding: 4px;
+    }
+    .bank-insignia img, .bank-insignia svg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .after-bank-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .after-bank-name {
+      font-size: 16.5px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .after-account-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ff9e42;
+      background: rgba(238, 128, 29, 0.15);
+      padding: 1px 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(238, 128, 29, 0.3);
+      width: fit-content;
+      margin-top: 2px;
+    }
+    .after-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-action-glass {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-action-glass:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+
+    /* FILA CHIP EMV DORADO + CONTACTLESS */
+    .after-chip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 4px 0 2px;
+      position: relative;
+      z-index: 2;
+    }
+    .emv-chip {
+      width: 34px;
+      height: 25px;
+      background: linear-gradient(135deg, #fce092 0%, #e5b54f 50%, #b8860b 100%);
+      border-radius: 4px;
+      border: 1px solid #b8860b;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    .emv-chip::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(to right, transparent 10px, #b8860b 10px, #b8860b 11px, transparent 11px, transparent 22px, #b8860b 22px, #b8860b 23px, transparent 23px),
+        linear-gradient(to bottom, transparent 8px, #b8860b 8px, #b8860b 9px, transparent 9px, transparent 16px, #b8860b 16px, #b8860b 17px, transparent 17px);
+      opacity: 0.6;
+    }
+    .contactless-wave {
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 18px;
+    }
+
+    /* DATOS DEL TITULAR (ESTILO TARJETA FÍSICA DE CRÉDITO) */
+    .after-body {
+      position: relative;
+      z-index: 2;
+    }
+    .after-name {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.4px;
+      text-transform: capitalize;
+    }
+    .after-account-numbers {
+      display: flex;
+      gap: 16px;
+      margin-top: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .acc-col-k {
+      font-size: 10px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .acc-col-v {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      letter-spacing: 0.5px;
+    }
+
+    /* BOTONES DE ALTA GAMA */
+    .after-btns-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+      position: relative;
+      z-index: 2;
+    }
+    .after-btn-qr {
+      flex: 1;
+      background: #ffffff;
+      color: #091a36;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .after-btn-qr:active { transform: scale(0.98); }
+    .after-btn-wa {
+      flex: 1;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .after-btn-wa:active { transform: scale(0.98); }
+    .after-btn-copy {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+    .after-btn-copy:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.3); }
+
+    /* ==============================================================
+       TARJETA 3: VARIANTE 2 (EDICIÓN NARANJA CORPORATIVO PRO)
+       ============================================================== */
+    .card-orange-pro {
+      background: linear-gradient(135deg, #d34a00 0%, #b83600 50%, #872100 100%);
+      color: #ffffff;
+      border-radius: 22px;
+      padding: 20px 18px;
+      box-shadow: 0 16px 36px -6px rgba(184, 54, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.14);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-orange-pro::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -30px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* COMPARATIVA BULLETS */
+    .comparison-box {
+      width: 100%;
+      max-width: 440px;
+      margin-top: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .comp-title {
+      font-weight: 800;
+      color: #00d2a0;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .comp-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+    .comp-item span:first-child {
+      color: #00d2a0;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <div class="badge-tag">Identidad de Marca Oficial</div>
+    <h1 class="header-title">Rediseño Tarjeta BancoEstado</h1>
+    <p class="header-sub">Compara la versión actual de la app con la nueva propuesta de alta gama</p>
+  </div>
+
+  <!-- SELECTOR DE VISTA -->
+  <div class="variant-selector">
+    <button class="btn-tab danger active" id="tab-before" type="button">1. Como se ve hoy</button>
+    <button class="btn-tab" id="tab-after" type="button">2. Propuesta Azul & Ámbar ⭐</button>
+    <button class="btn-tab" id="tab-orange" type="button">3. Naranja Refinado</button>
+  </div>
+
+  <!-- TELÉFONO ANDROID SIMULADO -->
+  <div class="phone-mock">
+    <!-- BARRA SUPERIOR ANDROID -->
+    <div class="phone-top-status">
+      <span>8:08</span>
+      <span>📶 🔋 100%</span>
+    </div>
+
+    <!-- APP BAR TRANSFERCHILE -->
+    <div class="phone-appbar">
+      <div class="phone-brand">
+        <div class="phone-brand-icon">💳</div>
+        <span>TransferChile</span>
+      </div>
+      <div style="font-size: 18px; color: #64748b;">❓ ⋮</div>
+    </div>
+
+    <!-- AVISO SUPERIOR -->
+    <div class="phone-notice-card">
+      <div class="phone-notice-title">⚡ Tus Cuentas para Cobrar</div>
+      <div class="phone-notice-sub">Muestra tu QR de mostrador o comparte tu link por WhatsApp.</div>
+    </div>
+
+    <!-- ================= CONTENEDOR DE LA TARJETA CAMBIANTE ================= -->
+
+    <!-- VISTA 1: ANTES (COMO ESTÁ HOY EN PLAY STORE) -->
+    <div id="view-before">
+      <div class="card-before">
+        <div class="before-top">
+          <div class="before-bank-block">
+            <span class="before-emoji-chip">💳</span>
+            <span class="before-bank-title">Banco Estado</span>
+          </div>
+          <div class="before-actions">
+            <span>✏️</span>
+            <span>🗑️</span>
+          </div>
+        </div>
+        <div class="before-name">isaac navarro</div>
+        <div class="before-account">CuentaRUT • N° 19061110</div>
+        <div class="before-rut">RUT: 19.061.110-8</div>
+
+        <div class="before-btns-row">
+          <button class="before-btn-qr" type="button">
+            <span>⛶</span> Ver QR
+          </button>
+          <button class="before-btn-wa" type="button">
+            <span>↗</span> WhatsApp
+          </button>
+        </div>
+        <button class="before-btn-copy" type="button">
+          <span>📋</span> Copiar Todos los Datos
+        </button>
+      </div>
+    </div>
+
+    <!-- VISTA 2: DESPUÉS (PROPUESTA AZUL & ÁMBAR REAL BANCOESTADO) -->
+    <div id="view-after" style="display: none;">
+      <div class="card-after">
+        <div class="card-guilloche"></div>
+        <div class="after-top">
+          <div class="after-bank-identity">
+            <div class="bank-insignia">
+              <img src="assets/bancoestado.svg" alt="BancoEstado">
+            </div>
+            <div class="after-bank-text">
+              <span class="after-bank-name">BancoEstado</span>
+              <span class="after-account-pill">CuentaRUT</span>
+            </div>
+          </div>
+          <div class="after-actions">
+            <div class="btn-action-glass">✏️</div>
+            <div class="btn-action-glass">🗑️</div>
+          </div>
+        </div>
+
+        <!-- FILA CHIP EMV DORADO REALISTA + CONTACTLESS -->
+        <div class="after-chip-row">
+          <div class="emv-chip"></div>
+          <div class="contactless-wave">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 7a6 6 0 0 1 0 10M12 4.5a10 10 0 0 1 0 15M16 2a14 14 0 0 1 0 20"/></svg>
+          </div>
+        </div>
+
+        <!-- TITULAR Y DATOS -->
+        <div class="after-body">
+          <div class="after-name">Isaac Navarro</div>
+          <div class="after-account-numbers">
+            <div>
+              <div class="acc-col-k">N° Cuenta</div>
+              <div class="acc-col-v">19061110</div>
+            </div>
+            <div>
+              <div class="acc-col-k">RUT</div>
+              <div class="acc-col-v">19.061.110-8</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="after-btns-row">
+          <button class="after-btn-qr" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3z"/></svg>
+            Ver QR
+          </button>
+          <button class="after-btn-wa" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-5.46-4.45-9.91-9.91-9.91zm0 18.15c-1.52 0-3.01-.41-4.31-1.18l-.31-.18-3.2.84.85-3.12-.2-.32c-.84-1.34-1.29-2.9-1.29-4.48 0-4.52 3.68-8.2 8.26-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/></svg>
+            WhatsApp
+          </button>
+        </div>
+        <button class="after-btn-copy" type="button">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar Todos los Datos
+        </button>
+      </div>
+    </div>
+
+    <!-- VISTA 3: VARIANTE NARANJA CORPORATIVO REFINADO -->
+    <div id="view-orange" style="display: none;">
+      <div class="card-orange-pro">
+        <div class="card-guilloche"></div>
+        <div class="after-top">
+          <div class="after-bank-identity">
+            <div class="bank-insignia">
+              <img src="assets/bancoestado.svg" alt="BancoEstado">
+            </div>
+            <div class="after-bank-text">
+              <span class="after-bank-name">BancoEstado</span>
+              <span class="after-account-pill" style="color: #fff; background: rgba(0,0,0,0.25); border-color: rgba(255,255,255,0.3);">CuentaRUT</span>
+            </div>
+          </div>
+          <div class="after-actions">
+            <div class="btn-action-glass">✏️</div>
+            <div class="btn-action-glass">🗑️</div>
+          </div>
+        </div>
+
+        <div class="after-chip-row">
+          <div class="emv-chip"></div>
+          <div class="contactless-wave">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 7a6 6 0 0 1 0 10M12 4.5a10 10 0 0 1 0 15M16 2a14 14 0 0 1 0 20"/></svg>
+          </div>
+        </div>
+
+        <div class="after-body">
+          <div class="after-name">Isaac Navarro</div>
+          <div class="after-account-numbers">
+            <div>
+              <div class="acc-col-k">N° Cuenta</div>
+              <div class="acc-col-v">19061110</div>
+            </div>
+            <div>
+              <div class="acc-col-k">RUT</div>
+              <div class="acc-col-v">19.061.110-8</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="after-btns-row">
+          <button class="after-btn-qr" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3z"/></svg>
+            Ver QR
+          </button>
+          <button class="after-btn-wa" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-5.46-4.45-9.91-9.91-9.91zm0 18.15c-1.52 0-3.01-.41-4.31-1.18l-.31-.18-3.2.84.85-3.12-.2-.32c-.84-1.34-1.29-2.9-1.29-4.48 0-4.52 3.68-8.2 8.26-8.2 4.52 0 8.2 3.68 8.2 8.2 0 4.52-3.68 8.2-8.2 8.2z"/></svg>
+            WhatsApp
+          </button>
+        </div>
+        <button class="after-btn-copy" type="button">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar Todos los Datos
+        </button>
+      </div>
+    </div>
+
+    <!-- BOTÓN AGREGAR CUENTA -->
+    <div style="margin-top: 14px; text-align: center;">
+      <button style="width: 100%; background: #004c6d; color: white; border: none; padding: 12px; border-radius: 24px; font-weight: 700; font-size: 14px;" type="button">
+        + Nueva Cuenta
+      </button>
+    </div>
+  </div>
+
+  <!-- COMPARATIVA TÉCNICA -->
+  <div class="comparison-box">
+    <div class="comp-title">✨ Qué cambia con la propuesta nueva:</div>
+    <div class="comp-item">
+      <span>1.</span>
+      <span><b>Logo oficial:</b> Adiós al emoji "💳" genérico; ahora tiene la insignia corporativa de BancoEstado a todo color.</span>
+    </div>
+    <div class="comp-item">
+      <span>2.</span>
+      <span><b>Chip EMV & Contactless:</b> Simula una tarjeta física real con chip dorado y ondas de pago.</span>
+    </div>
+    <div class="comp-item">
+      <span>3.</span>
+      <span><b>Fondo con textura y resplandor:</b> Degradado azul marino + resplandor ámbar CuentaRUT con líneas de seguridad guilloché.</span>
+    </div>
+    <div class="comp-item">
+      <span>4.</span>
+      <span><b>Tipografía en relieve:</b> Nombre en mayúsculas ("Isaac Navarro") y números en fuente monoespaciada de tarjeta.</span>
+    </div>
+    <div class="comp-item">
+      <span>5.</span>
+      <span><b>Píldora CuentaRUT:</b> Identifica claramente el tipo de cuenta con una insignia de cristal.</span>
+    </div>
+  </div>
+
+  <script>
+    var tabBefore = document.getElementById('tab-before');
+    var tabAfter = document.getElementById('tab-after');
+    var tabOrange = document.getElementById('tab-orange');
+
+    var viewBefore = document.getElementById('view-before');
+    var viewAfter = document.getElementById('view-after');
+    var viewOrange = document.getElementById('view-orange');
+
+    function selectTab(tab) {
+      tabBefore.classList.remove('active');
+      tabAfter.classList.remove('active');
+      tabOrange.classList.remove('active');
+
+      viewBefore.style.display = 'none';
+      viewAfter.style.display = 'none';
+      viewOrange.style.display = 'none';
+
+      if (tab === 'before') {
+        tabBefore.classList.add('active');
+        viewBefore.style.display = 'block';
+      } else if (tab === 'after') {
+        tabAfter.classList.add('active');
+        viewAfter.style.display = 'block';
+      } else if (tab === 'orange') {
+        tabOrange.classList.add('active');
+        viewOrange.style.display = 'block';
+      }
+    }
+
+    tabBefore.addEventListener('click', function() { selectTab('before'); });
+    tabAfter.addEventListener('click', function() { selectTab('after'); });
+    tabOrange.addEventListener('click', function() { selectTab('orange'); });
+
+    // Iniciar según hash o propuesta recomendada
+    if (location.hash === '#orange') {
+      selectTab('orange');
+    } else if (location.hash === '#before') {
+      selectTab('before');
+    } else {
+      selectTab('after');
+    }
+  </script>
+</body>
+</html>
