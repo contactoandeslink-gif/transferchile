@@ -75,6 +75,7 @@ const SupabaseAPI = {
       maps: payload.maps || '',
       website: payload.website || '',
       plan: payload.plan || 'PRO Anual ($10.000)',
+      access_code: payload.access_code || null,
       accounts: payload.accounts || [],
       updated_at: new Date().toISOString()
     };

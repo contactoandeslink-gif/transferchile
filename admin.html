@@ -407,9 +407,13 @@
             <div class="form-group">
               <label class="form-label">Plan Comercial</label>
               <select id="bizPlan" class="form-select">
-                <option value="Pack Mostrador ($15.000)">Pack Mostrador ($15.000 / año + NFC)</option>
+                <option value="Pack Mostrador ($15.000)">Pack Mostrador ($15.000 / año + Cartel A5)</option>
                 <option value="PRO Anual ($10.000)">PRO Anual ($10.000 / año digital)</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Código Activación App</label>
+              <input type="text" id="bizAccessCode" class="form-input" placeholder="PRO-XXXX-01">
             </div>
           </div>
 
@@ -636,6 +640,14 @@
           <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">
             ${b.category || 'Comercio'} • <b>${accountsCount} cuentas</b> (${banksSummary})
           </div>
+          <div style="margin: 6px 0 10px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 12px; background: rgba(0, 210, 160, 0.15); color: #00d2a0; font-family: monospace; font-weight: 700; padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(0, 210, 160, 0.3);">
+              🔑 Código App: <b>${b.access_code || 'SIN CÓDIGO'}</b>
+            </span>
+            <button type="button" class="btn-action" style="padding: 4px 10px; font-size: 11px; background: rgba(255,255,255,0.08);" onclick="copyCode('${b.access_code || ''}')">
+              📋 Copiar Código
+            </button>
+          </div>
           <div class="biz-card-actions">
             <button class="btn-action" style="background: #00d2a0; color: #090d16;" onclick="openMobileQr('${b.slug}', '${b.name}')">
               <span>📲</span> Ver en mi Celular
@@ -745,6 +757,7 @@
         theme: document.getElementById('bizSelectedTheme').value,
         logo: document.getElementById('bizLogoBase64').value,
         plan: document.getElementById('bizPlan').value,
+        access_code: document.getElementById('bizAccessCode').value,
         description: document.getElementById('bizDesc').value,
         instagram: document.getElementById('bizInstagram').value,
         whatsapp: document.getElementById('bizWhatsapp').value,
@@ -781,6 +794,7 @@
       document.getElementById('bizName').value = b.name;
       document.getElementById('bizCategory').value = b.category || '';
       document.getElementById('bizPlan').value = b.plan || 'PRO Anual ($10.000)';
+      document.getElementById('bizAccessCode').value = b.access_code || '';
       document.getElementById('bizDesc').value = b.description || '';
       document.getElementById('bizInstagram').value = b.instagram || '';
       document.getElementById('bizWhatsapp').value = b.whatsapp || '';
@@ -818,10 +832,17 @@
       }
     }
 
+    function copyCode(code) {
+      if (!code) { alert('Sin código'); return; }
+      navigator.clipboard.writeText(code);
+      showToast(`¡Código ${code} copiado!`);
+    }
+
     function resetForm() {
       document.getElementById('formTitle').innerText = 'Crear Nuevo Negocio PRO';
       document.getElementById('businessForm').reset();
       document.getElementById('editOriginalSlug').value = '';
+      document.getElementById('bizAccessCode').value = '';
       document.getElementById('bizLogoBase64').value = '';
       document.getElementById('logoPreviewBox').innerHTML = `<span style="font-size: 24px; color: #64748b;">📷</span>`;
       selectTheme('volcan-villarrica');
