@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>TransferDirecto | Redirigiendo...</title>
+  <script>
+    (function() {
+      var pathname = window.location.pathname;
+      var match = pathname.match(/\/p\/([a-zA-Z0-9_\-]+)/);
+      if (match && match[1]) {
+        window.location.replace('/negocio.html?slug=' + encodeURIComponent(match[1]) + (window.location.search ? '&' + window.location.search.substring(1) : ''));
+      } else {
+        window.location.replace('/');
+      }
+    })();
+  </script>
+</head>
+<body style="background:#090d16;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+  <p>Cargando datos de TransferDirecto...</p>
+</body>
+</html>
