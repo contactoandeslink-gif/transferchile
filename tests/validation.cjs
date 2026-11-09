@@ -69,6 +69,10 @@ assert(/M19\.8 8\.5/.test(idxHtml), 'isotipo globo Scotiabank (SVG inline) prese
 assert(idxHtml.includes('assets/ripley-icon.svg') && idxHtml.includes('assets/copecpay-icon.svg') && idxHtml.includes('assets/global66-icon.svg'), 'los 9 logos nuevos del usuario cableados');
 assert(!/<span>[A-Z]{1,2}<\/span>/.test(idxHtml), 'sin monogramas grises residuales');
 assert((html.match(/key: '/g) || []).length >= 17, 'catálogo de temas con 17+ bancos');
+// --- Confianza anti-estafa: preview del link + educación en página ---
+assert(/property="og:title"/.test(idxHtml) && /property="og:image"/.test(idxHtml), 'meta OpenGraph para preview en WhatsApp');
+assert(idxHtml.includes('og-transferchile.png'), 'imagen OG generada');
+assert(/trust-line/.test(idxHtml) && /DENTRO del enlace/.test(html), 'línea educativa: los datos viajan en el enlace, sin servidores');
 assert(/bankThemes/.test(html) && /main-bank-card/.test(html), 'catálogo de temas dinámicos por banco');
 assert(/normalize\('NFD'\)/.test(html), 'matching de banco tolerante a tildes (Itaú)');
 assert(/action=android\.intent\.action\.VIEW/.test(html) && /category=android\.intent\.category\.BROWSABLE/.test(html), 'intent Android con action VIEW + BROWSABLE (abre directo desde WhatsApp)');

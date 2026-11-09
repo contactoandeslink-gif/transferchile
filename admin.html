@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control PRO | TransferChile Negocios</title>
+  <title>Panel de Control PRO | TransferDirecto Negocios</title>
   <style>
     :root {
       --bg: #090d16;
@@ -351,7 +351,7 @@
     <!-- Top Bar -->
     <div class="top-bar">
       <div class="brand-title">
-        <span>⚡ TransferChile</span>
+        <span>⚡ TransferDirecto</span>
         <span class="badge-pro">PRO NEGOCIOS</span>
       </div>
       <div style="font-size: 13px; color: var(--text-muted);">
@@ -649,8 +649,11 @@
             </button>
           </div>
           <div class="biz-card-actions">
+            <button class="btn-action" style="background: #25d366; color: #090d16;" onclick="copyWspShare('${b.name}', '${b.slug}')">
+              <span>💬</span> Copiar WhatsApp
+            </button>
             <button class="btn-action" style="background: #00d2a0; color: #090d16;" onclick="openMobileQr('${b.slug}', '${b.name}')">
-              <span>📲</span> Ver en mi Celular
+              <span>📲</span> Ver en Celular
             </button>
             <a href="/p/${b.slug}" target="_blank" class="btn-action view">
               <span>👁️</span> Ver en PC
@@ -836,6 +839,15 @@
       if (!code) { alert('Sin código'); return; }
       navigator.clipboard.writeText(code);
       showToast(`¡Código ${code} copiado!`);
+    }
+
+    function copyWspShare(name, slug) {
+      const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const origin = isLocalhost ? window.location.origin : 'https://transferdirecto.cl';
+      const url = `${origin}/p/${slug}`;
+      const msg = `¡Hola! 👋 Acá están mis datos para que me transfieras rápido y directo:\n🔗 ${url}\n\n⚡ Solo tocas un botón para copiar los datos sin anotar nada a mano.\n🛡️ 100% seguro: transfieres desde la app de tu propio banco; este link jamás te pedirá claves ni datos confidenciales.`;
+      navigator.clipboard.writeText(msg);
+      showToast('¡Mensaje WhatsApp copiado listo para enviar!');
     }
 
     function resetForm() {

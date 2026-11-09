@@ -208,7 +208,7 @@ const server = http.createServer(async (req, res) => {
     pathname = '/cartel-print.html';
   }
 
-  // / -> index.html (Página Principal de Pago TransferChile)
+  // / -> index.html (Página Principal de Pago TransferDirecto)
   if (pathname === '/' || pathname === '') {
     pathname = '/index.html';
   }
@@ -239,7 +239,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`====================================================`);
-  console.log(`🚀 SERVIDOR TRANSFERCHILE PRO CON SUPABASE ACTIVO`);
+  console.log(`🚀 SERVIDOR TRANSFERDIRECTO PRO CON SUPABASE ACTIVO`);
   console.log(`====================================================`);
   console.log(`☁️  Base de Datos: Supabase Cloud (PostgreSQL Live)`);
   console.log(`🖥️  Panel de Control: http://localhost:${PORT}/admin`);

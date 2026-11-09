@@ -95,6 +95,12 @@
       seal.setAttribute('role', 'status');
       seal.textContent = '✅ Datos validados matemáticamente para transferencia.';
       if (noticeSlot) noticeSlot.appendChild(seal);
+      // Educación anti-estafa: el dato más desconfiado (el link raro) se
+      // convierte en virtud — los datos están escritos aquí, sin servidores.
+      var trust = document.createElement('p');
+      trust.className = 'trust-line';
+      trust.textContent = '🔒 Los datos viajan DENTRO del enlace: nadie los guarda ni los procesa en servidores. Puedes leerlos aquí sin tocar nada.';
+      if (noticeSlot) noticeSlot.appendChild(trust);
     }
     if (dataErrors.length) document.querySelectorAll('.btn-copy-small, .btn-hero-copy').forEach(function(button) { button.disabled = true; button.setAttribute('aria-label', 'Datos pendientes de corrección'); });
 

@@ -57,7 +57,7 @@
           return;
         }
 
-        var msg = '¡Hola! Quiero ser tester de TransferChile y descargar la app desde Google Play.\n' +
+        var msg = '¡Hola! Quiero ser tester de TransferDirecto y descargar la app desde Google Play.\n' +
                   '• Nombre: ' + name + '\n' +
                   '• WhatsApp: ' + phone + '\n' +
                   '• Correo Play Store: ' + email;

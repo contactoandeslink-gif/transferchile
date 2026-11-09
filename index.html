@@ -7,7 +7,19 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="data:,">
-  <title>Transferencia Bancaria Chile</title>
+  <title>TransferDirecto — Datos Bancarios y Transferencia Rápida</title>
+  <!-- OpenGraph: al compartir el link por WhatsApp se ve una tarjeta
+       con marca TransferDirecto y descripción segura ANTES de tocar nada (combate
+       el miedo a las estafas por link). -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TransferDirecto">
+  <meta property="og:title" content="TransferDirecto — Datos Oficiales para Transferir">
+  <meta property="og:description" content="Copia los datos bancarios con 1 toque y transfiere rápido y seguro desde tu propio banco. Sin intermediarios ni registros.">
+  <meta property="og:url" content="https://transferdirecto.cl/">
+  <meta property="og:image" content="https://transferdirecto.cl/assets/og-transferchile.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <style>
     :root {
       --primary: #0056b3;
@@ -116,6 +128,16 @@
       margin-bottom: 12px;
       text-align: center;
     }
+    /* Línea educativa anti-estafa: datos dentro del enlace, sin servidores */
+    .trust-line {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      text-align: center;
+      margin: -4px 0 12px 0;
+      padding: 0 6px;
+    }
+
     /* Aviso de datos con problema: visible pero sin asustar */
     .notice-error {
       padding: 12px 14px;
@@ -657,7 +679,7 @@
 
     <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border);">
       <a href="descargar.html" style="font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 700;">
-        ⚡ ¿Cobras con transferencias en tu negocio? <br><span style="text-decoration: underline;">Descarga la App TransferChile →</span>
+        ⚡ ¿Cobras con transferencias en tu negocio? <br><span style="text-decoration: underline;">Descarga la App TransferDirecto →</span>
       </a>
     </div>
   </div>
@@ -737,13 +759,14 @@
   </div>
 
   <footer style="margin-top: 32px; padding: 18px 12px; text-align: center; font-size: 12px; color: #64748b; line-height: 1.5; border-top: 1px solid #e2e8f0; width: 100%; max-width: 440px; margin-left: auto; margin-right: auto;">
-    <div>TransferChile por <a href="andeslink.html" style="color: #0056b3; font-weight: 600; text-decoration: none;">AndesLink</a></div>
+    <div><b>TransferDirecto</b> · Red de Transferencias Rápidas y Seguras</div>
     <div style="margin-top: 4px;">
       <a href="privacidad.html" style="color: #64748b; text-decoration: underline;">Política de Privacidad</a> ·
-      <a href="descargar.html" style="color: #64748b; text-decoration: underline;">Descargar Aplicación</a>
+      <a href="descargar.html" style="color: #64748b; text-decoration: underline;">Descargar Aplicación</a> ·
+      <a href="admin.html" style="color: #64748b; text-decoration: underline;">Panel PRO</a>
     </div>
     <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">
-      Esta herramienta facilita copiar datos de transferencia. Confirma siempre los pagos directamente en la app oficial de tu banco.
+      🛡️ Esta herramienta facilita copiar datos de transferencia verificados. Confirma siempre tus transferencias directamente en la app oficial de tu banco.
     </div>
   </footer>
 

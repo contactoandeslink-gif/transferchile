@@ -1,9 +1,10 @@
-// TransferChile - Cliente Oficial Supabase Cloud
+// TransferDirecto - Cliente Oficial Supabase Cloud
 // Conecta el frontend directamente con la base de datos PostgreSQL de Supabase
 
 const SUPABASE_CONFIG = {
   url: 'https://nqinogzaaxdrpzfxlpcg.supabase.co',
-  anonKey: 'sb_publishable_zleC_ISxkOkGDSvTv5ySyw_y2W5vJHK'
+  anonKey: 'sb_publishable_zleC_ISxkOkGDSvTv5ySyw_y2W5vJHK',
+  defaultDomain: 'https://transferdirecto.cl'
 };
 
 const SupabaseAPI = {
@@ -115,5 +116,17 @@ const SupabaseAPI = {
     });
 
     if (!res.ok) throw new Error('Error al eliminar en Supabase');
+  },
+
+  getBusinessUrl(slug) {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return `${window.location.origin}/negocio.html?slug=${encodeURIComponent(slug)}`;
+    }
+    return `https://transferdirecto.cl/p/${encodeURIComponent(slug)}`;
+  },
+
+  getShareMessage(name, slug) {
+    const url = this.getBusinessUrl(slug);
+    return `¡Hola! 👋 Acá están mis datos para que me transfieras rápido y directo:\n🔗 ${url}\n\n⚡ Solo tocas un botón para copiar los datos sin anotar nada a mano.\n🛡️ 100% seguro: transfieres desde la app de tu propio banco; este link jamás te pedirá claves ni datos confidenciales.`;
   }
 };

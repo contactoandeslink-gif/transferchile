@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cartel de Mostrador | TransferChile PRO</title>
+  <title>Cartel de Mostrador | TransferDirecto PRO</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     
@@ -192,9 +192,9 @@
   <div class="print-sheet" id="printSheet">
     <!-- Header -->
     <div class="cartel-header">
-      <div class="cartel-badge">⚡ PAGO FÁCIL & SIN CONTACTO</div>
+      <div class="cartel-badge">⚡ TRANSFER DIRECTO</div>
       <div class="cartel-biz-name" id="bizName">BARBERÍA VILLARRICA</div>
-      <div class="cartel-subtitle">Transfiere directo a nuestras cuentas oficiales</div>
+      <div class="cartel-subtitle">Transfiere directo a nuestras cuentas oficiales verificadas</div>
     </div>
 
     <!-- QR Section -->
@@ -205,11 +205,14 @@
       <div class="qr-frame">
         <img id="qrImg" src="" alt="Código QR">
       </div>
-      <div style="font-size: 13px; font-weight: 800; color: #0066ff; margin-top: 6px;" id="pageUrlText">
-        andeslink.net/p/barberia-villarrica
+      <div style="font-size: 14px; font-weight: 800; color: #0066ff; margin-top: 6px;" id="pageUrlText">
+        transferdirecto.cl/p/barberia-villarrica
       </div>
       <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
-        Al escanear, todos los datos bancarios se cargan listos para transferir
+        Al escanear, copias los datos con 1 toque y transfieres desde tu banco
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; font-weight: 700; color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 5px 10px; margin-top: 8px;">
+        🛡️ 100% SEGURO · Datos verificados · Jamás te pediremos claves
       </div>
     </div>
 
@@ -223,7 +226,7 @@
         <span class="bank-mini-tag">Tenpo / Mach</span>
       </div>
       <div class="footer-watermark">
-        TransferChile PRO • Red AndesLink Villarrica
+        TransferDirecto PRO • www.transferdirecto.cl
       </div>
     </div>
   </div>
@@ -250,11 +253,10 @@
 
         document.getElementById('bizName').innerText = biz.name;
         
-        // Si estamos en localhost, usar la IP de la red Wi-Fi para que el celular lo abra directo al escanear
+        // Usar dominio de producción o LAN si está en pruebas
         const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-        const lanHost = isLocalhost ? '192.168.1.12:3000' : window.location.host;
-        const targetUrl = `http://${lanHost}/p/${biz.slug}`;
-        document.getElementById('pageUrlText').innerText = `http://${lanHost}/p/${biz.slug}`;
+        const targetUrl = isLocalhost ? `http://192.168.1.12:3000/p/${biz.slug}` : `https://transferdirecto.cl/p/${biz.slug}`;
+        document.getElementById('pageUrlText').innerText = `transferdirecto.cl/p/${biz.slug}`;
 
         // Generar QR de alta calidad nítido
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=${encodeURIComponent(targetUrl)}`;
