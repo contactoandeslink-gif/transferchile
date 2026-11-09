@@ -1,14 +1,16 @@
+# Dependencias de Node
+node_modules/
+package-lock.json
+
+# Credenciales y variables de entorno
+.env
+.env.local
+.env.*
+
 # Paquetes de distribución Android exclusivos de Google Play Console
 TransferChile.aab
 
 # Herramientas de prueba local
-dev-server.js
 test-pago.html
 shot_*.png
 preview_*.png
-
-# Variantes de logos sin recortar o sin uso en producción
-assets/bancochile.png
-assets/bancochile.svg
-assets/santander.svg
-assets/scotiabank.svg

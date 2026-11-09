@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control PRO | TransferChile Negocios</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-light: #1f293d;
+      --border: rgba(255, 255, 255, 0.12);
+      --primary: #0066ff;
+      --accent: #00d2a0;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge-pro {
+      background: linear-gradient(135deg, #00d2a0 0%, #009e78 100%);
+      color: #090d16;
+      padding: 4px 11px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+    }
+
+    /* STATS HEADER */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+    .stat-value { font-size: 24px; font-weight: 800; color: #ffffff; }
+
+    /* LAYOUT: FORMULARIO Y LISTA */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 860px) {
+      .dashboard-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+    }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    }
+    .panel-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* FORMULARIO */
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* SELECTOR VISUAL DE FONDOS CON MINIATURAS REALES */
+    .theme-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .theme-card {
+      border: 2px solid var(--border);
+      background: var(--surface-light);
+      border-radius: 12px;
+      padding: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    .theme-card.active {
+      border-color: var(--accent);
+      background: rgba(0, 210, 160, 0.15);
+      box-shadow: 0 4px 14px rgba(0, 210, 160, 0.3);
+    }
+    .theme-thumb {
+      width: 100%;
+      height: 48px;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 5px;
+    }
+    .theme-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      display: block;
+    }
+
+    /* LOGO UPLOAD AREA */
+    .logo-uploader {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface-light);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .logo-preview-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .logo-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .logo-upload-btn-wrap {
+      flex: 1;
+    }
+    .file-input-custom {
+      display: none;
+    }
+    .btn-upload-label {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-upload-label:hover { background: rgba(255, 255, 255, 0.18); }
+
+    /* BANCOS MULTIPLES */
+    .accounts-builder {
+      background: rgba(0,0,0,0.25);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .account-row-item {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .btn-remove-acc {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* BOTONES */
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #00d2a0 0%, #009975 100%);
+      color: #090d16;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(0, 210, 160, 0.35);
+      transition: all 0.2s;
+    }
+    .btn-submit:active { transform: scale(0.98); }
+
+    .btn-add-acc {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    /* LISTA DE NEGOCIOS */
+    .biz-card-item {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: transform 0.2s ease;
+    }
+    .biz-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .biz-card-name { font-size: 16px; font-weight: 800; color: #ffffff; }
+    .biz-card-slug { font-size: 12px; color: var(--accent); font-family: monospace; }
+    .biz-card-theme-tag {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .biz-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-action.view { background: #0066ff; color: #fff; }
+    .btn-action.print { background: #f59e0b; color: #090d16; }
+    .btn-action.edit { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .btn-action.delete { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: #00d2a0;
+      color: #090d16;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(0, 210, 160, 0.4);
+      display: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="brand-title">
+        <span>⚡ TransferChile</span>
+        <span class="badge-pro">PRO NEGOCIOS</span>
+      </div>
+      <div style="font-size: 13px; color: var(--text-muted);">
+        📍 Servidor Local Activo • Villarrica, Chile
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Negocios Registrados</div>
+        <div class="stat-value" id="statCount">5</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ingreso Anual Proyectado</div>
+        <div class="stat-value" id="statRevenue">$65.000 CLP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ahorro en Comisiones</div>
+        <div class="stat-value" style="color: #00d2a0;">0% Transbank</div>
+      </div>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Formulario para Crear / Editar -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>➕</span> <span id="formTitle">Crear Nuevo Negocio PRO</span>
+        </div>
+
+        <form id="businessForm">
+          <input type="hidden" id="editOriginalSlug" value="">
+          <input type="hidden" id="bizLogoBase64" value="">
+          <input type="hidden" id="bizSelectedTheme" value="volcan-villarrica">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre del Negocio</label>
+              <input type="text" id="bizName" class="form-input" placeholder="Ej: Barbería Villarrica" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Enlace Web (Slug)</label>
+              <input type="text" id="bizSlug" class="form-input" placeholder="barberia-villarrica" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Categoría</label>
+              <input type="text" id="bizCategory" class="form-input" placeholder="Barbería, Cafetería, Cabañas...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Plan Comercial</label>
+              <select id="bizPlan" class="form-select">
+                <option value="Pack Mostrador ($15.000)">Pack Mostrador ($15.000 / año + NFC)</option>
+                <option value="PRO Anual ($10.000)">PRO Anual ($10.000 / año digital)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Selector de Fondo con Miniaturas Reales -->
+          <div class="form-group">
+            <label class="form-label">Fondo Fotográfico del Negocio</label>
+            <div class="theme-selector-grid">
+              <div class="theme-card active" data-theme="volcan-villarrica" onclick="selectTheme('volcan-villarrica')">
+                <div class="theme-thumb" style="background-image: url('/assets/backgrounds/volcan-villarrica.jpg');"></div>
+                <span class="theme-name">🌋 Volcán</span>
+              </div>
+              <div class="theme-card" data-theme="lago-villarrica" onclick="selectTheme('lago-villarrica')">
+                <div class="theme-thumb" style="background-image: url('/assets/backgrounds/lago-villarrica.jpg');"></div>
+                <span class="theme-name">🌊 Lago</span>
+              </div>
+              <div class="theme-card" data-theme="barberia" onclick="selectTheme('barberia')">
+                <div class="theme-thumb" style="background-image: url('/assets/backgrounds/barberia.jpg');"></div>
+                <span class="theme-name">💈 Barbería</span>
+              </div>
+              <div class="theme-card" data-theme="cafeteria" onclick="selectTheme('cafeteria')">
+                <div class="theme-thumb" style="background-image: url('/assets/backgrounds/cafeteria.jpg');"></div>
+                <span class="theme-name">☕ Café</span>
+              </div>
+              <div class="theme-card" data-theme="bosque-cabanas" onclick="selectTheme('bosque-cabanas')">
+                <div class="theme-thumb" style="background-image: url('/assets/backgrounds/bosque-cabanas.jpg');"></div>
+                <span class="theme-name">🌲 Cabañas</span>
+              </div>
+              <div class="theme-card" data-theme="spa-belleza" onclick="selectTheme('spa-belleza')">
+                <div class="theme-thumb" style="background-image: url('/assets/backgrounds/spa-belleza.jpg');"></div>
+                <span class="theme-name">💅 Belleza</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logo Uploader -->
+          <div class="form-group">
+            <label class="form-label">Logo Oficial del Negocio</label>
+            <div class="logo-uploader">
+              <div class="logo-preview-box" id="logoPreviewBox">
+                <span style="font-size: 24px; color: #64748b;">📷</span>
+              </div>
+              <div class="logo-upload-btn-wrap">
+                <label for="logoFileInput" class="btn-upload-label">
+                  📁 Subir Imagen o Logo
+                </label>
+                <input type="file" id="logoFileInput" class="file-input-custom" accept="image/*">
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                  PNG, JPG o WebP desde tu teléfono o computador.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descripción o Slogan</label>
+            <input type="text" id="bizDesc" class="form-input" placeholder="Atención por orden de llegada y reserva...">
+          </div>
+
+          <!-- Redes y Contacto -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Instagram (@usuario)</label>
+              <input type="text" id="bizInstagram" class="form-input" placeholder="barberia_villarrica">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp (+569...)</label>
+              <input type="text" id="bizWhatsapp" class="form-input" placeholder="+56912345678">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Enlace Google Maps ("Cómo llegar")</label>
+            <input type="text" id="bizMaps" class="form-input" placeholder="https://maps.google.com/?q=Pedro+de+Valdivia+Villarrica">
+          </div>
+
+          <!-- Cuentas Bancarias -->
+          <div class="form-group">
+            <label class="form-label">Cuentas Bancarias del Comercio</label>
+            <div class="accounts-builder" id="accountsBuilder"></div>
+            <button type="button" class="btn-add-acc" id="btnAddAccount">
+              + Agregar Otra Cuenta Bancaria
+            </button>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <span>💾</span> Guardar Negocio PRO
+          </button>
+        </form>
+      </div>
+
+      <!-- Lista de Negocios Registrados -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>🏪</span> Negocios en Villarrica (<span id="listCounter">5</span>)
+        </div>
+        <div id="businessesList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">¡Negocio guardado exitosamente!</div>
+
+  <!-- Modal QR para Celular -->
+  <div id="mobileQrModal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 3000;">
+    <div style="background: #111827; border: 1px solid rgba(255,255,255,0.18); border-radius: 26px; padding: 26px 20px 22px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.7);">
+      <div style="font-size: 19px; font-weight: 800; color: #ffffff;" id="modalBizName">Barbería Villarrica</div>
+      <div style="font-size: 12px; color: #00d2a0; font-family: monospace; margin: 4px 0 14px;" id="modalBizUrl">http://192.168.1.12:3000/p/barberia-villarrica</div>
+      <div style="background: #ffffff; border-radius: 20px; padding: 14px; width: 230px; height: 230px; margin: 0 auto 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+        <img id="mobileQrImg" src="" alt="Código QR" style="width: 100%; height: 100%; object-fit: contain;">
+      </div>
+      <div style="font-size: 13px; color: #cbd5e1; line-height: 1.4; margin-bottom: 16px;">
+        📲 <b>Apunta la cámara de tu celular a este código QR</b> para abrirlo de inmediato en tu teléfono.
+      </div>
+      <button type="button" class="btn-submit" onclick="document.getElementById('mobileQrModal').style.display='none'">
+        Entendido / Cerrar
+      </button>
+    </div>
+  </div>
+
+  <script src="/assets/supabase-client.js"></script>
+  <script>
+    let businesses = [];
+
+    const BANK_OPTIONS = [
+      'Banco Estado',
+      'Banco Santander',
+      'Banco de Chile',
+      'BCI',
+      'Scotiabank',
+      'Banco Falabella',
+      'Itaú',
+      'Banco BICE',
+      'Banco Security',
+      'Banco Ripley',
+      'Tenpo',
+      'Mach'
+    ];
+
+    function selectTheme(themeName) {
+      document.getElementById('bizSelectedTheme').value = themeName;
+      document.querySelectorAll('.theme-card').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('data-theme') === themeName);
+      });
+    }
+
+    document.getElementById('logoFileInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target.result;
+        document.getElementById('bizLogoBase64').value = base64;
+        document.getElementById('logoPreviewBox').innerHTML = `<img src="${base64}" alt="Preview">`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2400);
+    }
+
+    function openMobileQr(slug, name) {
+      const url = `http://192.168.1.12:3000/p/${slug}`;
+      document.getElementById('modalBizName').innerText = name;
+      document.getElementById('modalBizUrl').innerText = url;
+      document.getElementById('mobileQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=${encodeURIComponent(url)}`;
+      document.getElementById('mobileQrModal').style.display = 'flex';
+    }
+
+    async function loadBusinesses() {
+      try {
+        if (typeof SupabaseAPI !== 'undefined') {
+          businesses = await SupabaseAPI.getAllBusinesses();
+        } else {
+          const res = await fetch('/api/negocios');
+          businesses = await res.json();
+        }
+        renderBusinessesList();
+        updateStats();
+      } catch (err) {
+        console.error('Error cargando negocios:', err);
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('statCount').innerText = businesses.length;
+      document.getElementById('listCounter').innerText = businesses.length;
+      
+      let total = 0;
+      businesses.forEach(b => {
+        total += (b.plan && b.plan.includes('15.000')) ? 15000 : 10000;
+      });
+      document.getElementById('statRevenue').innerText = `$${total.toLocaleString('es-CL')} CLP`;
+    }
+
+    function renderBusinessesList() {
+      const listEl = document.getElementById('businessesList');
+      listEl.innerHTML = '';
+
+      if (businesses.length === 0) {
+        listEl.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 30px;">No hay negocios registrados aún.</div>';
+        return;
+      }
+
+      businesses.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'biz-card-item';
+
+        const accountsCount = (b.accounts || []).length;
+        const banksSummary = (b.accounts || []).map(a => a.bankName).join(', ') || 'Sin cuentas';
+
+        card.innerHTML = `
+          <div class="biz-card-top">
+            <div>
+              <div class="biz-card-name">${b.name}</div>
+              <div class="biz-card-slug">/p/${b.slug}</div>
+            </div>
+            <div class="biz-card-theme-tag">${b.theme || 'volcan'}</div>
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">
+            ${b.category || 'Comercio'} • <b>${accountsCount} cuentas</b> (${banksSummary})
+          </div>
+          <div class="biz-card-actions">
+            <button class="btn-action" style="background: #00d2a0; color: #090d16;" onclick="openMobileQr('${b.slug}', '${b.name}')">
+              <span>📲</span> Ver en mi Celular
+            </button>
+            <a href="/p/${b.slug}" target="_blank" class="btn-action view">
+              <span>👁️</span> Ver en PC
+            </a>
+            <a href="/cartel/${b.slug}" target="_blank" class="btn-action print">
+              <span>🖨️</span> Cartel Mostrador
+            </a>
+            <button class="btn-action edit" onclick="editBusiness('${b.slug}')">
+              <span>✏️</span> Editar
+            </button>
+            <button class="btn-action delete" onclick="deleteBusiness('${b.slug}')">
+              <span>🗑️</span>
+            </button>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function addAccountRow(acc = {}) {
+      const builder = document.getElementById('accountsBuilder');
+      const rowId = 'acc_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+
+      let optionsHtml = '';
+      BANK_OPTIONS.forEach(bank => {
+        const sel = acc.bankName === bank ? 'selected' : '';
+        optionsHtml += `<option value="${bank}" ${sel}>${bank}</option>`;
+      });
+
+      const row = document.createElement('div');
+      row.className = 'account-row-item';
+      row.id = rowId;
+      row.innerHTML = `
+        <button type="button" class="btn-remove-acc" onclick="document.getElementById('${rowId}').remove()">✕ Quitar</button>
+        <div class="form-row" style="margin-bottom: 8px;">
+          <div>
+            <label class="form-label">Banco</label>
+            <select class="form-select acc-bank">${optionsHtml}</select>
+          </div>
+          <div>
+            <label class="form-label">Tipo de Cuenta</label>
+            <input type="text" class="form-input acc-type" value="${acc.accountType || 'Cuenta Corriente'}" placeholder="CuentaRUT, Cta Corriente...">
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom: 8px;">
+          <div>
+            <label class="form-label">N° de Cuenta</label>
+            <input type="text" class="form-input acc-number" value="${acc.accountNumber || ''}" placeholder="12345678" required>
+          </div>
+          <div>
+            <label class="form-label">RUT Titular</label>
+            <input type="text" class="form-input acc-rut" value="${acc.rut || ''}" placeholder="19.061.110-8" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Nombre Titular</label>
+            <input type="text" class="form-input acc-holder" value="${acc.holderName || ''}" placeholder="Isaac Navarro" required>
+          </div>
+          <div>
+            <label class="form-label">Correo Confirmación</label>
+            <input type="email" class="form-input acc-email" value="${acc.email || ''}" placeholder="pagos@empresa.cl">
+          </div>
+        </div>
+      `;
+      builder.appendChild(row);
+    }
+
+    document.getElementById('bizName').addEventListener('input', (e) => {
+      const original = document.getElementById('editOriginalSlug').value;
+      if (!original) {
+        document.getElementById('bizSlug').value = e.target.value
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9_-]/g, '-')
+          .replace(/-+/g, '-');
+      }
+    });
+
+    document.getElementById('btnAddAccount').addEventListener('click', () => {
+      addAccountRow();
+    });
+
+    document.getElementById('businessForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const accountRows = document.querySelectorAll('.account-row-item');
+      const accounts = [];
+      accountRows.forEach(row => {
+        accounts.push({
+          bankName: row.querySelector('.acc-bank').value,
+          accountType: row.querySelector('.acc-type').value,
+          accountNumber: row.querySelector('.acc-number').value,
+          rut: row.querySelector('.acc-rut').value,
+          holderName: row.querySelector('.acc-holder').value,
+          email: row.querySelector('.acc-email').value
+        });
+      });
+
+      const payload = {
+        slug: document.getElementById('bizSlug').value,
+        name: document.getElementById('bizName').value,
+        category: document.getElementById('bizCategory').value,
+        theme: document.getElementById('bizSelectedTheme').value,
+        logo: document.getElementById('bizLogoBase64').value,
+        plan: document.getElementById('bizPlan').value,
+        description: document.getElementById('bizDesc').value,
+        instagram: document.getElementById('bizInstagram').value,
+        whatsapp: document.getElementById('bizWhatsapp').value,
+        maps: document.getElementById('bizMaps').value,
+        accounts: accounts
+      };
+
+      try {
+        if (typeof SupabaseAPI !== 'undefined') {
+          await SupabaseAPI.saveBusiness(payload);
+        } else {
+          const res = await fetch('/api/negocios', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error('Error al guardar');
+        }
+        showToast('¡Negocio guardado exitosamente en Supabase!');
+        resetForm();
+        loadBusinesses();
+      } catch (err) {
+        alert('Error guardando el negocio: ' + err.message);
+      }
+    });
+
+    function editBusiness(slug) {
+      const b = businesses.find(item => item.slug === slug);
+      if (!b) return;
+
+      document.getElementById('formTitle').innerText = `Editar: ${b.name}`;
+      document.getElementById('editOriginalSlug').value = b.slug;
+      document.getElementById('bizSlug').value = b.slug;
+      document.getElementById('bizName').value = b.name;
+      document.getElementById('bizCategory').value = b.category || '';
+      document.getElementById('bizPlan').value = b.plan || 'PRO Anual ($10.000)';
+      document.getElementById('bizDesc').value = b.description || '';
+      document.getElementById('bizInstagram').value = b.instagram || '';
+      document.getElementById('bizWhatsapp').value = b.whatsapp || '';
+      document.getElementById('bizMaps').value = b.maps || '';
+
+      selectTheme(b.theme || 'volcan-villarrica');
+
+      document.getElementById('bizLogoBase64').value = b.logo || '';
+      if (b.logo) {
+        document.getElementById('logoPreviewBox').innerHTML = `<img src="${b.logo}" alt="Preview">`;
+      } else {
+        document.getElementById('logoPreviewBox').innerHTML = `<span style="font-size: 24px; color: #64748b;">📷</span>`;
+      }
+
+      const builder = document.getElementById('accountsBuilder');
+      builder.innerHTML = '';
+      (b.accounts || []).forEach(acc => addAccountRow(acc));
+      if ((b.accounts || []).length === 0) addAccountRow();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deleteBusiness(slug) {
+      if (!confirm(`¿Seguro que deseas eliminar el negocio "${slug}"?`)) return;
+      try {
+        if (typeof SupabaseAPI !== 'undefined') {
+          await SupabaseAPI.deleteBusiness(slug);
+        } else {
+          await fetch(`/api/negocios/${slug}`, { method: 'DELETE' });
+        }
+        showToast('Negocio eliminado');
+        loadBusinesses();
+      } catch (err) {
+        alert('Error al eliminar');
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('formTitle').innerText = 'Crear Nuevo Negocio PRO';
+      document.getElementById('businessForm').reset();
+      document.getElementById('editOriginalSlug').value = '';
+      document.getElementById('bizLogoBase64').value = '';
+      document.getElementById('logoPreviewBox').innerHTML = `<span style="font-size: 24px; color: #64748b;">📷</span>`;
+      selectTheme('volcan-villarrica');
+      document.getElementById('accountsBuilder').innerHTML = '';
+      addAccountRow({ bankName: 'Banco Estado', accountType: 'CuentaRUT' });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBusinesses();
+      addAccountRow({ bankName: 'Banco Estado', accountType: 'CuentaRUT' });
+    });
+  </script>
+</body>
+</html>

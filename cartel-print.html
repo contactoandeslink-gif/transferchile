@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartel de Mostrador | TransferChile PRO</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+    body {
+      background: #e2e8f0;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* BARRA DE CONTROL SUPERIOR (NO SE IMPRIME) */
+    .no-print-bar {
+      width: 100%;
+      max-width: 440px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 14px 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .btn-print {
+      background: #00d2a0;
+      color: #0f172a;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0, 210, 160, 0.4);
+    }
+    .btn-print:hover { background: #00b88c; }
+
+    /* EL CARTEL FISICO (DISENO LISTO PARA IMPRIMIR Y PLASTIFICAR) */
+    .print-sheet {
+      width: 148mm; /* A5 standard */
+      height: 210mm;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 14mm 12mm;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      border: 3px solid #0f172a;
+      overflow: hidden;
+    }
+
+    /* DISENO DEL CARTEL */
+    .cartel-header {
+      width: 100%;
+    }
+    .cartel-badge {
+      display: inline-block;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .cartel-biz-name {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .cartel-subtitle {
+      font-size: 14px;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* ZONA QR */
+    .qr-frame {
+      width: 160px;
+      height: 160px;
+      background: #ffffff;
+      border: 3px solid #0f172a;
+      border-radius: 20px;
+      padding: 10px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    .qr-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .scan-cta {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    /* ZONA NFC DESTACADA */
+    .nfc-touch-zone {
+      width: 100%;
+      background: #f1f5f9;
+      border: 2px dashed #0066ff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin: 8px 0;
+      position: relative;
+    }
+    .nfc-icon-wrap {
+      font-size: 26px;
+      margin-bottom: 2px;
+    }
+    .nfc-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0066ff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .nfc-subtitle {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* PIE CON LOGOS BANCARIOS */
+    .cartel-footer {
+      width: 100%;
+      border-top: 1.5px solid #e2e8f0;
+      padding-top: 10px;
+    }
+    .banks-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .bank-mini-tag {
+      font-size: 10px;
+      font-weight: 800;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .footer-watermark {
+      font-size: 10px;
+      color: #94a3b8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* MODO IMPRESION */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+      }
+      .no-print-bar {
+        display: none !important;
+      }
+      .print-sheet {
+        box-shadow: none;
+        border: 2px solid #000;
+        margin: 0 auto;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Control -->
+  <div class="no-print-bar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px;">Cartel de Mostrador</div>
+      <div style="font-size: 12px; opacity: 0.7;">Formato A5 / Papelería</div>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <span>🖨️</span> Imprimir Cartel
+    </button>
+  </div>
+
+  <!-- Cartel Físico -->
+  <div class="print-sheet" id="printSheet">
+    <!-- Header -->
+    <div class="cartel-header">
+      <div class="cartel-badge">⚡ PAGO FÁCIL & SIN CONTACTO</div>
+      <div class="cartel-biz-name" id="bizName">BARBERÍA VILLARRICA</div>
+      <div class="cartel-subtitle">Transfiere directo a nuestras cuentas oficiales</div>
+    </div>
+
+    <!-- QR Section -->
+    <div>
+      <div class="scan-cta">
+        <span>📷</span> Enfoca con la cámara de tu celular
+      </div>
+      <div class="qr-frame">
+        <img id="qrImg" src="" alt="Código QR">
+      </div>
+      <div style="font-size: 12px; font-weight: 700; color: #0066ff;" id="pageUrlText">
+        andeslink.net/p/barberia-villarrica
+      </div>
+    </div>
+
+    <!-- NFC Touch Zone -->
+    <div class="nfc-touch-zone">
+      <div class="nfc-icon-wrap">📲</div>
+      <div class="nfc-title">O Acerca tu Celular Aquí (NFC)</div>
+      <div class="nfc-subtitle">Abre los datos de transferencia al instante sin tocar nada</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="cartel-footer">
+      <div class="banks-row">
+        <span class="bank-mini-tag" style="background: #fff3eb; color: #d84500;">BancoEstado</span>
+        <span class="bank-mini-tag" style="background: #ffebec; color: #cc0000;">Santander</span>
+        <span class="bank-mini-tag" style="background: #ebf3ff; color: #0047b3;">Banco de Chile</span>
+        <span class="bank-mini-tag" style="background: #e6f7f5; color: #007065;">BCI</span>
+        <span class="bank-mini-tag">Tenpo / Mach</span>
+      </div>
+      <div class="footer-watermark">
+        TransferChile PRO • Red AndesLink Villarrica
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/supabase-client.js"></script>
+  <script>
+    async function loadCartel() {
+      const parts = window.location.pathname.split('/');
+      let slug = parts[parts.length - 1];
+      if (!slug || slug === 'cartel' || slug === 'cartel-print.html') {
+        const p = new URLSearchParams(window.location.search);
+        slug = p.get('slug') || 'barberia-villarrica';
+      }
+
+      try {
+        let biz;
+        if (typeof SupabaseAPI !== 'undefined') {
+          biz = await SupabaseAPI.getBusinessBySlug(slug);
+        } else {
+          const res = await fetch(`/api/negocios/${slug}`);
+          if (!res.ok) throw new Error('Negocio no encontrado');
+          biz = await res.json();
+        }
+
+        document.getElementById('bizName').innerText = biz.name;
+        
+        // Si estamos en localhost, usar la IP de la red Wi-Fi para que el celular lo abra directo al escanear
+        const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        const lanHost = isLocalhost ? '192.168.1.12:3000' : window.location.host;
+        const targetUrl = `http://${lanHost}/p/${biz.slug}`;
+        document.getElementById('pageUrlText').innerText = `http://${lanHost}/p/${biz.slug}`;
+
+        // Generar QR de alta calidad nítido
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=${encodeURIComponent(targetUrl)}`;
+        document.getElementById('qrImg').src = qrUrl;
+
+      } catch (err) {
+        document.getElementById('bizName').innerText = 'COMERCIO PRO';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCartel);
+  </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+[
+  {
+    "id": "436c699b-318d-4ea1-ad6c-1acdca0cae2b",
+    "slug": "spa-bellas-villarrica",
+    "name": "Salón & Spa Bellas Villarrica",
+    "category": "Belleza, Uñas & Estética",
+    "theme": "spa-belleza",
+    "description": "Manicure rusa, esmaltado permanente, lifting de pestañas, balayage y masajes descontracturantes. Tu espacio de autocuidado en Villarrica.",
+    "logo": "",
+    "instagram": "bellas_salon_villarrica",
+    "whatsapp": "+56966778899",
+    "maps": "https://maps.google.com/?q=San+Martin+Villarrica",
+    "website": "",
+    "plan": "Pack Mostrador ($15.000)",
+    "expires_at": "2027-11-09",
+    "accounts": [
+      {
+        "rut": "18.945.612-4",
+        "email": "citas@bellasvillarrica.cl",
+        "bankName": "Banco Estado",
+        "holderName": "Camila Ignacia Rojas",
+        "accountType": "CuentaRUT",
+        "accountNumber": "18945612"
+      },
+      {
+        "rut": "18.945.612-4",
+        "email": "citas@bellasvillarrica.cl",
+        "bankName": "Banco de Chile",
+        "holderName": "Camila Ignacia Rojas",
+        "accountType": "Cuenta Fan / Vista",
+        "accountNumber": "987654321"
+      }
+    ],
+    "created_at": "2026-11-09T17:11:21.873348+00:00",
+    "updated_at": "2026-11-09T17:11:21.873348+00:00"
+  },
+  {
+    "id": "268ba3fb-c1cb-46bf-b3d3-330e7e7be63a",
+    "slug": "kutral-pizzeria",
+    "name": "Pizzería & Cervecería Kütral",
+    "category": "Gastronomía & Cervezas Artesanales",
+    "theme": "volcan-villarrica",
+    "description": "Pizzas a la leña napolitanas en horno de barro, hamburguesas caseras y 8 salidas de cerveza tirada de la cuenca del lago Villarrica.",
+    "logo": "",
+    "instagram": "kutral_pizzeria_villarrica",
+    "whatsapp": "+56955443322",
+    "maps": "https://maps.google.com/?q=Camilo+Henriquez+Villarrica",
+    "website": "",
+    "plan": "PRO Anual ($10.000)",
+    "expires_at": "2027-11-09",
+    "accounts": [
+      {
+        "rut": "77.123.456-8",
+        "email": "administracion@kutral.cl",
+        "bankName": "Banco Santander",
+        "holderName": "Gastronomía Kütral SpA",
+        "accountType": "Cuenta Corriente",
+        "accountNumber": "88776655"
+      },
+      {
+        "rut": "77.123.456-8",
+        "email": "administracion@kutral.cl",
+        "bankName": "Banco Falabella",
+        "holderName": "Gastronomía Kütral SpA",
+        "accountType": "Cuenta Corriente",
+        "accountNumber": "1009876543"
+      }
+    ],
+    "created_at": "2026-11-09T17:11:21.692216+00:00",
+    "updated_at": "2026-11-09T17:11:21.692216+00:00"
+  },
+  {
+    "id": "60cca5c5-ebc3-4df8-bbb5-ba45cdc7a07d",
+    "slug": "cabanas-alto-villarrica",
+    "name": "Cabañas & Tinajas Alto Villarrica",
+    "category": "Turismo & Hospedaje",
+    "theme": "bosque-cabanas",
+    "description": "Cabañas familiares 100% equipadas en medio de bosque nativo de canelos y araucarias. Tinajas calientes de ciprés con vista al volcán.",
+    "logo": "",
+    "instagram": "cabanas_altovillarrica",
+    "whatsapp": "+56999887766",
+    "maps": "https://maps.google.com/?q=Camino+Villarrica+Pucon",
+    "website": "",
+    "plan": "Pack Mostrador ($15.000)",
+    "expires_at": "2027-11-09",
+    "accounts": [
+      {
+        "rut": "12.876.543-2",
+        "email": "reservas@altovillarrica.cl",
+        "bankName": "BCI",
+        "holderName": "Rodrigo Valenzuela Soto",
+        "accountType": "Cuenta Corriente",
+        "accountNumber": "45678912"
+      },
+      {
+        "rut": "12.876.543-2",
+        "email": "reservas@altovillarrica.cl",
+        "bankName": "Banco Estado",
+        "holderName": "Rodrigo Valenzuela Soto",
+        "accountType": "CuentaRUT",
+        "accountNumber": "12876543"
+      }
+    ],
+    "created_at": "2026-11-09T17:11:21.498695+00:00",
+    "updated_at": "2026-11-09T17:11:21.498695+00:00"
+  },
+  {
+    "id": "c4a54084-b61b-4c74-9493-348fd33b27c5",
+    "slug": "cafe-volcan",
+    "name": "Café & Pastelería Volcán",
+    "category": "Cafetería & Pastelería",
+    "theme": "cafeteria",
+    "description": "Café de especialidad en grano recién molido, medialunas artesanales y kuchen de frambuesa del sur. Terraza frente a la costanera con vista al lago.",
+    "logo": "",
+    "instagram": "cafe_volcan_villarrica",
+    "whatsapp": "+56987654321",
+    "maps": "https://maps.google.com/?q=Costanera+Villarrica",
+    "website": "https://cafevolcan.cl",
+    "plan": "PRO Anual ($10.000)",
+    "expires_at": "2027-11-09",
+    "accounts": [
+      {
+        "rut": "15.432.890-5",
+        "email": "contacto@cafevolcan.cl",
+        "bankName": "Banco de Chile",
+        "holderName": "María Paz Gómez",
+        "accountType": "Cuenta Corriente",
+        "accountNumber": "00-123-45678-90"
+      },
+      {
+        "rut": "15.432.890-5",
+        "email": "contacto@cafevolcan.cl",
+        "bankName": "Banco Estado",
+        "holderName": "María Paz Gómez",
+        "accountType": "CuentaRUT",
+        "accountNumber": "15432890"
+      }
+    ],
+    "created_at": "2026-11-09T17:11:21.310161+00:00",
+    "updated_at": "2026-11-09T17:11:21.310161+00:00"
+  },
+  {
+    "id": "3b3c2aff-60d0-4712-85ae-b2facd6bb3c8",
+    "slug": "barberia-villarrica",
+    "name": "Barbería Villarrica",
+    "category": "Barbería & Estilo Masculino",
+    "theme": "barberia",
+    "description": "Cortes clásicos, degradados modernos, perfilado de barba y toalla caliente en pleno centro de Villarrica. Atención por orden de llegada y reserva.",
+    "logo": "",
+    "instagram": "barberia_villarrica",
+    "whatsapp": "+56912345678",
+    "maps": "https://maps.google.com/?q=Pedro+de+Valdivia+Villarrica",
+    "website": "",
+    "plan": "Pack Mostrador ($15.000)",
+    "expires_at": "2027-11-09",
+    "accounts": [
+      {
+        "rut": "19.061.110-8",
+        "email": "pagos@barberiavillarrica.cl",
+        "bankName": "Banco Estado",
+        "holderName": "Isaac Navarro",
+        "accountType": "CuentaRUT",
+        "accountNumber": "19061110"
+      },
+      {
+        "rut": "76.543.210-K",
+        "email": "facturacion@barberiavillarrica.cl",
+        "bankName": "Banco Santander",
+        "holderName": "Barbería Villarrica SpA",
+        "accountType": "Cuenta Corriente",
+        "accountNumber": "74839201"
+      }
+    ],
+    "created_at": "2026-11-09T17:11:21.099655+00:00",
+    "updated_at": "2026-11-09T17:11:21.099655+00:00"
+  }
+]

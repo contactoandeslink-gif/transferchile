@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Perfil Oficial | TransferChile PRO</title>
+  <style>
+    :root {
+      --primary: #0066ff;
+      --accent: #00d2a0;
+      --card-bg: rgba(15, 23, 42, 0.78);
+      --border: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --text-muted: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+    body {
+      background: #090d16;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px 50px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* CAPA DE FONDO FOTOGRÁFICO REAL */
+    .bg-backdrop {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      z-index: -2;
+      filter: brightness(0.65) saturate(1.25);
+      transform: scale(1.03);
+      transition: background-image 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 15%, rgba(9, 13, 22, 0.45) 0%, rgba(9, 13, 22, 0.88) 100%),
+                  linear-gradient(180deg, rgba(9, 13, 22, 0.3) 0%, rgba(9, 13, 22, 0.92) 100%);
+      z-index: -1;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      z-index: 1;
+    }
+
+    /* TARJETA PRINCIPAL DEL COMERCIO (FROSTED GLASS) */
+    .biz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* BANNER DE PORTADA PANORAMICO */
+    .biz-cover-banner {
+      width: 100%;
+      height: 125px;
+      background-size: cover;
+      background-position: center center;
+      position: relative;
+    }
+    .biz-cover-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
+    }
+
+    .biz-body {
+      padding: 0 20px 22px;
+      text-align: center;
+      position: relative;
+      margin-top: -50px;
+    }
+
+    .biz-logo-wrap {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 12px;
+      border-radius: 24px;
+      background: #0f172a;
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 210, 160, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+    .biz-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .biz-logo-initial {
+      font-size: 40px;
+      font-weight: 900;
+      color: #00d2a0;
+      text-transform: uppercase;
+    }
+
+    .biz-badge-pro {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 210, 160, 0.16);
+      border: 1px solid rgba(0, 210, 160, 0.4);
+      color: #00d2a0;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .biz-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .biz-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 18px;
+      padding: 0 6px;
+    }
+
+    /* ACCIONES Y REDES */
+    .biz-actions-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .action-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      padding: 9px 15px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+    .action-pill:active { transform: scale(0.96); }
+    .action-pill.ig { background: rgba(225, 48, 108, 0.2); border-color: rgba(225, 48, 108, 0.45); color: #ff6599; }
+    .action-pill.maps { background: rgba(66, 133, 244, 0.2); border-color: rgba(66, 133, 244, 0.45); color: #7cb2ff; }
+    .action-pill.wsp { background: rgba(37, 211, 102, 0.2); border-color: rgba(37, 211, 102, 0.45); color: #25d366; }
+
+    /* SECCION DE PAGOS */
+    .section-title-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 8px 12px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+    .zero-fee-badge {
+      background: rgba(0, 210, 160, 0.18);
+      color: #00d2a0;
+      border: 1px solid rgba(0, 210, 160, 0.4);
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0, 210, 160, 0.2);
+    }
+
+    /* TARJETAS BANCARIAS DE LUJO */
+    .bank-card {
+      border-radius: 22px;
+      padding: 22px 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      color: #ffffff;
+      transition: transform 0.2s ease;
+    }
+    .bank-card:hover { transform: translateY(-2px); }
+
+    /* DEGRADADOS OFICIALES POR BANCO */
+    .card-bancoestado {
+      background: linear-gradient(135deg, #eb5e00 0%, #d84500 55%, #b53100 100%);
+      box-shadow: 0 16px 32px rgba(235, 94, 0, 0.45);
+    }
+    .card-santander {
+      background: linear-gradient(135deg, #e30613 0%, #b8000b 55%, #8a0008 100%);
+      box-shadow: 0 16px 32px rgba(227, 6, 19, 0.45);
+    }
+    .card-bancochile {
+      background: linear-gradient(135deg, #091e42 0%, #0047b3 55%, #002e7a 100%);
+      box-shadow: 0 16px 32px rgba(0, 71, 179, 0.45);
+    }
+    .card-bci {
+      background: linear-gradient(135deg, #004b49 0%, #007065 55%, #003632 100%);
+      box-shadow: 0 16px 32px rgba(0, 112, 101, 0.45);
+    }
+    .card-scotiabank {
+      background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+      box-shadow: 0 16px 32px rgba(204, 0, 0, 0.45);
+    }
+    .card-falabella {
+      background: linear-gradient(135deg, #00843d 0%, #005a28 100%);
+      box-shadow: 0 16px 32px rgba(0, 132, 61, 0.45);
+    }
+    .card-itau {
+      background: linear-gradient(135deg, #002f6c 0%, #ff6200 100%);
+      box-shadow: 0 16px 32px rgba(255, 98, 0, 0.45);
+    }
+    .card-default {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .card-bank-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-bank-logo {
+      height: 26px;
+      max-width: 125px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+    }
+    .card-bank-name {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    .card-chip {
+      width: 36px;
+      height: 26px;
+      background: linear-gradient(135deg, #e6c875 0%, #bf9b30 50%, #8c6e14 100%);
+      border-radius: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .card-chip::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0; height: 1px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .card-holder-name {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .card-account-line {
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0.95;
+      margin-bottom: 3px;
+    }
+    .card-rut-line {
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0.95;
+      margin-bottom: 16px;
+    }
+
+    /* BOTONES ACCION DE LA TARJETA */
+    .card-actions-row {
+      display: flex;
+      gap: 8px;
+    }
+    .card-copy-btn {
+      flex: 1;
+      background: #ffffff;
+      color: #0f172a;
+      border: none;
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+    .card-copy-btn:active { transform: scale(0.97); }
+
+    .card-qr-btn {
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .card-qr-btn:active { transform: scale(0.97); background: rgba(255, 255, 255, 0.35); }
+
+    /* FOOTER */
+    .footer-seal {
+      text-align: center;
+      margin-top: 26px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      color: #94a3b8;
+      font-size: 12px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+    .footer-seal b { color: #00d2a0; }
+
+    /* MODAL QR DE CUENTA */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 26px 20px 20px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+    .modal-qr-img {
+      width: 220px;
+      height: 220px;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 18px;
+      margin: 14px auto;
+      display: block;
+    }
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #ffffff;
+      padding: 11px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #00d2a0;
+      color: #091e2b;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 10px 25px rgba(0, 210, 160, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2000;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- Capa de Fondo Fotográfico Real -->
+  <div class="bg-backdrop" id="bgBackdrop"></div>
+  <div class="bg-overlay"></div>
+
+  <div class="container" id="app">
+    <!-- Cargando -->
+    <div id="loading" style="text-align: center; padding: 80px 20px;">
+      <div style="font-size: 36px; margin-bottom: 12px;">⚡</div>
+      <div style="font-size: 16px; font-weight: 700; color: #cbd5e1;">Cargando perfil oficial del comercio...</div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div id="content" style="display: none;">
+      <!-- Tarjeta del Negocio -->
+      <div class="biz-card">
+        <!-- Portada de cabecera -->
+        <div class="biz-cover-banner" id="bizCoverBanner"></div>
+
+        <div class="biz-body">
+          <div class="biz-logo-wrap" id="logoWrap">
+            <span class="biz-logo-initial" id="logoInitial">V</span>
+          </div>
+          <div class="biz-badge-pro">
+            <span>🛡️</span> COMERCIO VERIFICADO
+          </div>
+          <h1 class="biz-title" id="bizTitle">Barbería Villarrica</h1>
+          <p class="biz-desc" id="bizDesc">Cortes clásicos y modernos.</p>
+
+          <!-- Redes y Acciones -->
+          <div class="biz-actions-grid" id="actionsGrid"></div>
+        </div>
+      </div>
+
+      <!-- Título de Cuentas -->
+      <div class="section-title-wrap">
+        <span class="section-title">Cuentas para Transferir</span>
+        <span class="zero-fee-badge">0% Comisión</span>
+      </div>
+
+      <!-- Tarjetas de Bancos -->
+      <div id="cardsContainer"></div>
+
+      <!-- Pie de Página -->
+      <div class="footer-seal">
+        <span>⚡ Desarrollado con <b>TransferChile PRO</b></span><br>
+        <span style="font-size: 11px; opacity: 0.8;">Villarrica • AndesLink Network</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal QR -->
+  <div class="modal-overlay" id="qrModal" onclick="closeQrModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div style="font-size: 16px; font-weight: 800; color: #ffffff;" id="modalBankTitle">Banco Estado</div>
+      <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;" id="modalBankSub">CuentaRUT • 19061110</div>
+      <img id="modalQrImg" class="modal-qr-img" src="" alt="Código QR">
+      <div style="font-size: 11px; color: #94a3b8;">Escanea con la app de tu banco o cámara del celular</div>
+      <button class="modal-close-btn" onclick="document.getElementById('qrModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Toast Notificación -->
+  <div class="toast" id="toast">
+    <span>✅</span>
+    <span id="toastMsg">¡Datos copiados al portapapeles!</span>
+  </div>
+
+  <script src="/assets/supabase-client.js"></script>
+  <script>
+    // Fondos Fotográficos Reales por Tema
+    const THEME_WALLPAPERS = {
+      'volcan-villarrica': '/assets/backgrounds/volcan-villarrica.jpg',
+      'lago-villarrica': '/assets/backgrounds/lago-villarrica.jpg',
+      'barberia': '/assets/backgrounds/barberia.jpg',
+      'cafeteria': '/assets/backgrounds/cafeteria.jpg',
+      'bosque-cabanas': '/assets/backgrounds/bosque-cabanas.jpg',
+      'spa-belleza': '/assets/backgrounds/spa-belleza.jpg'
+    };
+
+    function getBankVisuals(bankName) {
+      const b = (bankName || '').toLowerCase();
+      if (b.includes('estado')) {
+        return { cls: 'card-bancoestado', logo: '/assets/bancoestado.svg', name: 'Banco Estado' };
+      }
+      if (b.includes('santander')) {
+        return { cls: 'card-santander', logo: '/assets/santander.svg', name: 'Banco Santander' };
+      }
+      if (b.includes('chile') || b.includes('edwards')) {
+        return { cls: 'card-bancochile', logo: '/assets/bancochile.svg', name: 'Banco de Chile' };
+      }
+      if (b.includes('bci')) {
+        return { cls: 'card-bci', logo: '/assets/bci.svg', name: 'BCI' };
+      }
+      if (b.includes('scotia')) {
+        return { cls: 'card-scotiabank', logo: '/assets/scotiabank.svg', name: 'Scotiabank' };
+      }
+      if (b.includes('falabella')) {
+        return { cls: 'card-falabella', logo: '/assets/falabella.svg', name: 'Banco Falabella' };
+      }
+      if (b.includes('itau') || b.includes('itaú')) {
+        return { cls: 'card-itau', logo: '/assets/itau.svg', name: 'Itaú' };
+      }
+      return { cls: 'card-default', logo: null, name: bankName || 'Cuenta Bancaria' };
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2200);
+    }
+
+    function copyAccountData(acc) {
+      const text = 
+`Datos de Transferencia:
+Banco: ${acc.bankName}
+Tipo: ${acc.accountType}
+N° Cuenta: ${acc.accountNumber}
+RUT: ${acc.rut}
+Titular: ${acc.holderName}
+${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('¡Datos copiados! Pégalos en tu banco');
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('¡Datos copiados al portapapeles!');
+      });
+    }
+
+    function openQrModal(acc) {
+      document.getElementById('modalBankTitle').innerText = acc.bankName;
+      document.getElementById('modalBankSub').innerText = `${acc.accountType} • ${acc.accountNumber}`;
+      
+      const payload = `Banco:${acc.bankName}|Tipo:${acc.accountType}|Cuenta:${acc.accountNumber}|RUT:${acc.rut}|Titular:${acc.holderName}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=0&data=${encodeURIComponent(payload)}`;
+      document.getElementById('modalQrImg').src = qrUrl;
+      document.getElementById('qrModal').classList.add('open');
+    }
+
+    function closeQrModal(e) {
+      document.getElementById('qrModal').classList.remove('open');
+    }
+
+    async function loadBusiness() {
+      const pathParts = window.location.pathname.split('/');
+      let slug = pathParts[pathParts.length - 1];
+      if (!slug || slug === 'p' || slug === 'negocio.html') {
+        const urlParams = new URLSearchParams(window.location.search);
+        slug = urlParams.get('slug') || 'barberia-villarrica';
+      }
+
+      try {
+        let biz;
+        if (typeof SupabaseAPI !== 'undefined') {
+          biz = await SupabaseAPI.getBusinessBySlug(slug);
+        } else {
+          const res = await fetch(`/api/negocios/${slug}`);
+          if (!res.ok) throw new Error('Negocio no encontrado');
+          biz = await res.json();
+        }
+        renderBusiness(biz);
+      } catch (err) {
+        document.getElementById('loading').innerHTML = `
+          <div style="font-size: 36px; margin-bottom: 12px;">⚠️</div>
+          <h2 style="font-size: 18px; margin-bottom: 8px;">Negocio no encontrado</h2>
+          <p style="color: #94a3b8; font-size: 13px; margin-bottom: 16px;">El enlace no existe o aún no está registrado.</p>
+          <a href="/admin" style="display: inline-block; background: #0066ff; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 13px;">Crear este Negocio en Panel PRO</a>
+        `;
+      }
+    }
+
+    function renderBusiness(biz) {
+      document.title = `${biz.name} | Pago Rápido`;
+      
+      // Aplicar Fondo Fotográfico Real
+      const themeKey = biz.theme || 'volcan-villarrica';
+      const bgImgUrl = THEME_WALLPAPERS[themeKey] || THEME_WALLPAPERS['volcan-villarrica'];
+      
+      const bgEl = document.getElementById('bgBackdrop');
+      bgEl.style.backgroundImage = `url('${bgImgUrl}')`;
+
+      const coverBanner = document.getElementById('bizCoverBanner');
+      coverBanner.style.backgroundImage = `url('${bgImgUrl}')`;
+
+      document.getElementById('bizTitle').innerText = biz.name;
+      document.getElementById('bizDesc').innerText = biz.description || biz.category || '';
+
+      // Logo
+      const logoWrap = document.getElementById('logoWrap');
+      if (biz.logo && biz.logo.trim() !== '') {
+        logoWrap.innerHTML = `<img src="${biz.logo}" class="biz-logo-img" alt="${biz.name}">`;
+      } else {
+        const initial = (biz.name || 'N').charAt(0).toUpperCase();
+        logoWrap.innerHTML = `<span class="biz-logo-initial">${initial}</span>`;
+      }
+
+      // Redes
+      const actionsGrid = document.getElementById('actionsGrid');
+      actionsGrid.innerHTML = '';
+
+      if (biz.instagram) {
+        const igUser = biz.instagram.replace('@', '').trim();
+        actionsGrid.innerHTML += `
+          <a href="https://instagram.com/${igUser}" target="_blank" class="action-pill ig">
+            <span>📸</span> @${igUser}
+          </a>
+        `;
+      }
+
+      if (biz.maps) {
+        actionsGrid.innerHTML += `
+          <a href="${biz.maps}" target="_blank" class="action-pill maps">
+            <span>📍</span> Cómo llegar (Maps)
+          </a>
+        `;
+      }
+
+      if (biz.whatsapp) {
+        const cleanWsp = biz.whatsapp.replace(/[^0-9]/g, '');
+        actionsGrid.innerHTML += `
+          <a href="https://wa.me/${cleanWsp}" target="_blank" class="action-pill wsp">
+            <span>💬</span> WhatsApp
+          </a>
+        `;
+      }
+
+      if (biz.website) {
+        actionsGrid.innerHTML += `
+          <a href="${biz.website}" target="_blank" class="action-pill">
+            <span>🌐</span> Sitio Web
+          </a>
+        `;
+      }
+
+      // Tarjetas Bancarias
+      const cardsContainer = document.getElementById('cardsContainer');
+      cardsContainer.innerHTML = '';
+
+      const accounts = biz.accounts || [];
+      accounts.forEach((acc, idx) => {
+        const visuals = getBankVisuals(acc.bankName);
+        const cardEl = document.createElement('div');
+        cardEl.className = `bank-card ${visuals.cls}`;
+
+        let logoImgHtml = visuals.logo 
+          ? `<img src="${visuals.logo}" class="card-bank-logo" alt="${visuals.name}">`
+          : '';
+
+        cardEl.innerHTML = `
+          <div class="card-header-row">
+            <div class="card-bank-brand">
+              ${logoImgHtml}
+              <span class="card-bank-name">${visuals.name}</span>
+            </div>
+            <div class="card-chip"></div>
+          </div>
+          <div class="card-holder-name">${acc.holderName || biz.name}</div>
+          <div class="card-account-line">${acc.accountType} • N° ${acc.accountNumber}</div>
+          <div class="card-rut-line">RUT: ${acc.rut}</div>
+          <div class="card-actions-row">
+            <button class="card-copy-btn" id="btnCopy_${idx}">
+              <span>⚡</span> Copiar Todos los Datos
+            </button>
+            <button class="card-qr-btn" id="btnQr_${idx}">
+              <span>📱</span> Ver QR
+            </button>
+          </div>
+        `;
+
+        cardsContainer.appendChild(cardEl);
+
+        cardEl.querySelector(`#btnCopy_${idx}`).addEventListener('click', () => {
+          copyAccountData(acc);
+        });
+
+        cardEl.querySelector(`#btnQr_${idx}`).addEventListener('click', () => {
+          openQrModal(acc);
+        });
+      });
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadBusiness);
+  </script>
+</body>
+</html>
