@@ -67,6 +67,25 @@ const SupabaseAPI = {
     }
   },
 
+  async getAiConfig(pin) {
+    if (!pin) return null;
+    try {
+      const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/rpc/admin_get_ai_config`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_CONFIG.anonKey,
+          'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ admin_pin: pin })
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch(e) {
+      return null;
+    }
+  },
+
   async saveBusiness(payload, adminPin) {
     const pin = adminPin || sessionStorage.getItem('td_admin_pin') || '';
 

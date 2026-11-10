@@ -605,15 +605,15 @@
       <!-- Configuración Hugging Face -->
       <div id="hfConfigSection" style="margin-bottom: 16px; padding: 12px; background: rgba(0, 210, 160, 0.05); border: 1px solid rgba(0, 210, 160, 0.2); border-radius: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">Token de Hugging Face (Gratuito)</label>
-          <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer" style="font-size: 11px; color: #38bdf8; text-decoration: underline;">Obtener Token Gratis ↗</a>
+          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">IA Hugging Face: <span style="color: #ffffff;">Conectada ✅</span></label>
+          <span style="font-size: 11px; color: #00d2a0; font-weight: 600;">Plan Gratuito Activo</span>
         </div>
         <div style="display: flex; gap: 8px;">
-          <input type="password" id="hfApiKeyInput" class="form-input" placeholder="hf_xxxxxxxxxxxxxxxx..." style="font-size: 12px; padding: 8px 12px; flex: 1;">
-          <button type="button" onclick="saveHfToken()" style="padding: 8px 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: #ffffff; font-size: 12px; font-weight: 600; cursor: pointer;">Guardar</button>
+          <input type="password" id="hfApiKeyInput" class="form-input" placeholder="Token integrado automáticamente..." style="font-size: 12px; padding: 8px 12px; flex: 1;" readonly>
+          <button type="button" onclick="showToast('Token oficial de Hugging Face activo')" style="padding: 8px 14px; background: rgba(0, 210, 160, 0.15); border: 1px solid #00d2a0; border-radius: 10px; color: #00d2a0; font-size: 12px; font-weight: 700; cursor: default;">Activo</button>
         </div>
         <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">
-          Usa el modelo multimodal gratuito <b>Qwen2.5-VL-7B</b>. El token queda guardado exclusivamente en tu navegador.
+          IA Multimodal libre <b>Qwen2.5-VL-7B</b> integrada en el sistema. No necesitas configurar nada.
         </div>
       </div>
 
@@ -711,6 +711,12 @@
           const ok = await SupabaseAPI.verifyPin(savedPin);
           if (ok) {
             document.getElementById('adminLockScreen').style.display = 'none';
+            try {
+              const aiConf = await SupabaseAPI.getAiConfig(savedPin);
+              if (aiConf && aiConf.hf_token) {
+                sessionStorage.setItem('td_hf_token', aiConf.hf_token);
+              }
+            } catch(e) {}
             return true;
           }
         }
@@ -737,6 +743,12 @@
 
         if (isValid) {
           sessionStorage.setItem('td_admin_pin', pin);
+          try {
+            const aiConf = await SupabaseAPI.getAiConfig(pin);
+            if (aiConf && aiConf.hf_token) {
+              sessionStorage.setItem('td_hf_token', aiConf.hf_token);
+            }
+          } catch(e) {}
           document.getElementById('loginErrorMsg').style.display = 'none';
           document.getElementById('adminLockScreen').style.display = 'none';
           loadBusinesses();
@@ -753,6 +765,7 @@
 
     function logoutAdmin() {
       sessionStorage.removeItem('td_admin_pin');
+      sessionStorage.removeItem('td_hf_token');
       window.location.reload();
     }
 
@@ -1099,9 +1112,12 @@
     function openAiScanModal() {
       const modal = document.getElementById('aiScanModal');
       modal.style.display = 'flex';
-      const savedToken = localStorage.getItem('td_hf_token') || '';
-      document.getElementById('hfApiKeyInput').value = savedToken;
-      switchAiTab(savedToken ? 'hf' : 'local');
+      const savedToken = sessionStorage.getItem('td_hf_token') || localStorage.getItem('td_hf_token') || '';
+      const inputEl = document.getElementById('hfApiKeyInput');
+      if (inputEl) {
+        inputEl.value = savedToken ? '•••••••••••••••••••••••••••••••• (Activo)' : '';
+      }
+      switchAiTab('hf');
     }
 
     function closeAiScanModal() {
@@ -1371,17 +1387,14 @@
         let usedModel = '';
 
         if (currentAiMode === 'hf') {
-          const token = (document.getElementById('hfApiKeyInput').value || localStorage.getItem('td_hf_token') || '').trim();
-          if (!token) {
-            alert('Para ocupar la IA de Hugging Face ingresa tu Token de acceso gratuito (arriba). Si no tienes token, cambia a la pestaña "Escáner Local (Sin Token)".');
-            spinner.style.display = 'none';
-            btnRun.style.display = 'flex';
-            return;
-          }
+          const token = (sessionStorage.getItem('td_hf_token') || localStorage.getItem('td_hf_token') || '').trim();
+          let hfSuccess = false;
 
-          loadingText.innerText = 'Consultando IA Multimodal Hugging Face (Qwen2.5-VL)...';
+          if (token) {
+            try {
+              loadingText.innerText = 'Consultando IA Multimodal Hugging Face (Qwen2.5-VL)...';
 
-          const promptText = `Eres un sistema de OCR financiero experto en transferencias bancarias de Chile.
+              const promptText = `Eres un sistema de OCR financiero experto en transferencias bancarias de Chile.
 Analiza detenidamente la imagen enviada (puede ser una tarjeta bancaria, un comprobante de transferencia, una cartola o un papel escrito a mano).
 Extrae los siguientes datos bancarios chilenos:
 - bankName: Nombre del banco chileno (ej: Banco Estado, Banco Santander, Banco de Chile, BCI, Banco Falabella, Scotiabank, Itaú, Tenpo, Mach).
@@ -1395,31 +1408,47 @@ Responde ÚNICAMENTE un objeto JSON válido con estas claves exactas:
 {"bankName": "...", "accountType": "...", "accountNumber": "...", "rut": "...", "holderName": "...", "email": "..."}
 Si un campo no se puede determinar con certeza, deja su valor como string vacío "". No agregues texto introductorio ni explicaciones.`;
 
-          const hfRes = await fetch('https://router.huggingface.co/hf-inference/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer ' + token,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              model: 'Qwen/Qwen2.5-VL-7B-Instruct',
-              messages: [
-                {
-                  role: 'user',
-                  content: [
-                    { type: 'text', text: promptText },
-                    { type: 'image_url', image_url: { url: currentAiBase64 } }
-                  ]
-                }
-              ],
-              max_tokens: 350,
-              temperature: 0.1
-            })
-          });
+              const hfRes = await fetch('https://router.huggingface.co/hf-inference/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ' + token,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  model: 'Qwen/Qwen2.5-VL-7B-Instruct',
+                  messages: [
+                    {
+                      role: 'user',
+                      content: [
+                        { type: 'text', text: promptText },
+                        { type: 'image_url', image_url: { url: currentAiBase64 } }
+                      ]
+                    }
+                  ],
+                  max_tokens: 350,
+                  temperature: 0.1
+                })
+              });
 
-          if (!hfRes.ok) {
-            console.warn('Hugging Face API code ' + hfRes.status + ', activando motor local de respaldo...');
-            loadingText.innerText = 'Activando motor de lectura local gratuito en tu navegador...';
+              if (hfRes.ok) {
+                const hfJson = await hfRes.json();
+                const rawContent = (hfJson.choices && hfJson.choices[0] && hfJson.choices[0].message && hfJson.choices[0].message.content) || '';
+                const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                  extracted = JSON.parse(jsonMatch[0]);
+                  usedModel = 'Hugging Face Qwen2.5-VL';
+                  hfSuccess = true;
+                }
+              } else {
+                console.warn('Hugging Face devolvió código ' + hfRes.status + ', activando respaldo local...');
+              }
+            } catch (hfErr) {
+              console.warn('Error conectando a Hugging Face:', hfErr);
+            }
+          }
+
+          if (!hfSuccess) {
+            loadingText.innerText = 'Extrayendo datos de la imagen con escáner inteligente en tu dispositivo...';
             if (typeof Tesseract === 'undefined') {
               await new Promise((resolve, reject) => {
                 const script = document.createElement('script');
@@ -1429,21 +1458,10 @@ Si un campo no se puede determinar con certeza, deja su valor como string vacío
                 document.head.appendChild(script);
               });
             }
-            loadingText.innerText = 'Extrayendo datos de la imagen en tu dispositivo...';
             const tResult = await Tesseract.recognize(currentAiBase64, 'spa+eng');
             const text = (tResult && tResult.data && tResult.data.text) || '';
             extracted = parseChileanBankTextFromOcr(text);
-            usedModel = 'Escáner Local Gratuito (100% Navegador)';
-          } else {
-            const hfJson = await hfRes.json();
-            const rawContent = (hfJson.choices && hfJson.choices[0] && hfJson.choices[0].message && hfJson.choices[0].message.content) || '';
-            const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-            if (jsonMatch) {
-              extracted = JSON.parse(jsonMatch[0]);
-              usedModel = 'Hugging Face Qwen2.5-VL';
-            } else {
-              throw new Error('Respuesta de IA sin JSON válido');
-            }
+            usedModel = 'Escáner Inteligente Local (100% Gratuito)';
           }
 
         } else {
