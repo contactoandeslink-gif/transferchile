@@ -1418,19 +1418,32 @@ Si un campo no se puede determinar con certeza, deja su valor como string vacío
           });
 
           if (!hfRes.ok) {
-            const errBody = await hfRes.text();
-            throw new Error('Hugging Face error HTTP ' + hfRes.status + ': ' + errBody.slice(0, 150));
-          }
-
-          const hfJson = await hfRes.json();
-          const rawContent = (hfJson.choices && hfJson.choices[0] && hfJson.choices[0].message && hfJson.choices[0].message.content) || '';
-          
-          const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            extracted = JSON.parse(jsonMatch[0]);
-            usedModel = 'Hugging Face Qwen2.5-VL';
+            console.warn('Hugging Face API code ' + hfRes.status + ', activando motor local de respaldo...');
+            loadingText.innerText = 'Activando motor de lectura local gratuito en tu navegador...';
+            if (typeof Tesseract === 'undefined') {
+              await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('No se pudo cargar el motor local'));
+                document.head.appendChild(script);
+              });
+            }
+            loadingText.innerText = 'Extrayendo datos de la imagen en tu dispositivo...';
+            const tResult = await Tesseract.recognize(currentAiBase64, 'spa+eng');
+            const text = (tResult && tResult.data && tResult.data.text) || '';
+            extracted = parseChileanBankTextFromOcr(text);
+            usedModel = 'Escáner Local Gratuito (100% Navegador)';
           } else {
-            throw new Error('Respuesta de IA sin JSON válido');
+            const hfJson = await hfRes.json();
+            const rawContent = (hfJson.choices && hfJson.choices[0] && hfJson.choices[0].message && hfJson.choices[0].message.content) || '';
+            const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              extracted = JSON.parse(jsonMatch[0]);
+              usedModel = 'Hugging Face Qwen2.5-VL';
+            } else {
+              throw new Error('Respuesta de IA sin JSON válido');
+            }
           }
 
         } else {
