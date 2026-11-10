@@ -595,25 +595,25 @@
       <!-- Selector de Modo -->
       <div style="display: flex; gap: 8px; margin-bottom: 16px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
         <button type="button" id="tabHfMode" onclick="switchAiTab('hf')" style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: #00d2a0; color: #090d16; transition: all 0.2s;">
-          🤗 IA Hugging Face (Recomendado)
+          ✨ IA Google Gemini 3.5 Flash (Oficial)
         </button>
         <button type="button" id="tabLocalMode" onclick="switchAiTab('local')" style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: transparent; color: #94a3b8; transition: all 0.2s;">
-          ⚡ Escáner Local (Sin Token)
+          ⚡ Escáner Local (Offline)
         </button>
       </div>
 
-      <!-- Configuración Hugging Face -->
+      <!-- Configuración IA -->
       <div id="hfConfigSection" style="margin-bottom: 16px; padding: 12px; background: rgba(0, 210, 160, 0.05); border: 1px solid rgba(0, 210, 160, 0.2); border-radius: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">IA Hugging Face: <span style="color: #ffffff;">Conectada ✅</span></label>
-          <span style="font-size: 11px; color: #00d2a0; font-weight: 600;">Plan Gratuito Activo</span>
+          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">IA Google Gemini: <span style="color: #ffffff;">Conectada ✅</span></label>
+          <span style="font-size: 11px; color: #00d2a0; font-weight: 600;">1.500 consultas gratis/día</span>
         </div>
         <div style="display: flex; gap: 8px;">
           <input type="password" id="hfApiKeyInput" class="form-input" placeholder="Token integrado automáticamente..." style="font-size: 12px; padding: 8px 12px; flex: 1;" readonly>
-          <button type="button" onclick="showToast('Token oficial de Hugging Face activo')" style="padding: 8px 14px; background: rgba(0, 210, 160, 0.15); border: 1px solid #00d2a0; border-radius: 10px; color: #00d2a0; font-size: 12px; font-weight: 700; cursor: default;">Activo</button>
+          <button type="button" onclick="showToast('Google Gemini 3.5 Flash activo con respaldo local')" style="padding: 8px 14px; background: rgba(0, 210, 160, 0.15); border: 1px solid #00d2a0; border-radius: 10px; color: #00d2a0; font-size: 12px; font-weight: 700; cursor: default;">Activo</button>
         </div>
         <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">
-          IA Multimodal libre <b>Qwen2.5-VL-7B</b> integrada en el sistema. No necesitas configurar nada.
+          IA Multimodal de última generación <b>Gemini 3.5 Flash</b> integrada automáticamente con respaldo local.
         </div>
       </div>
 
@@ -713,8 +713,9 @@
             document.getElementById('adminLockScreen').style.display = 'none';
             try {
               const aiConf = await SupabaseAPI.getAiConfig(savedPin);
-              if (aiConf && aiConf.hf_token) {
-                sessionStorage.setItem('td_hf_token', aiConf.hf_token);
+              if (aiConf) {
+                if (aiConf.gemini_key) sessionStorage.setItem('td_gemini_key', aiConf.gemini_key);
+                if (aiConf.hf_token) sessionStorage.setItem('td_hf_token', aiConf.hf_token);
               }
             } catch(e) {}
             return true;
@@ -745,8 +746,9 @@
           sessionStorage.setItem('td_admin_pin', pin);
           try {
             const aiConf = await SupabaseAPI.getAiConfig(pin);
-            if (aiConf && aiConf.hf_token) {
-              sessionStorage.setItem('td_hf_token', aiConf.hf_token);
+            if (aiConf) {
+              if (aiConf.gemini_key) sessionStorage.setItem('td_gemini_key', aiConf.gemini_key);
+              if (aiConf.hf_token) sessionStorage.setItem('td_hf_token', aiConf.hf_token);
             }
           } catch(e) {}
           document.getElementById('loginErrorMsg').style.display = 'none';
@@ -766,6 +768,7 @@
     function logoutAdmin() {
       sessionStorage.removeItem('td_admin_pin');
       sessionStorage.removeItem('td_hf_token');
+      sessionStorage.removeItem('td_gemini_key');
       window.location.reload();
     }
 
@@ -1386,68 +1389,64 @@
         let extracted = null;
         let usedModel = '';
 
-        if (currentAiMode === 'hf') {
-          const token = (sessionStorage.getItem('td_hf_token') || localStorage.getItem('td_hf_token') || '').trim();
-          let hfSuccess = false;
+        if (currentAiMode === 'hf' || currentAiMode === 'gemini') {
+          const geminiKey = (sessionStorage.getItem('td_gemini_key') || '').trim();
+          let aiSuccess = false;
 
-          if (token) {
+          if (geminiKey) {
             try {
-              loadingText.innerText = 'Consultando IA Multimodal Hugging Face (Qwen2.5-VL)...';
+              loadingText.innerText = 'Analizando con Google Gemini 3.5 Flash...';
+              const mimeMatch = currentAiBase64.match(/^data:(image\/[a-zA-Z+]+);base64,/);
+              const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+              const rawB64 = currentAiBase64.replace(/^data:image\/[a-zA-Z+]+;base64,/, '');
 
-              const promptText = `Eres un sistema de OCR financiero experto en transferencias bancarias de Chile.
+              const promptText = `Eres el sistema de OCR financiero experto en transferencias bancarias de Chile para TransferDirecto.
 Analiza detenidamente la imagen enviada (puede ser una tarjeta bancaria, un comprobante de transferencia, una cartola o un papel escrito a mano).
 Extrae los siguientes datos bancarios chilenos:
-- bankName: Nombre del banco chileno (ej: Banco Estado, Banco Santander, Banco de Chile, BCI, Banco Falabella, Scotiabank, Itaú, Tenpo, Mach).
+- bankName: Nombre oficial del banco chileno (ej: Banco Estado, Banco Santander, Banco de Chile, BCI, Banco Falabella, Scotiabank, Banco Itaú, Tenpo, MACH).
 - accountType: Tipo de cuenta (ej: CuentaRUT, Cuenta Corriente, Cuenta Vista, Cuenta de Ahorro).
 - accountNumber: Número de cuenta bancaria numérico (solo dígitos). Si es CuentaRUT de Banco Estado y no aparece explícito, el número es el RUT sin dígito verificador.
-- rut: RUT chileno con formato estándar (ej: 12.345.678-9).
+- rut: RUT chileno estándar con puntos y guion (ej: 12.345.678-9).
 - holderName: Nombre completo del titular.
-- email: Correo electrónico de notificación si está visible.
+- email: Correo electrónico si está visible.
 
 Responde ÚNICAMENTE un objeto JSON válido con estas claves exactas:
 {"bankName": "...", "accountType": "...", "accountNumber": "...", "rut": "...", "holderName": "...", "email": "..."}
 Si un campo no se puede determinar con certeza, deja su valor como string vacío "". No agregues texto introductorio ni explicaciones.`;
 
-              const hfRes = await fetch('https://router.huggingface.co/hf-inference/v1/chat/completions', {
+              const gRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiKey}`, {
                 method: 'POST',
-                headers: {
-                  'Authorization': 'Bearer ' + token,
-                  'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  model: 'Qwen/Qwen2.5-VL-7B-Instruct',
-                  messages: [
-                    {
-                      role: 'user',
-                      content: [
-                        { type: 'text', text: promptText },
-                        { type: 'image_url', image_url: { url: currentAiBase64 } }
-                      ]
-                    }
-                  ],
-                  max_tokens: 350,
-                  temperature: 0.1
+                  contents: [{
+                    parts: [
+                      { text: promptText },
+                      { inlineData: { mimeType: mimeType, data: rawB64 } }
+                    ]
+                  }],
+                  generationConfig: {
+                    responseMimeType: 'application/json'
+                  }
                 })
               });
 
-              if (hfRes.ok) {
-                const hfJson = await hfRes.json();
-                const rawContent = (hfJson.choices && hfJson.choices[0] && hfJson.choices[0].message && hfJson.choices[0].message.content) || '';
-                const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                  extracted = JSON.parse(jsonMatch[0]);
-                  usedModel = 'Hugging Face Qwen2.5-VL';
-                  hfSuccess = true;
+              if (gRes.ok) {
+                const gJson = await gRes.json();
+                const rawContent = gJson.candidates && gJson.candidates[0] && gJson.candidates[0].content && gJson.candidates[0].content.parts[0].text;
+                if (rawContent) {
+                  extracted = JSON.parse(rawContent);
+                  usedModel = 'Google Gemini 3.5 Flash';
+                  aiSuccess = true;
                 }
               } else {
-                console.warn('Hugging Face devolvió código ' + hfRes.status + ', activando respaldo local...');
+                console.warn('Gemini devolvió código ' + gRes.status + ', activando respaldo...');
               }
-            } catch (hfErr) {
-              console.warn('Error conectando a Hugging Face:', hfErr);
+            } catch (gErr) {
+              console.warn('Error conectando con Gemini:', gErr);
             }
           }
 
-          if (!hfSuccess) {
+          if (!aiSuccess) {
             loadingText.innerText = 'Extrayendo datos de la imagen con escáner inteligente en tu dispositivo...';
             if (typeof Tesseract === 'undefined') {
               await new Promise((resolve, reject) => {
