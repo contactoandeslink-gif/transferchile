@@ -595,7 +595,7 @@
       <!-- Selector de Modo -->
       <div style="display: flex; gap: 8px; margin-bottom: 16px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
         <button type="button" id="tabHfMode" onclick="switchAiTab('hf')" style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: #00d2a0; color: #090d16; transition: all 0.2s;">
-          ✨ IA Google Gemini 3.5 Flash (Oficial)
+          ✨ Modo Inteligencia Artificial (IA)
         </button>
         <button type="button" id="tabLocalMode" onclick="switchAiTab('local')" style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: transparent; color: #94a3b8; transition: all 0.2s;">
           ⚡ Escáner Local (Offline)
@@ -605,15 +605,15 @@
       <!-- Configuración IA -->
       <div id="hfConfigSection" style="margin-bottom: 16px; padding: 12px; background: rgba(0, 210, 160, 0.05); border: 1px solid rgba(0, 210, 160, 0.2); border-radius: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">IA Google Gemini: <span style="color: #ffffff;">Conectada ✅</span></label>
-          <span style="font-size: 11px; color: #00d2a0; font-weight: 600;">1.500 consultas gratis/día</span>
+          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">Sistema de IA: <span style="color: #ffffff;">Conectado ✅</span></label>
+          <span style="font-size: 11px; color: #00d2a0; font-weight: 600;">Automático y Activo</span>
         </div>
         <div style="display: flex; gap: 8px;">
-          <input type="password" id="hfApiKeyInput" class="form-input" placeholder="Token integrado automáticamente..." style="font-size: 12px; padding: 8px 12px; flex: 1;" readonly>
-          <button type="button" onclick="showToast('Google Gemini 3.5 Flash activo con respaldo local')" style="padding: 8px 14px; background: rgba(0, 210, 160, 0.15); border: 1px solid #00d2a0; border-radius: 10px; color: #00d2a0; font-size: 12px; font-weight: 700; cursor: default;">Activo</button>
+          <input type="password" id="hfApiKeyInput" class="form-input" placeholder="IA integrada automáticamente..." style="font-size: 12px; padding: 8px 12px; flex: 1;" readonly>
+          <button type="button" onclick="showToast('Sistema de IA activo con respaldo local')" style="padding: 8px 14px; background: rgba(0, 210, 160, 0.15); border: 1px solid #00d2a0; border-radius: 10px; color: #00d2a0; font-size: 12px; font-weight: 700; cursor: default;">Activo</button>
         </div>
         <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">
-          IA Multimodal de última generación <b>Gemini 3.5 Flash</b> integrada automáticamente con respaldo local.
+          Inteligencia Artificial integrada automáticamente para leer tarjetas, cartolas y comprobantes bancarios.
         </div>
       </div>
 
@@ -1395,7 +1395,7 @@
 
           if (geminiKey) {
             try {
-              loadingText.innerText = 'Analizando con Google Gemini 3.5 Flash...';
+              loadingText.innerText = 'Analizando imagen con Inteligencia Artificial...';
               const mimeMatch = currentAiBase64.match(/^data:(image\/[a-zA-Z+]+);base64,/);
               const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
               const rawB64 = currentAiBase64.replace(/^data:image\/[a-zA-Z+]+;base64,/, '');
@@ -1435,14 +1435,14 @@ Si un campo no se puede determinar con certeza, deja su valor como string vacío
                 const rawContent = gJson.candidates && gJson.candidates[0] && gJson.candidates[0].content && gJson.candidates[0].content.parts[0].text;
                 if (rawContent) {
                   extracted = JSON.parse(rawContent);
-                  usedModel = 'Google Gemini 3.5 Flash';
+                  usedModel = 'Inteligencia Artificial (IA)';
                   aiSuccess = true;
                 }
               } else {
-                console.warn('Gemini devolvió código ' + gRes.status + ', activando respaldo...');
+                console.warn('Servicio de IA ocupado o sin cuota, activando respaldo local...');
               }
             } catch (gErr) {
-              console.warn('Error conectando con Gemini:', gErr);
+              console.warn('Conexión de IA no disponible, activando respaldo local...');
             }
           }
 

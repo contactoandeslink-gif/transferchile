@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activar el modo IA — TransferDirecto</title>
+  <meta name="description" content="Cómo activar el modo de máxima precisión con Inteligencia Artificial en la app TransferDirecto.">
+  <style>
+    :root { --bg:#090d16; --card:#111827; --text:#e5e7eb; --muted:#94a3b8; --accent:#00D2A0; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:var(--card); border:1px solid #1f2937; border-radius:16px; max-width:560px; width:100%; padding:32px; }
+    h1 { font-size:22px; margin-bottom:6px; }
+    h1 .ia { color:var(--accent); }
+    p.sub { color:var(--muted); font-size:14px; margin-bottom:20px; }
+    ol { margin:0 0 8px 20px; }
+    li { margin-bottom:14px; font-size:15px; line-height:1.5; }
+    li b { color:var(--accent); }
+    code { background:#0b1220; border:1px solid #1f2937; border-radius:6px; padding:1px 6px; font-size:13px; color:#7dd3fc; }
+    a.btn { display:inline-block; margin-top:10px; background:var(--accent); color:#06281f; font-weight:700; text-decoration:none; padding:10px 18px; border-radius:10px; font-size:14px; }
+    .nota { margin-top:18px; font-size:12.5px; color:var(--muted); border-top:1px solid #1f2937; padding-top:14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🤖 Activar el modo <span class="ia">IA</span> de máxima precisión</h1>
+    <p class="sub">TransferDirecto · Lectura inteligente de tarjetas, cartolas y comprobantes</p>
+    <ol>
+      <li><b>Crea tu cuenta gratuita</b> en el proveedor de Inteligencia Artificial que usamos (es gratis, sin tarjeta).<br>
+        <a class="btn" href="https://huggingface.co/join" target="_blank" rel="noopener">Abrir sitio del proveedor de IA ↗</a></li>
+      <li><b>Genera tu token personal:</b> entra a la sección de tokens de tu cuenta y crea uno nuevo con permiso de solo lectura (<code>read</code>). Tu token empieza con <code>hf_...</code>.</li>
+      <li><b>Pégalo en la app:</b> abre TransferDirecto, activa el "Modo Inteligencia Artificial (IA)" y pega tu token. Se guarda <b>solo en tu teléfono</b>, jamás se envía a nuestros servidores.</li>
+    </ol>
+    <p class="nota">🔒 Tu token es tuyo y personal. TransferDirecto nunca lo almacena ni lo comparte: la app lo usa directamente desde tu dispositivo para analizar tus propias fotos.</p>
+  </div>
+</body>
+</html>
