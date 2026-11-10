@@ -48,6 +48,25 @@ const SupabaseAPI = {
     return await res.json();
   },
 
+  async verifyPin(pin) {
+    if (!pin) return false;
+    try {
+      const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/rpc/admin_verify_pin`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_CONFIG.anonKey,
+          'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ admin_pin: pin })
+      });
+      if (!res.ok) return false;
+      return await res.json();
+    } catch(e) {
+      return false;
+    }
+  },
+
   async saveBusiness(payload, adminPin) {
     const pin = adminPin || sessionStorage.getItem('td_admin_pin') || '';
 

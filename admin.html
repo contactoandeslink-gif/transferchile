@@ -571,29 +571,54 @@
         .replace(/'/g, '&#39;');
     }
 
-    const ADMIN_MASTER_PIN = 'IsaacDirecto2026!';
-
-    function checkAdminAuth() {
+    async function checkAdminAuth() {
       const savedPin = sessionStorage.getItem('td_admin_pin');
-      if (savedPin === ADMIN_MASTER_PIN) {
-        document.getElementById('adminLockScreen').style.display = 'none';
-        return true;
-      } else {
+      if (!savedPin) {
         document.getElementById('adminLockScreen').style.display = 'flex';
         return false;
       }
+      try {
+        if (typeof SupabaseAPI !== 'undefined' && SupabaseAPI.verifyPin) {
+          const ok = await SupabaseAPI.verifyPin(savedPin);
+          if (ok) {
+            document.getElementById('adminLockScreen').style.display = 'none';
+            return true;
+          }
+        }
+      } catch(e) {}
+      document.getElementById('adminLockScreen').style.display = 'flex';
+      return false;
     }
 
-    function handleAdminLogin(e) {
+    async function handleAdminLogin(e) {
       e.preventDefault();
       const pin = document.getElementById('inputAdminPin').value.trim();
-      if (pin === ADMIN_MASTER_PIN) {
-        sessionStorage.setItem('td_admin_pin', pin);
-        document.getElementById('loginErrorMsg').style.display = 'none';
-        document.getElementById('adminLockScreen').style.display = 'none';
-        loadBusinesses();
-      } else {
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const origText = submitBtn.innerText;
+      submitBtn.innerText = 'Verificando credenciales...';
+      submitBtn.disabled = true;
+
+      try {
+        let isValid = false;
+        if (typeof SupabaseAPI !== 'undefined' && SupabaseAPI.verifyPin) {
+          isValid = await SupabaseAPI.verifyPin(pin);
+        } else {
+          isValid = (pin.length > 5);
+        }
+
+        if (isValid) {
+          sessionStorage.setItem('td_admin_pin', pin);
+          document.getElementById('loginErrorMsg').style.display = 'none';
+          document.getElementById('adminLockScreen').style.display = 'none';
+          loadBusinesses();
+        } else {
+          document.getElementById('loginErrorMsg').style.display = 'block';
+        }
+      } catch (err) {
         document.getElementById('loginErrorMsg').style.display = 'block';
+      } finally {
+        submitBtn.innerText = origText;
+        submitBtn.disabled = false;
       }
     }
 
@@ -934,8 +959,9 @@
       addAccountRow({ bankName: 'Banco Estado', accountType: 'CuentaRUT' });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (checkAdminAuth()) {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const isAuth = await checkAdminAuth();
+      if (isAuth) {
         loadBusinesses();
       }
       addAccountRow({ bankName: 'Banco Estado', accountType: 'CuentaRUT' });
