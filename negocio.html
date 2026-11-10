@@ -579,6 +579,16 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
       document.getElementById('qrModal').classList.remove('open');
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     async function loadBusiness() {
       const pathParts = window.location.pathname.split('/');
       let slug = pathParts[pathParts.length - 1];
@@ -626,9 +636,11 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
       // Logo
       const logoWrap = document.getElementById('logoWrap');
       if (biz.logo && biz.logo.trim() !== '') {
-        logoWrap.innerHTML = `<img src="${biz.logo}" class="biz-logo-img" alt="${biz.name}">`;
+        const safeLogo = encodeURI(biz.logo.trim());
+        const safeName = escapeHtml(biz.name);
+        logoWrap.innerHTML = `<img src="${safeLogo}" class="biz-logo-img" alt="${safeName}">`;
       } else {
-        const initial = (biz.name || 'N').charAt(0).toUpperCase();
+        const initial = escapeHtml((biz.name || 'N').charAt(0).toUpperCase());
         logoWrap.innerHTML = `<span class="biz-logo-initial">${initial}</span>`;
       }
 
@@ -637,34 +649,36 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
       actionsGrid.innerHTML = '';
 
       if (biz.instagram) {
-        const igUser = biz.instagram.replace('@', '').trim();
+        const igUser = escapeHtml(biz.instagram.replace('@', '').trim());
         actionsGrid.innerHTML += `
-          <a href="https://instagram.com/${igUser}" target="_blank" class="action-pill ig">
+          <a href="https://instagram.com/${igUser}" target="_blank" rel="noopener noreferrer" class="action-pill ig">
             <span>📸</span> @${igUser}
           </a>
         `;
       }
 
       if (biz.maps) {
+        const safeMaps = encodeURI(biz.maps.trim());
         actionsGrid.innerHTML += `
-          <a href="${biz.maps}" target="_blank" class="action-pill maps">
+          <a href="${safeMaps}" target="_blank" rel="noopener noreferrer" class="action-pill maps">
             <span>📍</span> Cómo llegar (Maps)
           </a>
         `;
       }
 
       if (biz.whatsapp) {
-        const cleanWsp = biz.whatsapp.replace(/[^0-9]/g, '');
+        const cleanWsp = escapeHtml(biz.whatsapp.replace(/[^0-9]/g, ''));
         actionsGrid.innerHTML += `
-          <a href="https://wa.me/${cleanWsp}" target="_blank" class="action-pill wsp">
+          <a href="https://wa.me/${cleanWsp}" target="_blank" rel="noopener noreferrer" class="action-pill wsp">
             <span>💬</span> WhatsApp
           </a>
         `;
       }
 
       if (biz.website) {
+        const safeWeb = encodeURI(biz.website.trim());
         actionsGrid.innerHTML += `
-          <a href="${biz.website}" target="_blank" class="action-pill">
+          <a href="${safeWeb}" target="_blank" rel="noopener noreferrer" class="action-pill">
             <span>🌐</span> Sitio Web
           </a>
         `;
@@ -681,20 +695,26 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
         cardEl.className = `bank-card ${visuals.cls}`;
 
         let logoImgHtml = visuals.logo 
-          ? `<img src="${visuals.logo}" class="card-bank-logo" alt="${visuals.name}">`
+          ? `<img src="${visuals.logo}" class="card-bank-logo" alt="${escapeHtml(visuals.name)}">`
           : '';
+
+        const safeHolder = escapeHtml(acc.holderName || biz.name);
+        const safeType = escapeHtml(acc.accountType);
+        const safeNumber = escapeHtml(acc.accountNumber);
+        const safeRut = escapeHtml(acc.rut);
+        const safeBankName = escapeHtml(visuals.name);
 
         cardEl.innerHTML = `
           <div class="card-header-row">
             <div class="card-bank-brand">
               ${logoImgHtml}
-              <span class="card-bank-name">${visuals.name}</span>
+              <span class="card-bank-name">${safeBankName}</span>
             </div>
             <div class="card-chip"></div>
           </div>
-          <div class="card-holder-name">${acc.holderName || biz.name}</div>
-          <div class="card-account-line">${acc.accountType} • N° ${acc.accountNumber}</div>
-          <div class="card-rut-line">RUT: ${acc.rut}</div>
+          <div class="card-holder-name">${safeHolder}</div>
+          <div class="card-account-line">${safeType} • N° ${safeNumber}</div>
+          <div class="card-rut-line">RUT: ${safeRut}</div>
           <div class="card-actions-row">
             <button class="card-copy-btn" id="btnCopy_${idx}">
               <span>⚡</span> Copiar Todos los Datos

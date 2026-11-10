@@ -347,6 +347,27 @@
 </head>
 <body>
 
+  <!-- LOCK SCREEN / ACCESO RESTRINGIDO ADMIN -->
+  <div id="adminLockScreen" style="position: fixed; inset: 0; background: #090d16; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #111827; border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; padding: 36px 26px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.85);">
+      <div style="font-size: 44px; margin-bottom: 12px;">🛡️</div>
+      <h2 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px;">TransferDirecto PRO</h2>
+      <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 24px;">Panel Oficial de Administración.<br>Ingrese su PIN Maestro para desbloquear el panel.</p>
+      
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+        <input type="password" id="inputAdminPin" placeholder="PIN de Administrador..." autocomplete="current-password" required
+               style="width: 100%; padding: 14px 16px; background: #1e293b; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff; font-size: 16px; text-align: center; letter-spacing: 2px; margin-bottom: 14px; outline: none;">
+        <div id="loginErrorMsg" style="color: #ef4444; font-size: 12px; font-weight: 600; margin-bottom: 14px; display: none;">❌ PIN incorrecto. Acceso denegado.</div>
+        <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #0066ff, #00d2a0); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);">
+          🔓 Desbloquear Panel
+        </button>
+      </form>
+      <div style="margin-top: 22px; font-size: 11px; color: #64748b;">
+        🔒 Base de datos Supabase protegida por Row-Level Security
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Top Bar -->
     <div class="top-bar">
@@ -354,8 +375,13 @@
         <span>⚡ TransferDirecto</span>
         <span class="badge-pro">PRO NEGOCIOS</span>
       </div>
-      <div style="font-size: 13px; color: var(--text-muted);">
-        📍 Servidor Local Activo • Villarrica, Chile
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="font-size: 13px; color: var(--text-muted);">
+          📍 Villarrica, Chile
+        </div>
+        <button type="button" onclick="logoutAdmin()" class="btn-action" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 6px 12px; font-size: 12px; border-radius: 8px;">
+          🔒 Bloquear
+        </button>
       </div>
     </div>
 
@@ -535,6 +561,47 @@
 
   <script src="/assets/supabase-client.js"></script>
   <script>
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    const ADMIN_MASTER_PIN = 'IsaacDirecto2026!';
+
+    function checkAdminAuth() {
+      const savedPin = sessionStorage.getItem('td_admin_pin');
+      if (savedPin === ADMIN_MASTER_PIN) {
+        document.getElementById('adminLockScreen').style.display = 'none';
+        return true;
+      } else {
+        document.getElementById('adminLockScreen').style.display = 'flex';
+        return false;
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pin = document.getElementById('inputAdminPin').value.trim();
+      if (pin === ADMIN_MASTER_PIN) {
+        sessionStorage.setItem('td_admin_pin', pin);
+        document.getElementById('loginErrorMsg').style.display = 'none';
+        document.getElementById('adminLockScreen').style.display = 'none';
+        loadBusinesses();
+      } else {
+        document.getElementById('loginErrorMsg').style.display = 'block';
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('td_admin_pin');
+      window.location.reload();
+    }
+
     let businesses = [];
 
     const BANK_OPTIONS = [
@@ -627,44 +694,49 @@
         card.className = 'biz-card-item';
 
         const accountsCount = (b.accounts || []).length;
-        const banksSummary = (b.accounts || []).map(a => a.bankName).join(', ') || 'Sin cuentas';
+        const banksSummary = escapeHtml((b.accounts || []).map(a => a.bankName).join(', ') || 'Sin cuentas');
+        const safeName = escapeHtml(b.name);
+        const safeSlug = escapeHtml(b.slug);
+        const safeCat = escapeHtml(b.category || 'Comercio');
+        const safeTheme = escapeHtml(b.theme || 'volcan');
+        const safeCode = escapeHtml(b.access_code || 'SIN CÓDIGO');
 
         card.innerHTML = `
           <div class="biz-card-top">
             <div>
-              <div class="biz-card-name">${b.name}</div>
-              <div class="biz-card-slug">/p/${b.slug}</div>
+              <div class="biz-card-name">${safeName}</div>
+              <div class="biz-card-slug">/p/${safeSlug}</div>
             </div>
-            <div class="biz-card-theme-tag">${b.theme || 'volcan'}</div>
+            <div class="biz-card-theme-tag">${safeTheme}</div>
           </div>
           <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">
-            ${b.category || 'Comercio'} • <b>${accountsCount} cuentas</b> (${banksSummary})
+            ${safeCat} • <b>${accountsCount} cuentas</b> (${banksSummary})
           </div>
           <div style="margin: 6px 0 10px; display: flex; align-items: center; gap: 8px;">
             <span style="font-size: 12px; background: rgba(0, 210, 160, 0.15); color: #00d2a0; font-family: monospace; font-weight: 700; padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(0, 210, 160, 0.3);">
-              🔑 Código App: <b>${b.access_code || 'SIN CÓDIGO'}</b>
+              🔑 Código App: <b>${safeCode}</b>
             </span>
-            <button type="button" class="btn-action" style="padding: 4px 10px; font-size: 11px; background: rgba(255,255,255,0.08);" onclick="copyCode('${b.access_code || ''}')">
+            <button type="button" class="btn-action" style="padding: 4px 10px; font-size: 11px; background: rgba(255,255,255,0.08);" onclick="copyCode('${safeCode}')">
               📋 Copiar Código
             </button>
           </div>
           <div class="biz-card-actions">
-            <button class="btn-action" style="background: #25d366; color: #090d16;" onclick="copyWspShare('${b.name}', '${b.slug}')">
+            <button class="btn-action" style="background: #25d366; color: #090d16;" onclick="copyWspShare('${safeName}', '${safeSlug}')">
               <span>💬</span> Copiar WhatsApp
             </button>
-            <button class="btn-action" style="background: #00d2a0; color: #090d16;" onclick="openMobileQr('${b.slug}', '${b.name}')">
+            <button class="btn-action" style="background: #00d2a0; color: #090d16;" onclick="openMobileQr('${safeSlug}', '${safeName}')">
               <span>📲</span> Ver en Celular
             </button>
-            <a href="/p/${b.slug}" target="_blank" class="btn-action view">
+            <a href="/negocio.html?slug=${safeSlug}" target="_blank" class="btn-action view">
               <span>👁️</span> Ver en PC
             </a>
-            <a href="/cartel/${b.slug}" target="_blank" class="btn-action print">
+            <a href="/cartel-print.html?slug=${safeSlug}" target="_blank" class="btn-action print">
               <span>🖨️</span> Cartel Mostrador
             </a>
-            <button class="btn-action edit" onclick="editBusiness('${b.slug}')">
+            <button class="btn-action edit" onclick="editBusiness('${safeSlug}')">
               <span>✏️</span> Editar
             </button>
-            <button class="btn-action delete" onclick="deleteBusiness('${b.slug}')">
+            <button class="btn-action delete" onclick="deleteBusiness('${safeSlug}')">
               <span>🗑️</span>
             </button>
           </div>
@@ -863,7 +935,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      loadBusinesses();
+      if (checkAdminAuth()) {
+        loadBusinesses();
+      }
       addAccountRow({ bankName: 'Banco Estado', accountType: 'CuentaRUT' });
     });
   </script>
