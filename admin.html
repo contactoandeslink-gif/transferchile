@@ -267,6 +267,30 @@
     }
     .btn-submit:active { transform: scale(0.98); }
 
+    
+    .btn-ai-scan {
+      background: linear-gradient(135deg, rgba(0, 210, 160, 0.16) 0%, rgba(56, 189, 248, 0.16) 100%);
+      border: 1px solid rgba(0, 210, 160, 0.45);
+      color: #00d2a0;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-ai-scan:hover {
+      background: linear-gradient(135deg, rgba(0, 210, 160, 0.28) 0%, rgba(56, 189, 248, 0.28) 100%);
+      border-color: #00d2a0;
+      transform: translateY(-1px);
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     .btn-add-acc {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border);
@@ -517,11 +541,21 @@
 
           <!-- Cuentas Bancarias -->
           <div class="form-group">
-            <label class="form-label">Cuentas Bancarias del Comercio</label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label class="form-label" style="margin: 0;">Cuentas Bancarias del Comercio</label>
+              <button type="button" class="btn-ai-scan" onclick="openAiScanModal()">
+                <span>📸</span> Auto-completar con Foto / IA
+              </button>
+            </div>
             <div class="accounts-builder" id="accountsBuilder"></div>
-            <button type="button" class="btn-add-acc" id="btnAddAccount">
-              + Agregar Otra Cuenta Bancaria
-            </button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-add-acc" id="btnAddAccount" style="flex: 1; margin-bottom: 0;">
+                + Agregar Otra Cuenta Bancaria
+              </button>
+              <button type="button" class="btn-ai-scan" onclick="openAiScanModal()" style="font-size: 11px;">
+                <span>📸</span> Escanear con IA
+              </button>
+            </div>
           </div>
 
           <button type="submit" class="btn-submit">
@@ -541,6 +575,101 @@
   </div>
 
   <div class="toast" id="toast">¡Negocio guardado exitosamente!</div>
+
+  
+  <!-- Modal Escáner con IA (Hugging Face / Local) -->
+  <div id="aiScanModal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 3000;">
+    <div style="background: #111827; border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; padding: 24px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.8); color: #f8fafc;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <div style="font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+          <span>📸</span> Auto-completar Datos con IA
+        </div>
+        <button type="button" onclick="closeAiScanModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 22px; cursor: pointer; padding: 4px 8px; line-height: 1;">✕</button>
+      </div>
+
+      <p style="font-size: 13px; color: #94a3b8; margin: 0 0 16px; line-height: 1.5;">
+        Sube o arrastra una foto de la <b>tarjeta bancaria</b>, <b>cartola</b>, <b>captura de pantalla de la app del banco</b> o un <b>papel manuscrito</b>. La IA extraerá los datos y rellenará el formulario automáticamente.
+      </p>
+
+      <!-- Selector de Modo -->
+      <div style="display: flex; gap: 8px; margin-bottom: 16px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+        <button type="button" id="tabHfMode" onclick="switchAiTab('hf')" style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: #00d2a0; color: #090d16; transition: all 0.2s;">
+          🤗 IA Hugging Face (Recomendado)
+        </button>
+        <button type="button" id="tabLocalMode" onclick="switchAiTab('local')" style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: transparent; color: #94a3b8; transition: all 0.2s;">
+          ⚡ Escáner Local (Sin Token)
+        </button>
+      </div>
+
+      <!-- Configuración Hugging Face -->
+      <div id="hfConfigSection" style="margin-bottom: 16px; padding: 12px; background: rgba(0, 210, 160, 0.05); border: 1px solid rgba(0, 210, 160, 0.2); border-radius: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label style="font-size: 12px; font-weight: 700; color: #00d2a0;">Token de Hugging Face (Gratuito)</label>
+          <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer" style="font-size: 11px; color: #38bdf8; text-decoration: underline;">Obtener Token Gratis ↗</a>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <input type="password" id="hfApiKeyInput" class="form-input" placeholder="hf_xxxxxxxxxxxxxxxx..." style="font-size: 12px; padding: 8px 12px; flex: 1;">
+          <button type="button" onclick="saveHfToken()" style="padding: 8px 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: #ffffff; font-size: 12px; font-weight: 600; cursor: pointer;">Guardar</button>
+        </div>
+        <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">
+          Usa el modelo multimodal gratuito <b>Qwen2.5-VL-7B</b>. El token queda guardado exclusivamente en tu navegador.
+        </div>
+      </div>
+
+      <!-- Dropzone / Input Foto -->
+      <div id="aiDropzone" style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 24px 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(255,255,255,0.02); margin-bottom: 16px;" onclick="document.getElementById('aiImageFileInput').click()">
+        <input type="file" id="aiImageFileInput" accept="image/*" style="display: none;" onchange="handleAiImageSelected(this)">
+        <div id="aiDropzoneContent">
+          <div style="font-size: 32px; margin-bottom: 6px;">📷</div>
+          <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 4px;">Toca para subir o tomar foto</div>
+          <div style="font-size: 12px; color: #64748b;">o pega una captura de pantalla con Ctrl + V</div>
+        </div>
+        <div id="aiPreviewBox" style="display: none;">
+          <img id="aiPreviewImg" src="" alt="Vista previa" style="max-height: 180px; max-width: 100%; border-radius: 10px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+          <div style="font-size: 11px; color: #00d2a0; margin-top: 8px; font-weight: 600;" id="aiImageName">foto.jpg</div>
+          <div style="font-size: 11px; color: #64748b; margin-top: 2px;">(Toca aquí para cambiar imagen)</div>
+        </div>
+      </div>
+
+      <!-- Botón Analizar -->
+      <button type="button" id="btnRunAiAnalysis" class="btn-submit" onclick="runAiImageAnalysis()" style="margin-bottom: 16px; display: none;">
+        <span>🔍</span> Analizar Imagen con IA
+      </button>
+
+      <div id="aiLoadingSpinner" style="display: none; text-align: center; padding: 16px 0;">
+        <div style="display: inline-block; width: 32px; height: 32px; border: 3px solid rgba(0,210,160,0.25); border-top-color: #00d2a0; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <div style="font-size: 13px; color: #00d2a0; margin-top: 8px; font-weight: 600;" id="aiLoadingText">La IA está reconociendo los datos bancarios...</div>
+      </div>
+
+      <!-- Resultados Detectados -->
+      <div id="aiResultsCard" style="display: none; background: rgba(0, 210, 160, 0.05); border: 1px solid rgba(0,210,160,0.35); border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+        <div style="font-size: 13px; font-weight: 700; color: #00d2a0; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+          <span>✅ Datos Extraídos con Éxito:</span>
+          <span id="aiConfidenceBadge" style="font-size: 11px; background: rgba(0,210,160,0.2); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Listo para aplicar</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+          <div><b style="color: #94a3b8;">Banco:</b> <span id="resBank" style="color: #ffffff; font-weight: 600;">-</span></div>
+          <div><b style="color: #94a3b8;">Tipo:</b> <span id="resType" style="color: #ffffff; font-weight: 600;">-</span></div>
+          <div><b style="color: #94a3b8;">N° Cuenta:</b> <span id="resNumber" style="color: #ffffff; font-weight: 600; font-family: monospace;">-</span></div>
+          <div><b style="color: #94a3b8;">RUT:</b> <span id="resRut" style="color: #ffffff; font-weight: 600; font-family: monospace;">-</span></div>
+          <div style="grid-column: span 2;"><b style="color: #94a3b8;">Titular:</b> <span id="resHolder" style="color: #ffffff; font-weight: 600;">-</span></div>
+          <div style="grid-column: span 2;"><b style="color: #94a3b8;">Correo:</b> <span id="resEmail" style="color: #ffffff; font-weight: 600;">-</span></div>
+        </div>
+        <div id="aiWarningText" style="display: none; margin-top: 10px; font-size: 11px; color: #fbbf24; background: rgba(251, 191, 36, 0.1); padding: 6px 10px; border-radius: 8px;"></div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn-action" style="flex: 1; padding: 12px; background: rgba(255,255,255,0.08);" onclick="closeAiScanModal()">
+          Cerrar
+        </button>
+        <button type="button" id="btnApplyAiData" class="btn-action" style="flex: 2; padding: 12px; background: #00d2a0; color: #090d16; font-weight: 800; display: none;" onclick="applyAiDataToForm()">
+          ✨ Aplicar al Formulario
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Modal QR para Celular -->
   <div id="mobileQrModal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 3000;">
@@ -957,6 +1086,429 @@
       selectTheme('volcan-villarrica');
       document.getElementById('accountsBuilder').innerHTML = '';
       addAccountRow({ bankName: 'Banco Estado', accountType: 'CuentaRUT' });
+    }
+
+    
+    /* ==========================================================================
+       MODO IA HUGGING FACE Y ESCÁNER BANCARIO INTELIGENTE (CHILE)
+       ========================================================================== */
+    let currentAiMode = 'hf';
+    let currentAiBase64 = null;
+    let lastAiExtractedData = null;
+
+    function openAiScanModal() {
+      const modal = document.getElementById('aiScanModal');
+      modal.style.display = 'flex';
+      const savedToken = localStorage.getItem('td_hf_token') || '';
+      document.getElementById('hfApiKeyInput').value = savedToken;
+      switchAiTab(savedToken ? 'hf' : 'local');
+    }
+
+    function closeAiScanModal() {
+      document.getElementById('aiScanModal').style.display = 'none';
+      document.getElementById('aiImageFileInput').value = '';
+      currentAiBase64 = null;
+      document.getElementById('aiDropzoneContent').style.display = 'block';
+      document.getElementById('aiPreviewBox').style.display = 'none';
+      document.getElementById('btnRunAiAnalysis').style.display = 'none';
+      document.getElementById('aiLoadingSpinner').style.display = 'none';
+      document.getElementById('aiResultsCard').style.display = 'none';
+      document.getElementById('btnApplyAiData').style.display = 'none';
+    }
+
+    function switchAiTab(mode) {
+      currentAiMode = mode;
+      const tabHf = document.getElementById('tabHfMode');
+      const tabLocal = document.getElementById('tabLocalMode');
+      const hfSection = document.getElementById('hfConfigSection');
+
+      if (mode === 'hf') {
+        tabHf.style.background = '#00d2a0';
+        tabHf.style.color = '#090d16';
+        tabLocal.style.background = 'transparent';
+        tabLocal.style.color = '#94a3b8';
+        hfSection.style.display = 'block';
+      } else {
+        tabLocal.style.background = '#00d2a0';
+        tabLocal.style.color = '#090d16';
+        tabHf.style.background = 'transparent';
+        tabHf.style.color = '#94a3b8';
+        hfSection.style.display = 'none';
+      }
+    }
+
+    function saveHfToken() {
+      const token = document.getElementById('hfApiKeyInput').value.trim();
+      if (!token) {
+        localStorage.removeItem('td_hf_token');
+        showToast('Token eliminado');
+      } else {
+        localStorage.setItem('td_hf_token', token);
+        showToast('¡Token Hugging Face guardado con éxito!');
+      }
+    }
+
+    function handleAiImageSelected(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      loadAiImageFile(file);
+    }
+
+    function loadAiImageFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen (JPG, PNG, WebP)');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentAiBase64 = e.target.result;
+        document.getElementById('aiPreviewImg').src = currentAiBase64;
+        document.getElementById('aiImageName').innerText = file.name || 'captura.png';
+        document.getElementById('aiDropzoneContent').style.display = 'none';
+        document.getElementById('aiPreviewBox').style.display = 'block';
+        document.getElementById('btnRunAiAnalysis').style.display = 'flex';
+        document.getElementById('aiResultsCard').style.display = 'none';
+        document.getElementById('btnApplyAiData').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Drag and drop & paste handlers
+    document.addEventListener('DOMContentLoaded', () => {
+      const dropzone = document.getElementById('aiDropzone');
+      if (dropzone) {
+        ['dragenter', 'dragover'].forEach(name => {
+          dropzone.addEventListener(name, (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#00d2a0';
+            dropzone.style.background = 'rgba(0, 210, 160, 0.08)';
+          });
+        });
+        ['dragleave', 'drop'].forEach(name => {
+          dropzone.addEventListener(name, (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = 'rgba(255,255,255,0.2)';
+            dropzone.style.background = 'rgba(255,255,255,0.02)';
+          });
+        });
+        dropzone.addEventListener('drop', (e) => {
+          if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+            loadAiImageFile(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
+      window.addEventListener('paste', (e) => {
+        const modal = document.getElementById('aiScanModal');
+        if (modal && modal.style.display === 'flex' && e.clipboardData && e.clipboardData.items) {
+          for (let i = 0; i < e.clipboardData.items.length; i++) {
+            const item = e.clipboardData.items[i];
+            if (item.type.indexOf('image') !== -1) {
+              const file = item.getAsFile();
+              if (file) loadAiImageFile(file);
+              break;
+            }
+          }
+        }
+      });
+    });
+
+    // Parser heurístico chileno
+    const CHILE_BANK_ALIASES = {
+      'estado': 'Banco Estado',
+      'bancoestado': 'Banco Estado',
+      'cuenta rut': 'Banco Estado',
+      'cuentarut': 'Banco Estado',
+      'chile': 'Banco de Chile',
+      'banco de chile': 'Banco de Chile',
+      'edwards': 'Banco de Chile',
+      'santander': 'Banco Santander',
+      'bci': 'BCI',
+      'falabella': 'Banco Falabella',
+      'scotiabank': 'Scotiabank',
+      'itau': 'Itaú',
+      'itaú': 'Itaú',
+      'bice': 'Banco BICE',
+      'security': 'Banco Security',
+      'ripley': 'Banco Ripley',
+      'tenpo': 'Tenpo',
+      'mach': 'Mach'
+    };
+
+    function cleanRutNumber(rut) {
+      return String(rut || '').replace(/[^0-9kK]/g, '').toUpperCase();
+    }
+
+    function isMathValidRut(rut) {
+      const clean = cleanRutNumber(rut);
+      if (clean.length < 3) return false;
+      const dv = clean.slice(-1);
+      const cuerpoStr = clean.slice(0, -1);
+      if (cuerpoStr.length > 8 || !/^\d+$/.test(cuerpoStr)) return false;
+      const cuerpo = parseInt(cuerpoStr, 10);
+      if (cuerpo <= 0) return false;
+      let m = 0, s = 1, t = cuerpo;
+      while (t !== 0) {
+        s = (s + (t % 10) * (9 - (m++ % 6))) % 11;
+        t = Math.floor(t / 10);
+      }
+      const expectedDv = s > 0 ? String(s - 1) : 'K';
+      return dv === expectedDv;
+    }
+
+    function formatChileanRut(rut) {
+      const clean = cleanRutNumber(rut);
+      if (clean.length < 2) return clean;
+      const dv = clean.slice(-1);
+      const cuerpo = clean.slice(0, -1);
+      const reversed = cuerpo.split('').reverse().join('');
+      const chunks = reversed.match(/.{1,3}/g) || [];
+      return chunks.join('.').split('').reverse().join('') + '-' + dv;
+    }
+
+    function parseChileanBankTextFromOcr(text) {
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      let bank = '';
+      let accountType = '';
+      let accountNumber = '';
+      let rut = '';
+      let holderName = '';
+      let email = '';
+
+      const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) email = emailMatch[0];
+
+      const OCR_MAP = {
+        'l': '1', 'L': '1', 'I': '1', 'i': '1', '|': '1',
+        'o': '0', 'O': '0', 'b': '6', 'B': '8', 's': '5', 'S': '5',
+        'q': '9', 'Q': '9', 'g': '9', 'G': '6', 'z': '2', 'Z': '2'
+      };
+
+      const rutCandidateRegex = /(^|[\s:;#])([0-9oObsSqQGglLiI|zZ.\-]{6,16}[\dkKbBoOsSiIlL|])($|[\s.,;])/gi;
+      let match;
+      while ((match = rutCandidateRegex.exec(text)) !== null) {
+        const rawToken = match[2];
+        const candidate = rawToken.split('').map(c => OCR_MAP[c] || c).join('');
+        if (isMathValidRut(candidate)) {
+          rut = formatChileanRut(candidate);
+          break;
+        }
+      }
+
+      const lowerText = text.toLowerCase();
+      for (const [kw, officialBank] of Object.entries(CHILE_BANK_ALIASES)) {
+        if (lowerText.includes(kw)) {
+          bank = officialBank;
+          break;
+        }
+      }
+
+      if (lowerText.includes('cuentarut') || (lowerText.includes('rut') && lowerText.includes('vista'))) {
+        accountType = 'CuentaRUT';
+      } else if (lowerText.includes('corriente') || lowerText.includes('cte')) {
+        accountType = 'Cuenta Corriente';
+      } else if (lowerText.includes('vista') || lowerText.includes('vta')) {
+        accountType = 'Cuenta Vista';
+      } else if (lowerText.includes('ahorro')) {
+        accountType = 'Cuenta de Ahorro';
+      } else if (lowerText.includes('prepago')) {
+        accountType = 'Cuenta Prepago';
+      }
+
+      const accNumMatch = text.match(/(?:cuenta|cta|n°|n[ºo]|numero)[\s:.]*([0-9\s.-]{4,18})/i);
+      if (accNumMatch) {
+        const digits = accNumMatch[1].replace(/[^0-9]/g, '');
+        if (digits.length >= 4 && digits.length <= 18) {
+          accountNumber = digits;
+        }
+      }
+
+      if ((bank === 'Banco Estado' || accountType === 'CuentaRUT') && rut && !accountNumber) {
+        accountNumber = cleanRutNumber(rut).slice(0, -1);
+        if (!accountType) accountType = 'CuentaRUT';
+        if (!bank) bank = 'Banco Estado';
+      }
+
+      for (const line of lines) {
+        const lLower = line.toLowerCase();
+        if (lLower.startsWith('nombre:') || lLower.startsWith('titular:')) {
+          holderName = line.split(':')[1].trim();
+          break;
+        }
+      }
+
+      return {
+        bankName: bank || 'Banco Estado',
+        accountType: accountType || 'Cuenta Corriente',
+        accountNumber: accountNumber || '',
+        rut: rut || '',
+        holderName: holderName || '',
+        email: email || ''
+      };
+    }
+
+    async function runAiImageAnalysis() {
+      if (!currentAiBase64) {
+        alert('Por favor selecciona una imagen primero.');
+        return;
+      }
+
+      const btnRun = document.getElementById('btnRunAiAnalysis');
+      const spinner = document.getElementById('aiLoadingSpinner');
+      const loadingText = document.getElementById('aiLoadingText');
+      const resultsCard = document.getElementById('aiResultsCard');
+      const btnApply = document.getElementById('btnApplyAiData');
+      const warningText = document.getElementById('aiWarningText');
+
+      btnRun.style.display = 'none';
+      resultsCard.style.display = 'none';
+      btnApply.style.display = 'none';
+      warningText.style.display = 'none';
+      spinner.style.display = 'block';
+
+      try {
+        let extracted = null;
+        let usedModel = '';
+
+        if (currentAiMode === 'hf') {
+          const token = (document.getElementById('hfApiKeyInput').value || localStorage.getItem('td_hf_token') || '').trim();
+          if (!token) {
+            alert('Para ocupar la IA de Hugging Face ingresa tu Token de acceso gratuito (arriba). Si no tienes token, cambia a la pestaña "Escáner Local (Sin Token)".');
+            spinner.style.display = 'none';
+            btnRun.style.display = 'flex';
+            return;
+          }
+
+          loadingText.innerText = 'Consultando IA Multimodal Hugging Face (Qwen2.5-VL)...';
+
+          const promptText = `Eres un sistema de OCR financiero experto en transferencias bancarias de Chile.
+Analiza detenidamente la imagen enviada (puede ser una tarjeta bancaria, un comprobante de transferencia, una cartola o un papel escrito a mano).
+Extrae los siguientes datos bancarios chilenos:
+- bankName: Nombre del banco chileno (ej: Banco Estado, Banco Santander, Banco de Chile, BCI, Banco Falabella, Scotiabank, Itaú, Tenpo, Mach).
+- accountType: Tipo de cuenta (ej: CuentaRUT, Cuenta Corriente, Cuenta Vista, Cuenta de Ahorro).
+- accountNumber: Número de cuenta bancaria numérico (solo dígitos). Si es CuentaRUT de Banco Estado y no aparece explícito, el número es el RUT sin dígito verificador.
+- rut: RUT chileno con formato estándar (ej: 12.345.678-9).
+- holderName: Nombre completo del titular.
+- email: Correo electrónico de notificación si está visible.
+
+Responde ÚNICAMENTE un objeto JSON válido con estas claves exactas:
+{"bankName": "...", "accountType": "...", "accountNumber": "...", "rut": "...", "holderName": "...", "email": "..."}
+Si un campo no se puede determinar con certeza, deja su valor como string vacío "". No agregues texto introductorio ni explicaciones.`;
+
+          const hfRes = await fetch('https://router.huggingface.co/hf-inference/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'Qwen/Qwen2.5-VL-7B-Instruct',
+              messages: [
+                {
+                  role: 'user',
+                  content: [
+                    { type: 'text', text: promptText },
+                    { type: 'image_url', image_url: { url: currentAiBase64 } }
+                  ]
+                }
+              ],
+              max_tokens: 350,
+              temperature: 0.1
+            })
+          });
+
+          if (!hfRes.ok) {
+            const errBody = await hfRes.text();
+            throw new Error('Hugging Face error HTTP ' + hfRes.status + ': ' + errBody.slice(0, 150));
+          }
+
+          const hfJson = await hfRes.json();
+          const rawContent = (hfJson.choices && hfJson.choices[0] && hfJson.choices[0].message && hfJson.choices[0].message.content) || '';
+          
+          const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            extracted = JSON.parse(jsonMatch[0]);
+            usedModel = 'Hugging Face Qwen2.5-VL';
+          } else {
+            throw new Error('Respuesta de IA sin JSON válido');
+          }
+
+        } else {
+          // Modo Local: Tesseract.js en el navegador
+          loadingText.innerText = 'Cargando motor de reconocimiento OCR en tu navegador...';
+          if (typeof Tesseract === 'undefined') {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+              script.onload = resolve;
+              script.onerror = () => reject(new Error('No se pudo cargar Tesseract.js'));
+              document.head.appendChild(script);
+            });
+          }
+
+          loadingText.innerText = 'Leyendo texto de la imagen en tu dispositivo...';
+          const tResult = await Tesseract.recognize(currentAiBase64, 'spa+eng');
+          const text = (tResult && tResult.data && tResult.data.text) || '';
+          extracted = parseChileanBankTextFromOcr(text);
+          usedModel = 'Escáner Local (Offline)';
+        }
+
+        if (extracted) {
+          lastAiExtractedData = extracted;
+          document.getElementById('resBank').innerText = extracted.bankName || 'No detectado';
+          document.getElementById('resType').innerText = extracted.accountType || 'No detectado';
+          document.getElementById('resNumber').innerText = extracted.accountNumber || 'No detectado';
+          document.getElementById('resRut').innerText = extracted.rut || 'No detectado';
+          document.getElementById('resHolder').innerText = extracted.holderName || 'No detectado';
+          document.getElementById('resEmail').innerText = extracted.email || '(Ninguno)';
+
+          document.getElementById('aiConfidenceBadge').innerText = usedModel;
+          resultsCard.style.display = 'block';
+          btnApply.style.display = 'block';
+          btnRun.style.display = 'flex';
+          btnRun.innerHTML = '<span>🔄</span> Volver a Analizar';
+        }
+
+      } catch (err) {
+        console.error('Error en análisis de imagen:', err);
+        warningText.style.display = 'block';
+        warningText.innerHTML = '⚠️ <b>Nota:</b> ' + escapeHtml(err.message || 'Error al analizar la imagen.') + 
+          '<br><br>💡 <b>Tip:</b> Si falló Hugging Face, prueba cambiando a la pestaña <b>"Escáner Local"</b> o verifica que tu Token de HF sea válido.';
+        resultsCard.style.display = 'block';
+        btnRun.style.display = 'flex';
+      } finally {
+        spinner.style.display = 'none';
+      }
+    }
+
+    function applyAiDataToForm() {
+      if (!lastAiExtractedData) return;
+
+      const rows = document.querySelectorAll('.account-row-item');
+      let targetRow = null;
+
+      // Si la primera fila está vacía, la usamos; si ya tiene datos, creamos una nueva
+      if (rows.length === 1) {
+        const firstNum = rows[0].querySelector('.acc-number').value.trim();
+        const firstRut = rows[0].querySelector('.acc-rut').value.trim();
+        if (!firstNum && !firstRut) {
+          targetRow = rows[0];
+        }
+      }
+
+      if (targetRow) {
+        if (lastAiExtractedData.bankName) targetRow.querySelector('.acc-bank').value = lastAiExtractedData.bankName;
+        if (lastAiExtractedData.accountType) targetRow.querySelector('.acc-type').value = lastAiExtractedData.accountType;
+        if (lastAiExtractedData.accountNumber) targetRow.querySelector('.acc-number').value = lastAiExtractedData.accountNumber;
+        if (lastAiExtractedData.rut) targetRow.querySelector('.acc-rut').value = lastAiExtractedData.rut;
+        if (lastAiExtractedData.holderName) targetRow.querySelector('.acc-holder').value = lastAiExtractedData.holderName;
+        if (lastAiExtractedData.email) targetRow.querySelector('.acc-email').value = lastAiExtractedData.email;
+      } else {
+        addAccountRow(lastAiExtractedData);
+      }
+
+      closeAiScanModal();
+      showToast('¡Datos bancarios extraídos aplicados con éxito!');
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
