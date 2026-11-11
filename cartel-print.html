@@ -203,7 +203,7 @@
         <span>📷</span> Enfoca con la cámara de tu celular
       </div>
       <div class="qr-frame">
-        <img id="qrImg" src="" alt="Código QR">
+        <img id="qrImg" src="/assets/uploads/qr-clean-hero.png" alt="Código QR">
       </div>
       <div style="font-size: 14px; font-weight: 800; color: #0066ff; margin-top: 6px;" id="pageUrlText">
         transferdirecto.cl/p/barberia-villarrica
@@ -260,7 +260,9 @@
 
         // Generar QR de alta calidad nítido
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=${encodeURIComponent(targetUrl)}`;
-        document.getElementById('qrImg').src = qrUrl;
+        const qrEl = document.getElementById('qrImg');
+        qrEl.onerror = function() { this.src = '/assets/uploads/qr-clean-hero.png'; };
+        qrEl.src = (biz.slug === 'mono-san-martin') ? '/assets/uploads/qr-clean-hero.png' : qrUrl;
 
       } catch (err) {
         document.getElementById('bizName').innerText = 'COMERCIO PRO';

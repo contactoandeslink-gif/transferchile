@@ -565,6 +565,21 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
       });
     }
 
+    let currentBiz = null;
+
+    function openBizQrModal() {
+      const bizName = currentBiz ? currentBiz.name : 'Peluquería Mono San Martín';
+      const bizSlug = currentBiz ? currentBiz.slug : 'mono-san-martin';
+      document.getElementById('modalBankTitle').innerText = bizName;
+      document.getElementById('modalBankSub').innerText = 'transferdirecto.cl/p/' + bizSlug;
+      const modalQrImg = document.getElementById('modalQrImg');
+      modalQrImg.src = '/assets/uploads/qr-clean-hero.png';
+      modalQrImg.onerror = function() {
+        this.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=1&data=${encodeURIComponent('https://transferdirecto.cl/p/' + bizSlug)}`;
+      };
+      document.getElementById('qrModal').classList.add('open');
+    }
+
     function openQrModal(acc) {
       document.getElementById('modalBankTitle').innerText = acc.bankName;
       document.getElementById('modalBankSub').innerText = `${acc.accountType} • ${acc.accountNumber}`;
@@ -618,6 +633,7 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
     }
 
     function renderBusiness(biz) {
+      currentBiz = biz;
       document.title = `${biz.name} | Pago Rápido`;
       
       // Aplicar Fondo Fotográfico Real
@@ -684,11 +700,33 @@ ${acc.email ? 'Correo: ' + acc.email : ''}`.trim();
         `;
       }
 
+      // Botón Ver Código QR
+      actionsGrid.innerHTML += `
+        <button type="button" onclick="openBizQrModal()" class="action-pill qr" style="background: rgba(0, 210, 160, 0.18); border: 1.5px solid rgba(0, 210, 160, 0.5); color: #00d2a0; font-weight: 800; cursor: pointer;">
+          <span>📷</span> Ver QR
+        </button>
+      `;
+
       // Tarjetas Bancarias
       const cardsContainer = document.getElementById('cardsContainer');
       cardsContainer.innerHTML = '';
 
       const accounts = biz.accounts || [];
+      if (accounts.length === 0) {
+        cardsContainer.innerHTML = `
+          <div style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(212, 163, 89, 0.45); border-radius: 20px; padding: 24px 18px; text-align: center; margin-top: 10px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div style="font-size: 16px; font-weight: 900; color: #ffffff; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Código QR de Mostrador</div>
+            <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 16px;">Enfoca con la cámara de tu celular para transferir directo</div>
+            <div style="background: #ffffff; padding: 12px; border-radius: 18px; display: inline-block; box-shadow: 0 12px 35px rgba(0,0,0,0.6); border: 2.5px solid #d4a359;">
+              <img id="bizQrDisplay" src="/assets/uploads/qr-clean-hero.png" style="width: 200px; height: 200px; display: block; border-radius: 6px;" alt="Código QR de Cobro" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=1&data=https%3A%2F%2Ftransferdirecto.cl%2Fp%2F' + encodeURIComponent(biz.slug)">
+            </div>
+            <div style="font-size: 13px; color: #00d2a0; font-weight: 800; margin-top: 14px; letter-spacing: 0.3px;">transferdirecto.cl/p/${escapeHtml(biz.slug)}</div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 5px 12px; border-radius: 20px; font-size: 11px; color: #6ee7b7; font-weight: 700; margin-top: 10px;">
+              <span>🛡️ 100% Seguro</span><span>•</span><span>0% Comisión</span>
+            </div>
+          </div>
+        `;
+      }
       accounts.forEach((acc, idx) => {
         const visuals = getBankVisuals(acc.bankName);
         const cardEl = document.createElement('div');
