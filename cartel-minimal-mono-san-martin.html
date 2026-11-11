@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartel Minimalista Media Carta | Peluquería Mono San Martín</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    @page {
+      size: 140mm 216mm; /* Media Carta exacta */
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Barra no imprimible */
+    .no-print-bar {
+      width: 140mm;
+      max-width: 100%;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-print {
+      background: #0f172a;
+      color: #ffffff;
+      border: 1px solid #475569;
+      background: #2563eb;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* HOJA MEDIA CARTA (140mm x 216mm) */
+    .sheet-half-letter {
+      width: 140mm;
+      height: 216mm;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14mm 12mm 12mm 12mm;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      border: 1.5px solid #e2e8f0;
+      overflow: hidden;
+    }
+
+    /* Detalle sutil de corte y marco interior */
+    .inner-border {
+      position: absolute;
+      top: 6mm;
+      left: 6mm;
+      right: 6mm;
+      bottom: 6mm;
+      border: 1px solid #f1f5f9;
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    /* HEADER */
+    .header-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .logo-circle {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      border: 1.5px solid #0f172a;
+      padding: 2px;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      margin-bottom: 10px;
+    }
+
+    .logo-circle img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .biz-name {
+      font-size: 17px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .biz-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 3px;
+      letter-spacing: 0.2px;
+    }
+
+    /* ZONA CENTRAL DEL QR: MINIMALISTA, AIREADA, LIMPIA */
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 8px 0;
+    }
+
+    .qr-frame {
+      width: 142px;
+      height: 142px;
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 16px;
+      border: 1.5px solid #0f172a;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-frame img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .qr-link-badge {
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #0f172a;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    /* MENSAJE DE PAGO */
+    .cta-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .cta-main {
+      font-size: 13.5px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cta-sub {
+      font-size: 10.5px;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* FOOTER DISCRETO */
+    .footer-wrap {
+      width: 100%;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bank-tags {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 8px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .bank-tags span {
+      color: #cbd5e1;
+    }
+
+    .brand-stamp {
+      font-size: 8px;
+      font-weight: 700;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+      }
+      .no-print-bar {
+        display: none !important;
+      }
+      .sheet-half-letter {
+        box-shadow: none;
+        border: none;
+        margin: 0 auto;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print-bar">
+    <div>
+      <div style="font-weight: 800; font-size: 13px;">Cartel Minimalista · Media Carta</div>
+      <div style="font-size: 11px; opacity: 0.7;">140 x 216 mm (Vertical)</div>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <span>🖨️</span> Imprimir / PDF
+    </button>
+  </div>
+
+  <div class="sheet-half-letter">
+    <div class="inner-border"></div>
+
+    <!-- CABECERA CON IDENTIDAD -->
+    <div class="header-wrap">
+      <div class="logo-circle">
+        <img src="data:image/jpeg;base64,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" alt="Logo Peluquería Mono San Martín">
+      </div>
+      <h1 class="biz-name">Peluquería Mono San Martín</h1>
+      <p class="biz-subtitle">Punto de Pago Oficial</p>
+    </div>
+
+    <!-- EL QR PROTAGONISTA: LIMPIO, PURO, 100% ESCANEABLE -->
+    <div class="qr-container">
+      <div class="qr-frame">
+        <img src="data:image/png;base64,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" alt="Código QR TransferDirecto">
+      </div>
+      <div class="qr-link-badge">transferdirecto.cl/p/mono-san-martin</div>
+    </div>
+
+    <!-- INSTRUCCION PRECISA Y CLARA DE PAGO -->
+    <div class="cta-section">
+      <div class="cta-main">
+        <span>⚡</span> PAGA AQUÍ CON TRANSFERENCIA
+      </div>
+      <div class="cta-sub">
+        Enfoca con tu cámara · Copia en 1 toque directo a tu banco
+      </div>
+    </div>
+
+    <!-- PIE LIMPIO Y SEGURO -->
+    <div class="footer-wrap">
+      <div class="bank-tags">
+        CuentaRUT <span>•</span> Banco de Chile <span>•</span> Santander <span>•</span> BCI <span>•</span> Todos los bancos
+      </div>
+      <div class="brand-stamp">
+        <span>🛡️</span> 100% Seguro · 0% Comisión · TransferDirecto PRO
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
